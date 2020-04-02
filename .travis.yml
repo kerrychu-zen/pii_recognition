@@ -11,3 +11,8 @@ install:
 
 before_script:
   - poetry config settings.virtualenvs.in-project true
+
+jobs:
+  include:
+    - name: unittest
+      script: poetry run pytest pii_recognition
