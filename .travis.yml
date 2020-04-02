@@ -3,6 +3,10 @@ dist: xenial
 python:
   - "3.7"
 
+branches:
+  only:
+    - "master"
+
 before_install:
   - pip install poetry
 
