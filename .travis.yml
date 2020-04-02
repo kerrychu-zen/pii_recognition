@@ -8,3 +8,6 @@ before_install:
 
 install:
   - poetry install
+
+before_script:
+  - poetry config settings.virtualenvs.in-project true
