@@ -1,6 +1,6 @@
 import re
 from abc import ABCMeta, abstractmethod
-from typing import Match, Optional, Type
+from typing import Match, Optional
 
 
 class Path(metaclass=ABCMeta):
