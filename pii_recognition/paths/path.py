@@ -1,9 +1,9 @@
 import re
 from typing import Match, Optional, Type
+from abc import ABCMeta, abstractmethod
 
 
-class Path:
-    _pattern_str: Optional[str] = None
+class Path(metaclass=ABCMeta):
     valid: bool = False
 
     def __init__(self, path: str):
@@ -14,11 +14,13 @@ class Path:
         else:
             self._pattern_to_attrs(matches)
 
-    def get_pattern(self) -> Optional[Match]:
-        if not self._pattern_str:
-            raise AttributeError("No pattern has been defined.")
+    @property
+    @abstractmethod
+    def pattern_str(self) -> str:
+        ...
 
-        return re.match(self._pattern_str, self.path)
+    def get_pattern(self) -> Optional[Match]:
+        return re.match(self.pattern_str, self.path)
 
     def _pattern_to_attrs(self, pattern: Match):
         for key, value in pattern.groupdict().items():
