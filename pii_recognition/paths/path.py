@@ -12,6 +12,12 @@ class Path(metaclass=ABCMeta):
         if matches:
             self.valid = True
             self._pattern_to_attrs(matches)
+    
+    # Will be invoked regardless whether attribute
+    # exists or not, this fix mypy error due to
+    # dynamic attributes creations
+    def __getattribute__(self, name: str) -> str:
+        return super().__getattribute__(name)
 
     @property
     @abstractmethod

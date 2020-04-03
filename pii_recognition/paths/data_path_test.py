@@ -5,18 +5,18 @@ from pytest import raises
 def test_DataPath():
     actual = DataPath("pii_recognition/datasets/conll2003/eng.testa")
     assert actual.valid is True
-    assert actual.data_name == "conll"  # type: ignore
-    assert actual.version == "2003"  # type: ignore
+    assert actual.data_name == "conll"
+    assert actual.version == "2003"
 
     actual = DataPath("/datasets/conll2003/eng.testa")
     assert actual.valid is True
-    assert actual.data_name == "conll"  # type: ignore
-    assert actual.version == "2003"  # type: ignore
+    assert actual.data_name == "conll"
+    assert actual.version == "2003"
 
     actual = DataPath("datasets/conll2003/eng.testa")
     assert actual.valid is True
-    assert actual.data_name == "conll"  # type: ignore
-    assert actual.version == "2003"  # type: ignore
+    assert actual.data_name == "conll"
+    assert actual.version == "2003"
 
     actual = DataPath("broken_path")
     assert actual.valid is False
