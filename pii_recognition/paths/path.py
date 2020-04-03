@@ -1,17 +1,22 @@
 import re
-from typing import Match, Type
+from typing import Match, Optional, Type
 
 
 class Path:
-    _pattern_str = None
+    _pattern_str: Optional[str] = None
+    valid: bool = False
 
     def __init__(self, path: str):
         self.path = path
-        self._pattern_to_attrs(self.get_pattern())
+        matches = self.get_pattern()
+        if matches is None:
+            self.valid = True
+        else:
+            self._pattern_to_attrs(matches)
 
-    def get_pattern(self) -> Match:
+    def get_pattern(self) -> Optional[Match]:
         if not self._pattern_str:
-            raise AttributeError("Pattern has not been defined.")
+            raise AttributeError("No pattern has been defined.")
 
         return re.match(self._pattern_str, self.path)
 
