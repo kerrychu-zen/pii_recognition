@@ -9,9 +9,8 @@ class Path(metaclass=ABCMeta):
     def __init__(self, path: str):
         self.path = path
         matches = self.get_pattern()
-        if matches is None:
+        if matches:
             self.valid = True
-        else:
             self._pattern_to_attrs(matches)
 
     @property
