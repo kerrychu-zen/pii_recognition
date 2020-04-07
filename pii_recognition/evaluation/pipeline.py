@@ -4,11 +4,12 @@ from pakkr import returns
 
 from pii_recognition.evaluation.model_evaluator import ModelEvaluator
 from pii_recognition.recognisers.entity_recogniser import EntityRecogniser
+from pii_recognition.registers import recogniser_registry
 
 
 @returns(Type[EntityRecogniser])
 def get_recogniser(recogniser_name: str) -> Type[EntityRecogniser]:
-    ...
+    return recogniser_registry[recogniser_name]
 
 
 # recogniser has been injected to meta
