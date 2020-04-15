@@ -16,14 +16,16 @@ def test_Registry():
     toy_assignment = ""
 
     actual = Registry()  # type: ignore
-    actual.add_item(toy_func)
-    assert isinstance(actual, dict)
-    assert actual["toy_func"] == toy_func
 
     actual.add_item(ToyClass)
     assert isinstance(actual, dict)
     assert actual["ToyClass"] == ToyClass
 
-    with raises(AttributeError) as err:
+    with raises(TypeError) as err:
+        actual.add_item(toy_func)
+    assert str(err.value) == "The registered item must be a class object."
+
+
+    with raises(TypeError) as err:
         actual.add_item(toy_assignment)
-    assert str(err.value) == "'str' object has no attribute '__name__'"
+    assert str(err.value) == "The registered item must be a class object."
