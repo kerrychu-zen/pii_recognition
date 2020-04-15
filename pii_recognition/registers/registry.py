@@ -22,3 +22,6 @@ class Registry(dict, metaclass=ABCMeta):
         else:
             name = getattr(item, "__name__")
             self[name] = item
+
+    def create_instance(self, name: str, **config):
+        return self[name](**config)
