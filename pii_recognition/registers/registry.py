@@ -14,6 +14,9 @@ class Registry(dict, metaclass=ABCMeta):
         ...
 
     def add_item(self, item: T, name: Optional[str]):
+        if not inspect.isclass(item):
+            raise ValueError("The registered item must be a class object.")
+
         if name:
             self[name] = item
         else:
