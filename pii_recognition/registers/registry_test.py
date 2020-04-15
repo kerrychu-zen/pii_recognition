@@ -1,7 +1,5 @@
 from unittest.mock import patch
 
-from pytest import raises
-
 from .registry import Registry
 
 

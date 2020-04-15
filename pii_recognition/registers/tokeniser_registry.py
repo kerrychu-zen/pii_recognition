@@ -1,5 +1,3 @@
-from pii_recognition.tokenisation.tokenisers import nltk_word_tokenizer
-
 from .registry import Registry
 
 
