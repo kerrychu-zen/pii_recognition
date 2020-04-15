@@ -1,11 +1,10 @@
-import inspect
 from abc import ABCMeta, abstractmethod
-from typing import Optional, TypeVar
+from typing import Generic, Optional, Type, TypeVar
 
-T = TypeVar("T")
+T = TypeVar("T", covariant=True)
 
 
-class Registry(dict, metaclass=ABCMeta):
+class Registry(dict, Generic[T], metaclass=ABCMeta):
     def __init__(self):
         self.add_predefines()
 
@@ -14,15 +13,11 @@ class Registry(dict, metaclass=ABCMeta):
         """Use add_item method to put objects to registry."""
         ...
 
-    def add_item(self, item: T, name: Optional[str] = None):
-        if not inspect.isclass(item):
-            raise TypeError("The registered item must be a class object.")
-
+    def add_item(self, item: Type[T], name: Optional[str] = None):
         if name:
             self[name] = item
         else:
-            name = getattr(item, "__name__")
-            self[name] = item
+            self[getattr(item, "__name__")] = item
 
-    def create_instance(self, name: str, **config):
+    def create_instance(self, name: str, **config) -> T:
         return self[name](**config)
