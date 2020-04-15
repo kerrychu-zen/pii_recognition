@@ -21,6 +21,10 @@ def test_Registry_add_item():
     assert isinstance(actual, dict)
     assert actual["ToyClass"] == ToyClass
 
+    actual.add_item(ToyClass, "TClass")
+    assert isinstance(actual, dict)
+    assert actual["TClass"] == ToyClass
+
     with raises(TypeError) as err:
         actual.add_item(toy_func)
     assert str(err.value) == "The registered item must be a class object."
