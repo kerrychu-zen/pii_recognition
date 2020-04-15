@@ -11,6 +11,7 @@ class Registry(dict, metaclass=ABCMeta):
 
     @abstractmethod
     def add_predefines(self):
+        """Use add_item method to put objects to registry."""
         ...
 
     def add_item(self, item: T, name: Optional[str] = None):
