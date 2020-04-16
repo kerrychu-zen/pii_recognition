@@ -5,9 +5,6 @@ T_co = TypeVar("T_co", covariant=True)
 
 
 class Registry(dict, Generic[T_co], metaclass=ABCMeta):
-    def __init__(self):
-        self.add_predefines()
-
     def add_item(self, item: Type[T_co], name: Optional[str] = None):
         if name:
             self[name] = item
