@@ -1,7 +1,6 @@
-from unittest.mock import patch
+from typing import Any
 
 from .registry import Registry
-from typing import Any
 
 
 def test_Registry_add_item():
