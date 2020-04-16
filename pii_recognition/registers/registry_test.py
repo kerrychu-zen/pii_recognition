@@ -1,14 +1,14 @@
 from unittest.mock import patch
 
 from .registry import Registry
+from typing import Any
 
 
-@patch.object(Registry, attribute="__abstractmethods__", new=set())
 def test_Registry_add_item():
     class ToyClass:
         pass
 
-    actual = Registry()  # type: ignore
+    actual = Registry[Any]()
 
     actual.add_item(ToyClass)
     assert isinstance(actual, dict)
@@ -19,13 +19,12 @@ def test_Registry_add_item():
     assert actual["TClass"] == ToyClass
 
 
-@patch.object(Registry, attribute="__abstractmethods__", new=set())
 def test_Registry_create_instance():
     class ToyClass:
         def __init__(self, a):
             self.a = a
 
-    registry = Registry()  # type: ignore
+    registry = Registry[Any]()
     registry.add_item(ToyClass)
 
     actual = registry.create_instance(name="ToyClass", a="a")
