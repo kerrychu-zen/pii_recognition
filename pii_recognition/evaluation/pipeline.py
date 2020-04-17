@@ -4,20 +4,19 @@ from pakkr import returns
 
 from pii_recognition.evaluation.model_evaluator import ModelEvaluator
 from pii_recognition.recognisers.entity_recogniser import EntityRecogniser
-from pii_recognition.registers import recogniser_registry
-
-
-@returns(Type[EntityRecogniser])
-def get_recogniser(recogniser_name: str) -> Type[EntityRecogniser]:
-    return recogniser_registry[recogniser_name]
+from pii_recognition import registry
 
 
 # recogniser has been injected to meta
 @returns(recogniser=EntityRecogniser)
-def initialise_recogniser(
-    recogniser: EntityRecogniser, recogniser_config: Dict[str, str]
+def get_recogniser(
+    recogniser_name: str, recogniser_config: Dict
 ) -> Dict[str, EntityRecogniser]:
-    ...
+    return {
+        "recogniser": registry.recogniser.create_instance(
+            recogniser_name, **recogniser_config
+        )
+    }
 
 
 # evaluator has been injected to meta
