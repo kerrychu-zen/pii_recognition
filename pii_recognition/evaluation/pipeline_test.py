@@ -1,18 +1,22 @@
 from unittest.mock import patch
 
-from pytest import raises
-
 from .pipeline import get_recogniser
 
 
-@patch(
-    "pii_recognition.registry",
-    new={"fake_model": "fake_value"},
-)
-def test_get_recogniser():
-    actual = get_recogniser("fake_model")
-    assert actual == "fake_value"
+@patch("pii_recognition.evaluation.pipeline.registry")
+def test_get_recogniser(mock_regsitry):
+    class Simple:
+        pass
 
-    with raises(KeyError) as err:
-        get_recogniser("non_exist_model")
-    assert str(err.value) == "'non_exist_model'"
+    class Complex:
+        def __init__(self, a):
+            self.a = a
+
+    mock_regsitry.recogniser = {"Simple": Simple, "Complex": Complex}
+
+    actual = get_recogniser("Simple")["recogniser"]
+    assert isinstance(actual, Simple)
+
+    actual = get_recogniser("Complex", {"a": "attr_a"})["recogniser"]
+    assert isinstance(actual, Complex)
+    assert actual.a == "attr_a"

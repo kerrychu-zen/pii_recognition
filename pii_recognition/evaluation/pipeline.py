@@ -2,21 +2,19 @@ from typing import Dict, List, Tuple
 
 from pakkr import returns
 
+from pii_recognition import registry
 from pii_recognition.evaluation.model_evaluator import ModelEvaluator
 from pii_recognition.recognisers.entity_recogniser import EntityRecogniser
-from pii_recognition import registry
 
 
 # recogniser has been injected to meta
 @returns(recogniser=EntityRecogniser)
 def get_recogniser(
-    recogniser_name: str, recogniser_config: Dict
+    recogniser_name: str, recogniser_config: Dict = {}
 ) -> Dict[str, EntityRecogniser]:
-    return {
-        "recogniser": registry.recogniser.create_instance(
-            recogniser_name, **recogniser_config
-        )
-    }
+    recogniser_class = registry.recogniser[recogniser_name]
+    recogniser_instance = recogniser_class(**recogniser_config)
+    return {"recogniser": recogniser_instance}
 
 
 # evaluator has been injected to meta
