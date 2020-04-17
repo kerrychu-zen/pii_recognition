@@ -15,4 +15,5 @@ class Registry(dict, Generic[T_co]):
     def create_instance(self, name: str, **config) -> T_co:
         return self[name](**config)
 
+
 recogniser = Registry[EntityRecogniser]()

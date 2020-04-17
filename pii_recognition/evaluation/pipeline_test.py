@@ -6,7 +6,7 @@ from .pipeline import get_recogniser
 
 
 @patch(
-    "pii_recognition.evaluation.pipeline.recogniser_registry",
+    "pii_recognition.registry",
     new={"fake_model": "fake_value"},
 )
 def test_get_recogniser():

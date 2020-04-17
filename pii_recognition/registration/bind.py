@@ -1,5 +1,5 @@
 from pii_recognition import recognisers
-from pii_recognition.registers import registry 
+from pii_recognition.registers import registry
 
 
 def _get_default_recognisers():

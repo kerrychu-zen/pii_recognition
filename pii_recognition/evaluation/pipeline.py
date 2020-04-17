@@ -1,4 +1,4 @@
-from typing import Dict, List, Tuple, Type
+from typing import Dict, List, Tuple
 
 from pakkr import returns
 
