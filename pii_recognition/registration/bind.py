@@ -12,6 +12,6 @@ def _get_default_recognisers():
     ]
 
 
-def _run():
+def _register_recognisers():
     for item in _get_default_recognisers():
         registry.recogniser.add_item(item)
