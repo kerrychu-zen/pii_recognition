@@ -3,7 +3,7 @@ from unittest.mock import patch
 from .pipeline import get_recogniser
 
 
-@patch("pii_recognition.evaluation.pipeline.registry")
+@patch("pii_recognition.evaluation.pipeline.recogniser_registry")
 def test_get_recogniser(mock_regsitry):
     class Simple:
         pass
@@ -12,7 +12,7 @@ def test_get_recogniser(mock_regsitry):
         def __init__(self, a):
             self.a = a
 
-    mock_regsitry.recogniser = {"Simple": Simple, "Complex": Complex}
+    mock_regsitry = {"Simple": Simple, "Complex": Complex}
 
     actual = get_recogniser("Simple")["recogniser"]
     assert isinstance(actual, Simple)

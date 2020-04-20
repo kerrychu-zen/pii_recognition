@@ -1,5 +1,5 @@
 from .entity_recogniser import EntityRecogniser
-from registration.registry import Registry
+from pii_recognition.registration.registry import Registry
 
 
 def init():
