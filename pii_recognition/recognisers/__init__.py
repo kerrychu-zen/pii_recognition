@@ -18,4 +18,5 @@ def init():
 
     return registry
 
+
 registry: Registry[EntityRecogniser] = init()

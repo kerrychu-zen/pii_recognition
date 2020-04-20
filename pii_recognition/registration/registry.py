@@ -1,6 +1,4 @@
 from typing import Generic, Optional, Type, TypeVar
-from pii_recognition.recognisers.entity_recogniser import EntityRecogniser
-
 
 T_co = TypeVar("T_co", covariant=True)
 

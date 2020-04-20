@@ -12,7 +12,6 @@ from pii_recognition.recognisers.entity_recogniser import EntityRecogniser
 def get_recogniser(
     recogniser_name: str, recogniser_config: Dict = {}
 ) -> Dict[str, EntityRecogniser]:
-    import pdb; pdb.set_trace()
     recogniser_class = recogniser_registry[recogniser_name]
     recogniser_instance = recogniser_class(**recogniser_config)
     return {"recogniser": recogniser_instance}
