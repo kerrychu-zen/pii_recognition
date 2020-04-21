@@ -1,4 +1,4 @@
-from typing import Generic, Optional, Type, TypeVar, Dict
+from typing import Dict, Generic, Optional, Type, TypeVar
 
 T_co = TypeVar("T_co", covariant=True)
 
@@ -10,7 +10,10 @@ class Registry(dict, Generic[T_co]):
         else:
             self[getattr(item, "__name__")] = item
 
-    def create_instance(self, name: str, config: Dict = {}) -> T_co:
+    def create_instance(self, name: str, config: Optional[Dict] = None) -> T_co:
+        if config is None:
+            config = {}
+
         def _create_instance(name: str, **config) -> T_co:
             return self[name](**config)
 
