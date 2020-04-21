@@ -26,6 +26,6 @@ def test_Registry_create_instance():
     registry = Registry[Any]()
     registry.add_item(ToyClass)
 
-    actual = registry.create_instance(name="ToyClass", a="a")
+    actual = registry.create_instance(name="ToyClass", config={"a": "value_a"})
     assert isinstance(actual, ToyClass)
-    assert actual.a == "a"
+    assert actual.a == "value_a"

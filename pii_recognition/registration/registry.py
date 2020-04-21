@@ -11,6 +11,7 @@ class Registry(dict, Generic[T_co]):
             self[getattr(item, "__name__")] = item
 
     def create_instance(self, name: str, config: Dict = {}) -> T_co:
-        def _create_instance(self, name: str, **config) -> T_co:
+        def _create_instance(name: str, **config) -> T_co:
             return self[name](**config)
+
         return _create_instance(name, **config)
