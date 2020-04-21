@@ -6,7 +6,7 @@ from .registry import Registry
 def test_Registry_add_item():
     class ToyClass:
         pass
-    
+
     # Any is equivalent to Type[Any]
     actual = Registry[Any]()
 

@@ -2,7 +2,8 @@ from unittest.mock import patch
 
 from .pipeline import get_recogniser
 from pii_recognition.registration.registry import Registry
-from typing import Type, Any, Callable
+from typing import Any
+
 
 class RegistryNoConfig:
     # class can be instantiated without passing any args
