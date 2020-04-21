@@ -38,6 +38,3 @@ class EntityRecogniser(metaclass=ABCMeta):
     def analyse(self, text: str, entities: List[str]) -> List[SpanLabel]:
         """Anotate asked entities in the text."""
         ...
-
-
-Rec_co = TypeVar("Rec_co", bound=EntityRecogniser)
