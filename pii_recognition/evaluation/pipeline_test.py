@@ -2,7 +2,7 @@ from unittest.mock import patch
 
 from .pipeline import get_recogniser
 from pii_recognition.registration.registry import Registry
-
+from typing import Type, Any, Callable
 
 class RegistryNoConfig:
     # class can be instantiated without passing any args
@@ -16,7 +16,8 @@ class RegistryWithConfig:
 
 
 def mock_registry():
-    regsitry = Registry()
+    # Any is equivalent to Type[Any]
+    regsitry: Registry[Any] = Registry()
     regsitry.add_item(RegistryNoConfig)
     regsitry.add_item(RegistryWithConfig)
     return regsitry
