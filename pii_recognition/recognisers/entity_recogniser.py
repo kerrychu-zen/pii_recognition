@@ -1,5 +1,5 @@
 from abc import ABCMeta, abstractmethod
-from typing import List, TypeVar
+from typing import List
 
 from pii_recognition.labels.schema import SpanLabel
 
