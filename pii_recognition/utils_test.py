@@ -22,4 +22,4 @@ def test_lazy_property():
         actual = Toy()
         actual.a
         actual.a
-        mock_fget.assert_called_once
+        mock_fget.assert_called_once()
