@@ -7,7 +7,7 @@ def write_iterable_to_text(iterable: Iterable, file_path: str):
             f.write(str(elem) + "\n")
 
 
-class lazy_property(property):  # class name follows the convention of property
+class cached_property(property):  # class name follows the convention of property
     def __get__(self, obj: Any, objtype: Optional[Type] = None) -> Any:
         if self.fget is None:
             raise AttributeError("unreadable attribute")

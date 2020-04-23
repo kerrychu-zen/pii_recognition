@@ -3,7 +3,7 @@ from typing import List
 from stanza import Pipeline
 
 from pii_recognition.labels.schema import SpanLabel
-from pii_recognition.utils import lazy_property
+from pii_recognition.utils import cached_property
 
 from .entity_recogniser import EntityRecogniser
 
@@ -31,7 +31,7 @@ class StanzaRecogniser(EntityRecogniser):
             supported_languages=supported_languages,
         )
 
-    @lazy_property
+    @cached_property
     def model(self) -> Pipeline:
         return Pipeline(self.model_name)
 
