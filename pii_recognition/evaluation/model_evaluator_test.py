@@ -27,6 +27,11 @@ def mock_recogniser():
     return recogniser
 
 
+@fixture
+def tokeniser_config():
+    return {"name": "fake_tokeniser", "config": {"fake_param": "fake_value"}}
+
+
 def get_mock_tokeniser():
     # reference: text = "This is Bob from Melbourne."
     tokeniser = Mock()
@@ -46,13 +51,13 @@ def get_mock_tokeniser():
     attribute="create_instance",
     new_callable=get_mock_tokeniser,
 )
-def test_class_init(mock_tokeniser):
+def test_class_init(mock_tokeniser, tokeniser_config):
     mock_recogniser = Mock()
 
     evaluator = ModelEvaluator(
         recogniser=mock_recogniser,
         target_entities=["PER", "LOC"],
-        tokeniser={"name": "fake_tokeniser", "config": {"fake_param": "fake_value"},},
+        tokeniser=tokeniser_config,
         convert_labels={"PER": "PERSON"},
     )
 
@@ -62,23 +67,30 @@ def test_class_init(mock_tokeniser):
     assert evaluator._convert_labels == {"PER": "PERSON"}
 
 
-# def test_get_token_based_prediction(text, mock_recogniser, mock_tokeniser):
-#     # test 1: succeed
-#     evaluator = ModelEvaluator(
-#         recogniser=mock_recogniser,
-#         target_entities=["PER", "LOC"],
-#         tokeniser=mock_tokeniser,
-#     )
-#     actual = evaluator.get_token_based_prediction(text)
-#     assert actual == ["O", "O", "PER", "O", "LOC", "O"]
+@patch.object(
+    target=tokeniser_registry,
+    attribute="create_instance",
+    new_callable=get_mock_tokeniser,
+)
+def test_get_token_based_prediction(
+    mock_tokeniser, text, mock_recogniser, tokeniser_config
+):
+    # test 1: succeed
+    evaluator = ModelEvaluator(
+        recogniser=mock_recogniser,
+        target_entities=["PER", "LOC"],
+        tokeniser=tokeniser_config,
+    )
+    actual = evaluator.get_token_based_prediction(text)
+    assert actual == ["O", "O", "PER", "O", "LOC", "O"]
 
-#     # test 2: raise assertion error
-#     evaluator = ModelEvaluator(
-#         recogniser=mock_recogniser, target_entities=["PER"], tokeniser=mock_tokeniser,
-#     )
-#     with pytest.raises(AssertionError) as err:
-#         evaluator.get_token_based_prediction(text)
-#     assert str(err.value) == f"Predictions contain unasked entities ['LOC']"
+    # test 2: raise assertion error
+    evaluator = ModelEvaluator(
+        recogniser=mock_recogniser, target_entities=["PER"], tokeniser=tokeniser_config,
+    )
+    with pytest.raises(AssertionError) as err:
+        evaluator.get_token_based_prediction(text)
+    assert str(err.value) == f"Predictions contain unasked entities ['LOC']"
 
 
 # def test__compare_predicted_and_truth(text, mock_tokeniser):
