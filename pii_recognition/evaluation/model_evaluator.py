@@ -1,5 +1,5 @@
 from collections import Counter
-from typing import Callable, Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple
 
 import numpy as np
 
@@ -8,7 +8,6 @@ from pii_recognition.labels.schema import EvalLabel
 from pii_recognition.labels.span import span_labels_to_token_labels
 from pii_recognition.recognisers.entity_recogniser import EntityRecogniser
 from pii_recognition.tokenisation import tokeniser_registry
-from pii_recognition.tokenisation.token_schema import Token
 
 from .metrics import compute_f_beta
 from .prediction_error import SampleError, TokenError
