@@ -44,9 +44,7 @@ def test_crf_recogniser_analyse(mock_tokeniser):
     )
 
     actual = recogniser.analyse("fake_text", entities=["PER"])
-    mock_tokeniser.assert_called_with(
-        "fake_tokeniser", {"fake_param": "fake_value"}
-    )
+    mock_tokeniser.assert_called_with("fake_tokeniser", {"fake_param": "fake_value"})
     assert actual == [SpanLabel("PER", 8, 11)]
 
     actual = recogniser.analyse("fake_text", entities=["PER", "LOC"])

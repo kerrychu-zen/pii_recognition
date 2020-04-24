@@ -41,31 +41,25 @@ def get_mock_tokeniser():
     return tokeniser
 
 
-def test_class_init():
+@patch.object(
+    target=tokeniser_registry,
+    attribute="create_instance",
+    new_callable=get_mock_tokeniser,
+)
+def test_class_init(mock_tokeniser):
     mock_recogniser = Mock()
 
-    with patch.object(
-        target=tokeniser_registry,
-        attribute="create_instance",
-        new_callable=get_mock_tokeniser,
-    ) as mock_tokeniser:
-        # test 1: succeed
-        evaluator = ModelEvaluator(
-            recogniser=mock_recogniser,
-            target_entities=["PER", "LOC"],
-            tokeniser={
-                "name": "fake_tokeniser",
-                "config": {"fake_param": "fake_value"},
-            },
-            convert_labels={"PER": "PERSON"},
-        )
+    evaluator = ModelEvaluator(
+        recogniser=mock_recogniser,
+        target_entities=["PER", "LOC"],
+        tokeniser={"name": "fake_tokeniser", "config": {"fake_param": "fake_value"},},
+        convert_labels={"PER": "PERSON"},
+    )
 
-        assert evaluator.recogniser == mock_recogniser
-        assert evaluator.target_entities == ["PER", "LOC"]
-        mock_tokeniser.assert_called_with(
-            "fake_tokeniser", {"fake_param": "fake_value"}
-        )
-        assert evaluator._convert_labels == {"PER": "PERSON"}
+    assert evaluator.recogniser == mock_recogniser
+    assert evaluator.target_entities == ["PER", "LOC"]
+    mock_tokeniser.assert_called_with("fake_tokeniser", {"fake_param": "fake_value"})
+    assert evaluator._convert_labels == {"PER": "PERSON"}
 
 
 # def test_get_token_based_prediction(text, mock_recogniser, mock_tokeniser):
