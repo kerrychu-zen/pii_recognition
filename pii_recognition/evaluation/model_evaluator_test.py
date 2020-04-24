@@ -228,30 +228,35 @@ def test_evaluate_sample_with_label_conversion(mock_tokeniser, mock_recogniser, 
     assert mistakes == SampleError(token_errors=[], full_text=text, failed=False)
 
 
-# def test_evaulate_all(text, mock_recogniser, mock_tokeniser):
-#     evaluator = ModelEvaluator(
-#         recogniser=mock_recogniser,
-#         target_entities=["PER", "LOC"],
-#         tokeniser=mock_tokeniser,
-#     )
-#     counters, mistakes = evaluator.evaulate_all(
-#         texts=[text] * 2, annotations=[["O", "O", "PER", "O", "LOC", "O"]] * 2
-#     )
+@patch.object(
+    target=tokeniser_registry,
+    attribute="create_instance",
+    new_callable=get_mock_tokeniser,
+)
+def test_evaulate_all(mock_tokeniser, text, mock_recogniser, tokeniser_config):
+    evaluator = ModelEvaluator(
+        recogniser=mock_recogniser,
+        target_entities=["PER", "LOC"],
+        tokeniser=tokeniser_config,
+    )
+    counters, mistakes = evaluator.evaulate_all(
+        texts=[text] * 2, annotations=[["O", "O", "PER", "O", "LOC", "O"]] * 2
+    )
 
-#     assert (
-#         counters
-#         == [
-#             Counter(
-#                 {
-#                     EvalLabel("O", "O"): 4,
-#                     EvalLabel("LOC", "LOC"): 1,
-#                     EvalLabel("PER", "PER"): 1,
-#                 }
-#             )
-#         ]
-#         * 2
-#     )
-#     assert mistakes == [SampleError(token_errors=[], full_text=text, failed=False)] * 2
+    assert (
+        counters
+        == [
+            Counter(
+                {
+                    EvalLabel("O", "O"): 4,
+                    EvalLabel("LOC", "LOC"): 1,
+                    EvalLabel("PER", "PER"): 1,
+                }
+            )
+        ]
+        * 2
+    )
+    assert mistakes == [SampleError(token_errors=[], full_text=text, failed=False)] * 2
 
 
 # def test_calculate_score():
