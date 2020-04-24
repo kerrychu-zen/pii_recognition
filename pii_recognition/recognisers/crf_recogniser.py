@@ -1,4 +1,4 @@
-from typing import Callable, List
+from typing import List, Dict
 
 from pycrfsuite import Tagger
 
@@ -18,10 +18,12 @@ class CrfRecogniser(EntityRecogniser):
         supported_entities: List[str],
         supported_languages: List[str],
         model_path: str,
-        tokeniser_name: str,
+        tokeniser: Dict,
     ):
         self._model_path = model_path
-        self._tokeniser = tokeniser_registry.create_instance(tokeniser_name)
+        self._tokeniser = tokeniser_registry.create_instance(
+            tokeniser["name"], tokeniser["config"]
+        )
         super().__init__(
             supported_entities=supported_entities,
             supported_languages=supported_languages,
