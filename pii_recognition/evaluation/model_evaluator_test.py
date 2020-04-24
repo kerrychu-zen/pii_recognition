@@ -172,30 +172,35 @@ def test__compare_predicted_and_truth(mock_tokeniser, text, tokeniser_config):
     assert mistakes == SampleError(token_errors=[], full_text=text, failed=False)
 
 
-# def test_evaluate_sample(text, mock_recogniser, mock_tokeniser):
-#     evaluator = ModelEvaluator(
-#         recogniser=mock_recogniser,
-#         target_entities=["PER", "LOC"],
-#         tokeniser=mock_tokeniser,
-#     )
+@patch.object(
+    target=tokeniser_registry,
+    attribute="create_instance",
+    new_callable=get_mock_tokeniser,
+)
+def test_evaluate_sample(mock_tokeniser, text, mock_recogniser, tokeniser_config):
+    evaluator = ModelEvaluator(
+        recogniser=mock_recogniser,
+        target_entities=["PER", "LOC"],
+        tokeniser=tokeniser_config,
+    )
 
-#     # test 1: simple straightforward pass
-#     counter, mistakes = evaluator.evaluate_sample(
-#         text, annotations=["O", "O", "PER", "O", "LOC", "O"]
-#     )
-#     assert counter == Counter(
-#         {EvalLabel("O", "O"): 4, EvalLabel("LOC", "LOC"): 1, EvalLabel("PER", "PER"): 1}
-#     )
-#     assert mistakes == SampleError(token_errors=[], full_text=text, failed=False)
+    # test 1: simple straightforward pass
+    counter, mistakes = evaluator.evaluate_sample(
+        text, annotations=["O", "O", "PER", "O", "LOC", "O"]
+    )
+    assert counter == Counter(
+        {EvalLabel("O", "O"): 4, EvalLabel("LOC", "LOC"): 1, EvalLabel("PER", "PER"): 1}
+    )
+    assert mistakes == SampleError(token_errors=[], full_text=text, failed=False)
 
-#     # test 2: annotated labels not in target_entities
-#     counter, mistakes = evaluator.evaluate_sample(
-#         text, annotations=["O", "MISC", "PER", "O", "LOC", "MISC"]
-#     )
-#     assert counter == Counter(
-#         {EvalLabel("O", "O"): 4, EvalLabel("LOC", "LOC"): 1, EvalLabel("PER", "PER"): 1}
-#     )
-#     assert mistakes == SampleError(token_errors=[], full_text=text, failed=False)
+    # test 2: annotated labels not in target_entities
+    counter, mistakes = evaluator.evaluate_sample(
+        text, annotations=["O", "MISC", "PER", "O", "LOC", "MISC"]
+    )
+    assert counter == Counter(
+        {EvalLabel("O", "O"): 4, EvalLabel("LOC", "LOC"): 1, EvalLabel("PER", "PER"): 1}
+    )
+    assert mistakes == SampleError(token_errors=[], full_text=text, failed=False)
 
 
 # def test_evaluate_sample_with_label_conversion(mock_recogniser, mock_tokeniser):
