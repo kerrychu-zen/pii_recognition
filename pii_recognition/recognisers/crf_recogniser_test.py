@@ -35,7 +35,7 @@ def get_mock_tokeniser():
     attribute="create_instance",
     new_callable=get_mock_tokeniser,
 )
-def test_crf_recogniser_analyse(mock_create_instance):
+def test_crf_recogniser_analyse(mock_tokeniser):
     recogniser = CrfRecogniser(
         ["PER", "LOC"],
         ["en"],
@@ -44,7 +44,7 @@ def test_crf_recogniser_analyse(mock_create_instance):
     )
 
     actual = recogniser.analyse("fake_text", entities=["PER"])
-    mock_create_instance.assert_called_with(
+    mock_tokeniser.assert_called_with(
         "fake_tokeniser", {"fake_param": "fake_value"}
     )
     assert actual == [SpanLabel("PER", 8, 11)]

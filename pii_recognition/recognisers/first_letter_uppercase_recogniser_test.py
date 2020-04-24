@@ -28,12 +28,12 @@ def get_mock_tokeniser():
     attribute="create_instance",
     new_callable=get_mock_tokeniser,
 )
-def test_first_letter_uppercase_analyse(mock_create_instance):
+def test_first_letter_uppercase_analyse(mock_tokeniser):
     recogniser = FirstLetterUppercaseRecogniser(
         ["en"],
         tokeniser={"name": "fake_tokeniser", "config": {"fake_param": "fake_value"}},
     )
-    mock_create_instance.assert_called_with(
+    mock_tokeniser.assert_called_with(
         "fake_tokeniser", {"fake_param": "fake_value"}
     )
     actual = recogniser.analyse("fake_text", entities=["PER"])
