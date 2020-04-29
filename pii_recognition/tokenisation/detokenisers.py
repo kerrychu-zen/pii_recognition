@@ -1,7 +1,9 @@
 from abc import ABCMeta, abstractmethod
 from typing import Callable, List
 
-from nltk.tokenize.treebank import TreebankWordDetokenizer
+import nltk
+# tokenize.treebank import TreebankWordDetokenizer
+from pii_recognition.utils import cached_property
 
 
 class Detokeniser(metaclass=ABCMeta):
@@ -15,5 +17,10 @@ class SpaceJoinDetokeniser(Detokeniser):
         return " ".join(tokens)
 
 
-def treebank_detokeniser(tokens: List[str]) -> str:
-    return TreebankWordDetokenizer().detokenize(tokens)
+class TreebankDetokeniser(Detokeniser):
+    @cached_property
+    def _engine(self):
+        return nltk.tokenize.treebank.TreebankWordDetokenizer()
+
+    def detokenise(self, tokens: List[str]) -> str:
+        return self._engine.detokenize(tokens)
