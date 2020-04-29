@@ -1,9 +1,5 @@
 from typing import List
-from unittest.mock import mock_open, patch, Mock
-
-from pytest import fixture
-
-from pii_recognition.tokenisation.detokenisers import SpaceJoinDetokeniser
+from unittest.mock import Mock, mock_open, patch
 
 from .wnut_reader import WnutReader, detokeniser_registry
 

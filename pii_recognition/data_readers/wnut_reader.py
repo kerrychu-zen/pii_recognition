@@ -1,4 +1,4 @@
-from typing import Callable, List, Tuple, Dict
+from typing import List, Tuple, Dict
 
 from pii_recognition.labels.mapping import map_bio_to_io_labels
 from .reader import Reader
