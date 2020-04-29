@@ -7,6 +7,7 @@ from pii_recognition.tokenisation.detokenisers import SpaceJoinDetokeniser
 from .wnut_reader import get_wnut_eval_data
 
 
+# temporary fix and will update
 @fixture
 def detokeniser():
     return SpaceJoinDetokeniser().detokenise
