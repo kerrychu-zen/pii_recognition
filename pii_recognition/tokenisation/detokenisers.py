@@ -1,5 +1,5 @@
 from abc import ABCMeta, abstractmethod
-from typing import Callable, List
+from typing import List
 
 import nltk
 
