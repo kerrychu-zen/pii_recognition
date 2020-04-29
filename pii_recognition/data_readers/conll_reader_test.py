@@ -16,7 +16,7 @@ def sent():
     ]
 
 
-def mock_ConllCorpusReader():
+def get_mock_ConllCorpusReader():
     mock = Mock()
     mock.return_value.iob_sents.return_value = [
         [
@@ -44,7 +44,7 @@ def get_mock_detokeniser():
 
 @patch(
     "pii_recognition.data_readers.conll_reader.ConllCorpusReader",
-    new=mock_ConllCorpusReader(),
+    new=get_mock_ConllCorpusReader(),
 )
 @patch.object(
     target=detokeniser_registry,
