@@ -49,11 +49,12 @@ def get_mock_detokeniser():
 @patch.object(
     target=detokeniser_registry,
     attribute="create_instance",
-    new=get_mock_detokeniser(),
+    new_callable=get_mock_detokeniser,
 )
-def test_get_conll_eval_data():
+def test_get_conll_eval_data(mock_detokeniser):
     reader = ConllReader(detokeniser_setup={"name": "fake_reader"})
     sents, labels = reader.get_test_data(file_path="fake_path")
+    mock_detokeniser.assert_called_once_with(config=None, name="fake_reader")
     assert sents == ["SOCCER - JAPAN GET", "Nadim Ladki"]
     assert labels == [["O", "O", "I-LOC", "O"], ["I-PER", "I-PER"]]
 

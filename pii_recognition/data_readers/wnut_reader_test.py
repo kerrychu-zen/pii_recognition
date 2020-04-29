@@ -21,11 +21,12 @@ def get_mock_detokeniser():
 @patch.object(
     target=detokeniser_registry,
     attribute="create_instance",
-    new=get_mock_detokeniser(),
+    new_callable=get_mock_detokeniser,
 )
-def test_get_wnut_eval_data():
+def test_get_wnut_eval_data(mock_detokeniser):
     patch_target = "pii_recognition.data_readers.wnut_reader.open"
     reader = WnutReader(detokeniser_setup={"name": "fake_reader"})
+    mock_detokeniser.assert_called_once_with(config=None, name="fake_reader")
 
     # test 1: empty file
     text = ""
