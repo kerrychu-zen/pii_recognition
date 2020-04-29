@@ -1,5 +1,12 @@
-# This is in code review
 from pii_recognition.registration.registry import Registry
-from pii_recognition.tokenisation.tokenisers import Tokeniser
+from pii_recognition.tokenisation.tokenisers import Tokeniser, TreebankWordTokeniser
 
-tokeniser_registry = Registry[Tokeniser]()
+
+def tokeniser_init():
+    registry = Registry[Tokeniser]()
+    registry.add_item(TreebankWordTokeniser)
+
+    return registry
+
+
+tokeniser_registry: Registry[TreebankWordTokeniser] = tokeniser_init()
