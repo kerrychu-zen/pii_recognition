@@ -20,4 +20,7 @@ def detokeniser_init():
     registry.add_item(TreebankWordDetokeniser)
 
 
-tokeniser_registry: Registry[TreebankWordTokeniser] = tokeniser_init()
+# initialisations are simple once become complex considering
+# separate the two
+tokeniser_registry: Registry[Tokeniser] = tokeniser_init()
+detokeniser_registry: Registry[Detokeniser] = detokeniser_init()
