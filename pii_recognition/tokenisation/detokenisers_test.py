@@ -1,13 +1,15 @@
-from .detokenisers import space_join_detokensier, treebank_detokeniser
+from .detokenisers import SpaceJoinDetokeniser, TreebankDetokeniser
 
 
-def test_space_join_detokeniser():
+def test_SpaceJoinDetokeniser():
     tokens = ["Here", "is", "a", "test", "."]
-    actual = space_join_detokensier(tokens)
+    detokeniser = SpaceJoinDetokeniser()
+    actual = detokeniser.detokenise(tokens)
     assert actual == "Here is a test ."
 
 
 def test_treebank_detokeniser():
     tokens = ["Here", "is", "a", "test", "."]
-    actual = treebank_detokeniser(tokens)
+    detokeniser = TreebankDetokeniser()
+    actual = detokeniser.detokenise(tokens)
     assert actual == "Here is a test."

@@ -2,7 +2,7 @@ from abc import ABCMeta, abstractmethod
 from typing import Callable, List
 
 import nltk
-# tokenize.treebank import TreebankWordDetokenizer
+
 from pii_recognition.utils import cached_property
 
 
