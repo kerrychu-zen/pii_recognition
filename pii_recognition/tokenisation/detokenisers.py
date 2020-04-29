@@ -10,8 +10,9 @@ class Detokeniser(metaclass=ABCMeta):
         ...
 
 
-def space_join_detokensier(tokens: List[str]) -> str:
-    return " ".join(tokens)
+class SpaceJoinDetokeniser(Detokeniser):
+    def detokenise(self, tokens: List[str]) -> str:
+        return " ".join(tokens)
 
 
 def treebank_detokeniser(tokens: List[str]) -> str:
