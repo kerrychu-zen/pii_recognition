@@ -17,7 +17,7 @@ class SpaceJoinDetokeniser(Detokeniser):
         return " ".join(tokens)
 
 
-class TreebankDetokeniser(Detokeniser):
+class TreebankWordDetokeniser(Detokeniser):
     @cached_property
     def _engine(self):
         return nltk.tokenize.treebank.TreebankWordDetokenizer()
