@@ -44,9 +44,7 @@ def mock_ConllCorpusReader():
     new=mock_ConllCorpusReader(),
 )
 def test_get_conll_eval_data(detokeniser):
-    sents, labels = get_conll_eval_data(
-        file_path="fake_path", detokenizer=detokeniser
-    )
+    sents, labels = get_conll_eval_data(file_path="fake_path", detokenizer=detokeniser)
     assert sents == ["SOCCER - JAPAN GET", "Nadim Ladki"]
     assert labels == [["O", "O", "I-LOC", "O"], ["I-PER", "I-PER"]]
 
