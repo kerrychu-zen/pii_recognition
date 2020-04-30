@@ -48,31 +48,28 @@ def span_labels_to_token_labels(
     return [TokenLabel.from_instance(tokens[i], labels[i]) for i in range(len(tokens))]
 
 
-def token_labels_to_span_labels(
-    tokens: List[Token], labels: List[str]
-) -> List[SpanLabel]:
-    assert len(tokens) == len(labels), (
-        f"Length mismatch, where len(tokens)={len(tokens)} and "
-        f"len(tags)={len(labels)}"
-    )
-
+def token_labels_to_span_labels(token_labels: List[TokenLabel]) -> List[SpanLabel]:
     span_labels = []
-    segment_start = tokens[0].start
-    segment_end = tokens[0].end
+    segment_start = token_labels[0].start
+    segment_end = token_labels[0].end
 
-    if len(labels) == 1:
-        return [SpanLabel(labels[0], segment_start, segment_end)]
+    if len(token_labels) == 1:
+        return [SpanLabel(token_labels[0].entity_type, segment_start, segment_end)]
 
     # process all except the last one
-    for i in range(1, len(labels)):
-        if labels[i] == labels[i - 1]:
-            segment_end = tokens[i].end
+    for i in range(1, len(token_labels)):
+        if token_labels[i].entity_type == token_labels[i - 1].entity_type:
+            segment_end = token_labels[i].end
         else:
-            span_labels.append(SpanLabel(labels[i - 1], segment_start, segment_end))
-            segment_start = tokens[i].start
-            segment_end = tokens[i].end
+            span_labels.append(
+                SpanLabel(token_labels[i - 1].entity_type, segment_start, segment_end)
+            )
+            segment_start = token_labels[i].start
+            segment_end = token_labels[i].end
 
     # write out the last one
-    segment_end = tokens[-1].end
-    span_labels.append(SpanLabel(labels[-1], segment_start, segment_end))
+    segment_end = token_labels[-1].end
+    span_labels.append(
+        SpanLabel(token_labels[-1].entity_type, segment_start, segment_end)
+    )
     return span_labels
