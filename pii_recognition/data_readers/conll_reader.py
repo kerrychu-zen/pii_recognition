@@ -22,7 +22,7 @@ class ConllReader(Reader):
             name=detokeniser_setup["name"], config=detokeniser_setup.get("config")
         )
 
-    def _get_data(self, file_path: str) -> ConllCorpusReader:
+    def _get_corpus(self, file_path: str) -> ConllCorpusReader:
         path = PurePath(file_path)
         return ConllCorpusReader(
             root=str(path.parents[0]),
@@ -38,7 +38,7 @@ class ConllReader(Reader):
             I_ORG
             I-MISC
         """
-        data = self._get_data(file_path)
+        data = self._get_corpus(file_path)
 
         sent_features = list(data.iob_sents())
         sent_features = [x for x in sent_features if x]  # remove empty features
