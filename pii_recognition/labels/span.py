@@ -22,7 +22,6 @@ def is_substring(
         return False
 
 
-# TODO: outside label
 def span_labels_to_token_labels(
     span_labels: List[SpanLabel], tokens: List[Token]
 ) -> List[TokenLabel]:
@@ -36,6 +35,8 @@ def span_labels_to_token_labels(
     Returns:
         Token based entity labels, e.g., ["O", "O", "LOC", "O"].
     """
+    # TODO: add param to control whether to include outside label
+    # TODO: span_labels and tokens should be ascending order
     labels = ["O"] * len(tokens)  # default is O, no chunck label
 
     for i in range(len(tokens)):
@@ -51,19 +52,18 @@ def span_labels_to_token_labels(
 
 
 def token_labels_to_span_labels(token_labels: List[TokenLabel]) -> List[SpanLabel]:
+    # TODO: token_labels should be ascending order
     span_labels = []
-    num_tokens = len(token_labels)
-    current_span: Dict = asdict(token_labels[0])
+    prior_span: Dict = asdict(token_labels[0])
 
-    if num_tokens == 1:
-        return [SpanLabel(**current_span)]
-    else:
-        for i in range(num_tokens, num_tokens - 1):
-            next_token_label = token_labels[i + 1]
-            if next_token_label.entity_type == current_span["entity_type"]:
-                current_span["end"] = next_token_label.end
-            else:
-                span_labels.append(SpanLabel(**current_span))
-                current_span = asdict(next_token_label)
+    for i in range(1, len(token_labels)):
+        current_token_label = token_labels[i]
+        if current_token_label.entity_type == prior_span["entity_type"]:
+            prior_span["end"] = current_token_label.end
+        else:
+            span_labels.append(SpanLabel(**prior_span))
+            prior_span = asdict(current_token_label)
+
+    span_labels.append(SpanLabel(**prior_span))
 
     return span_labels

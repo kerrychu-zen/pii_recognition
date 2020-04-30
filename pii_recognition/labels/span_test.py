@@ -18,17 +18,18 @@ def test_is_substring():
 
 
 def test_span_labels_to_token_labels():
+    # reference sentence: "This is Bob from Melbourne."
     span_labels = [
-        SpanLabel("Bob", "PER", 8, 11),
-        SpanLabel("Melbourne", "LOC", 17, 26),
+        SpanLabel("PER", 8, 11),
+        SpanLabel("LOC", 17, 26),
     ]
     tokens = [
-        Token("This", 0, 4),
-        Token("is", 5, 7),
-        Token("Bob", 8, 11),
-        Token("from", 12, 16),
-        Token("Melbourne", 17, 26),
-        Token(".", 26, 27),
+        Token(0, 4),
+        Token(5, 7),
+        Token(8, 11),
+        Token(12, 16),
+        Token(17, 26),
+        Token(26, 27),
     ]
     actual = span_labels_to_token_labels(span_labels, tokens)
     assert [x.entity_type for x in actual] == ["O", "O", "PER", "O", "LOC", "O"]
@@ -37,40 +38,48 @@ def test_span_labels_to_token_labels():
 
 
 def test_token_labels_to_span_labels():
-    token_labels = [TokenLabel("Luke", 0, 4, "PER")]
+    #
+    token_labels = [TokenLabel(0, 4, "PER")]
     actual = token_labels_to_span_labels(token_labels)
-    assert actual == [SpanLabel("Luke", "PER", 0, 4)]
+    assert actual == [SpanLabel("PER", 0, 4)]
 
-    tokens = [Token("Luke", 0, 4), Token("Skywalker", 5, 14)]
-    tags = ["PER", "PER"]
-    actual = token_labels_to_span_labels(tokens, tags)
+    # text: Luke
+    token_labels = [
+        TokenLabel(0, 4, "PER"),
+        TokenLabel(5, 14, "PER"),
+    ]
+    actual = token_labels_to_span_labels(token_labels)
     assert actual == [SpanLabel("PER", 0, 14)]
 
-    tokens = [Token("Luke", 0, 4), Token("Skywalker", 5, 14), Token(".", 14, 15)]
-    tags = ["PER", "PER", "O"]
-    actual = token_labels_to_span_labels(tokens, tags)
+    # text: Luke Skywalker
+    token_labels = [
+        TokenLabel(0, 4, "PER"),
+        TokenLabel(5, 14, "PER"),
+        TokenLabel(14, 15, "O"),
+    ]
+    actual = token_labels_to_span_labels(token_labels)
     assert actual == [SpanLabel("PER", 0, 14), SpanLabel("O", 14, 15)]
 
-    tokens = [Token("Luke-", 0, 5), Token("Skywalker", 5, 14)]
-    tags = ["PER", "PER"]
-    actual = token_labels_to_span_labels(tokens, tags)
+    # text: Luke-Skywalker
+    token_labels = [TokenLabel(0, 5, "PER"), TokenLabel(5, 14, "PER")]
+    actual = token_labels_to_span_labels(token_labels)
     assert actual == [SpanLabel("PER", 0, 14)]
 
-    tokens = [
-        Token("one", 0, 3),
-        Token("day", 4, 7),
-        Token(",", 7, 8),
-        Token("Luke", 9, 13),
-        Token("Skywalker", 14, 23),
-        Token("and", 24, 27),
-        Token("Wedge", 28, 33),
-        Token("Antilles", 34, 42),
-        Token("recover", 43, 50),
-        Token("a", 51, 52),
-        Token("message", 53, 60),
+    # text: one day, Luke Skywalker and Wedge Antilles recover a message
+    token_labels = [
+        TokenLabel(0, 3, "O"),
+        TokenLabel(4, 7, "O"),
+        TokenLabel(7, 8, "O"),
+        TokenLabel(9, 13, "PER"),
+        TokenLabel(14, 23, "PER"),
+        TokenLabel(24, 27, "O"),
+        TokenLabel(28, 33, "PER"),
+        TokenLabel(34, 42, "PER"),
+        TokenLabel(43, 50, "O"),
+        TokenLabel(51, 52, "O"),
+        TokenLabel(53, 60, "O"),
     ]
-    tags = ["O", "O", "O", "PER", "PER", "O", "PER", "PER", "O", "O", "O"]
-    actual = token_labels_to_span_labels(tokens, tags)
+    actual = token_labels_to_span_labels(token_labels)
     assert actual == [
         SpanLabel("O", 0, 8),
         SpanLabel("PER", 9, 23),
@@ -78,9 +87,3 @@ def test_token_labels_to_span_labels():
         SpanLabel("PER", 28, 42),
         SpanLabel("O", 43, 60),
     ]
-
-    tokens = [Token(".", 0, 1)]
-    tags = ["O", "O"]
-    with pytest.raises(AssertionError) as err:
-        token_labels_to_span_labels(tokens, tags)
-    assert str(err.value) == "Length mismatch, where len(tokens)=1 and len(tags)=2"

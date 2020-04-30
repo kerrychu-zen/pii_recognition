@@ -8,7 +8,6 @@ from pii_recognition.tokenisation.token_schema import Token
 
 @dataclass
 class SpanLabel:
-    text: str
     entity_type: str
     start: int
     end: int
