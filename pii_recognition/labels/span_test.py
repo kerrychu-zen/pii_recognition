@@ -2,7 +2,7 @@ import pytest
 
 from pii_recognition.tokenisation.token_schema import Token
 
-from .schema import SpanLabel
+from .schema import SpanLabel, TokenLabel
 from .span import is_substring, span_labels_to_token_labels, token_labels_to_span_labels
 
 
@@ -18,7 +18,10 @@ def test_is_substring():
 
 
 def test_span_labels_to_token_labels():
-    span_labels = [SpanLabel("PER", 8, 11), SpanLabel("LOC", 17, 26)]
+    span_labels = [
+        SpanLabel("Bob", "PER", 8, 11),
+        SpanLabel("Melbourne", "LOC", 17, 26),
+    ]
     tokens = [
         Token("This", 0, 4),
         Token("is", 5, 7),
@@ -30,12 +33,13 @@ def test_span_labels_to_token_labels():
     actual = span_labels_to_token_labels(span_labels, tokens)
     assert [x.entity_type for x in actual] == ["O", "O", "PER", "O", "LOC", "O"]
 
+    # TODO: add test case where span across multiple tokens
+
 
 def test_token_labels_to_span_labels():
-    tokens = [Token("Luke", 0, 4)]
-    tags = ["PER"]
-    actual = token_labels_to_span_labels(tokens, tags)
-    assert actual == [SpanLabel("PER", 0, 4)]
+    token_labels = [TokenLabel("Luke", 0, 4, "PER")]
+    actual = token_labels_to_span_labels(token_labels)
+    assert actual == [SpanLabel("Luke", "PER", 0, 4)]
 
     tokens = [Token("Luke", 0, 4), Token("Skywalker", 5, 14)]
     tags = ["PER", "PER"]

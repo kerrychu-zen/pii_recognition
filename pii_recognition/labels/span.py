@@ -1,4 +1,5 @@
-from typing import List, Tuple
+from dataclasses import asdict
+from typing import List, Tuple, Dict
 
 from pii_recognition.tokenisation.token_schema import Token
 
@@ -10,7 +11,7 @@ def is_substring(
 ) -> bool:
     """
     Whether segment A is a substring of segment B, where segment is identified by
-    position of the start and end characters.
+    indices of the start and end characters.
     """
     if (
         segment_A_start_end[0] >= segment_B_start_end[0]
@@ -21,6 +22,7 @@ def is_substring(
         return False
 
 
+# TODO: outside label
 def span_labels_to_token_labels(
     span_labels: List[SpanLabel], tokens: List[Token]
 ) -> List[TokenLabel]:
@@ -50,26 +52,18 @@ def span_labels_to_token_labels(
 
 def token_labels_to_span_labels(token_labels: List[TokenLabel]) -> List[SpanLabel]:
     span_labels = []
-    segment_start = token_labels[0].start
-    segment_end = token_labels[0].end
+    num_tokens = len(token_labels)
+    current_span: Dict = asdict(token_labels[0])
 
-    if len(token_labels) == 1:
-        return [SpanLabel(token_labels[0].entity_type, segment_start, segment_end)]
+    if num_tokens == 1:
+        return [SpanLabel(**current_span)]
+    else:
+        for i in range(num_tokens, num_tokens - 1):
+            next_token_label = token_labels[i + 1]
+            if next_token_label.entity_type == current_span["entity_type"]:
+                current_span["end"] = next_token_label.end
+            else:
+                span_labels.append(SpanLabel(**current_span))
+                current_span = asdict(next_token_label)
 
-    # process all except the last one
-    for i in range(1, len(token_labels)):
-        if token_labels[i].entity_type == token_labels[i - 1].entity_type:
-            segment_end = token_labels[i].end
-        else:
-            span_labels.append(
-                SpanLabel(token_labels[i - 1].entity_type, segment_start, segment_end)
-            )
-            segment_start = token_labels[i].start
-            segment_end = token_labels[i].end
-
-    # write out the last one
-    segment_end = token_labels[-1].end
-    span_labels.append(
-        SpanLabel(token_labels[-1].entity_type, segment_start, segment_end)
-    )
     return span_labels
