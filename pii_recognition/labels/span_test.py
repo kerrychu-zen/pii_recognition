@@ -28,7 +28,7 @@ def test_span_labels_to_token_labels():
         Token(".", 26, 27),
     ]
     actual = span_labels_to_token_labels(span_labels, tokens)
-    assert actual == ["O", "O", "PER", "O", "LOC", "O"]
+    assert [x.entity_type for x in actual] == ["O", "O", "PER", "O", "LOC", "O"]
 
 
 def test_token_labels_to_span_labels():

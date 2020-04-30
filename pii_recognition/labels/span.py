@@ -2,7 +2,7 @@ from typing import List, Tuple
 
 from pii_recognition.tokenisation.token_schema import Token
 
-from .schema import SpanLabel
+from .schema import SpanLabel, TokenLabel
 
 
 def is_substring(
@@ -23,7 +23,7 @@ def is_substring(
 
 def span_labels_to_token_labels(
     span_labels: List[SpanLabel], tokens: List[Token]
-) -> List[str]:
+) -> List[TokenLabel]:
     """
     A conversion that breaks entity labeled by spans to tokens.
 
@@ -34,7 +34,7 @@ def span_labels_to_token_labels(
     Returns:
         Token based entity labels, e.g., ["O", "O", "LOC", "O"].
     """
-    token_labels = ["O"] * len(tokens)
+    labels = ["O"] * len(tokens)  # default is O, no chunck label
 
     for i in range(len(tokens)):
         current_token = tokens[i]
@@ -42,9 +42,10 @@ def span_labels_to_token_labels(
             if is_substring(
                 (current_token.start, current_token.end), (label.start, label.end)
             ):
-                token_labels[i] = label.entity_type
+                labels[i] = label.entity_type
                 break
-    return token_labels
+
+    return [TokenLabel.from_instance(tokens[i], labels[i]) for i in range(len(tokens))]
 
 
 def token_labels_to_span_labels(
