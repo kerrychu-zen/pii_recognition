@@ -91,7 +91,7 @@ def test_token_labels_to_span_labels():
     ]
 
     # test failure
-    token_labels = [TokenLabel(4, 7, "O"), TokenLabel(0, 3, "O"), TokenLabel(7, 8, "O")]
+    token_labels = [TokenLabel("O", 4, 7), TokenLabel("O", 0, 3), TokenLabel("O", 7, 8)]
     with pytest.raises(AssertionError) as err:
         token_labels_to_span_labels(token_labels)
     assert str(err.value) == "token_labels are not in ascending order"
