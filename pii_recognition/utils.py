@@ -25,6 +25,5 @@ class cached_property(property):  # class name follows the convention of propert
             return value
 
 
-# TODO: add test
 def is_ascending(sequence: Sequence) -> bool:
     return all(sequence[i] < sequence[i + 1] for i in range(len(sequence) - 1))
