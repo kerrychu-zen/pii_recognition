@@ -60,6 +60,7 @@ def span_labels_to_token_labels(
 
 
 def token_labels_to_span_labels(token_labels: List[TokenLabel]) -> List[SpanLabel]:
+    # order matters
     assert is_ascending(
         [label.start for label in token_labels]
     ), "token_labels are not in ascending order"
