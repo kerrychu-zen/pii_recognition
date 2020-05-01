@@ -24,13 +24,13 @@ def test_span_labels_to_token_labels():
         SpanLabel("LOC", 23, 32),
     ]
     tokens = [
-        Token(0, 4),
-        Token(5, 7),
-        Token(8, 11),
-        Token(12, 17),
-        Token(18, 22),
-        Token(23, 32),
-        Token(32, 33),
+        Token("This", 0, 4),
+        Token("is", 5, 7),
+        Token("Bob", 8, 11),
+        Token("Smith", 12, 17),
+        Token("from", 18, 22),
+        Token("Melbourne", 23, 32),
+        Token(".", 32, 33),
     ]
     actual = span_labels_to_token_labels(span_labels, tokens)
     assert [x.entity_type for x in actual] == ["O", "O", "PER", "PER", "O", "LOC", "O"]
@@ -41,45 +41,45 @@ def test_span_labels_to_token_labels():
 
 def test_token_labels_to_span_labels():
     #
-    token_labels = [TokenLabel(0, 4, "PER")]
+    token_labels = [TokenLabel("PER", 0, 4)]
     actual = token_labels_to_span_labels(token_labels)
     assert actual == [SpanLabel("PER", 0, 4)]
 
     # text: Luke
     token_labels = [
-        TokenLabel(0, 4, "PER"),
-        TokenLabel(5, 14, "PER"),
+        TokenLabel("PER", 0, 4),
+        TokenLabel("PER", 5, 14),
     ]
     actual = token_labels_to_span_labels(token_labels)
     assert actual == [SpanLabel("PER", 0, 14)]
 
     # text: Luke Skywalker
     token_labels = [
-        TokenLabel(0, 4, "PER"),
-        TokenLabel(5, 14, "PER"),
-        TokenLabel(14, 15, "O"),
+        TokenLabel("PER", 0, 4),
+        TokenLabel("PER", 5, 14),
+        TokenLabel("O", 14, 15),
     ]
     actual = token_labels_to_span_labels(token_labels)
     assert actual == [SpanLabel("PER", 0, 14), SpanLabel("O", 14, 15)]
 
     # text: Luke-Skywalker
-    token_labels = [TokenLabel(0, 5, "PER"), TokenLabel(5, 14, "PER")]
+    token_labels = [TokenLabel("PER", 0, 5), TokenLabel("PER", 5, 14)]
     actual = token_labels_to_span_labels(token_labels)
     assert actual == [SpanLabel("PER", 0, 14)]
 
     # text: one day, Luke Skywalker and Wedge Antilles recover a message
     token_labels = [
-        TokenLabel(0, 3, "O"),
-        TokenLabel(4, 7, "O"),
-        TokenLabel(7, 8, "O"),
-        TokenLabel(9, 13, "PER"),
-        TokenLabel(14, 23, "PER"),
-        TokenLabel(24, 27, "O"),
-        TokenLabel(28, 33, "PER"),
-        TokenLabel(34, 42, "PER"),
-        TokenLabel(43, 50, "O"),
-        TokenLabel(51, 52, "O"),
-        TokenLabel(53, 60, "O"),
+        TokenLabel("O", 0, 3),
+        TokenLabel("O", 4, 7),
+        TokenLabel("O", 7, 8),
+        TokenLabel("PER", 9, 13),
+        TokenLabel("PER", 14, 23),
+        TokenLabel("O", 24, 27),
+        TokenLabel("PER", 28, 33),
+        TokenLabel("PER", 34, 42),
+        TokenLabel("O", 43, 50),
+        TokenLabel("O", 51, 52),
+        TokenLabel("O", 53, 60),
     ]
     actual = token_labels_to_span_labels(token_labels)
     assert actual == [

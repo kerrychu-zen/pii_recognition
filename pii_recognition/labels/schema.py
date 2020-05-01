@@ -14,12 +14,10 @@ class SpanLabel:
 
 
 @dataclass
-class TokenLabel(Token):
+class TokenLabel:
     entity_type: str
-
-    @classmethod
-    def from_instance(cls, instance: Token, entity_type: str) -> TokenLabel:
-        return cls(entity_type=entity_type, **asdict(instance))
+    start: int
+    end: int
 
 
 class EvalLabel(NamedTuple):

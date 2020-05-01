@@ -49,11 +49,12 @@ def span_labels_to_token_labels(
 
     if keep_o_label:
         return [
-            TokenLabel.from_instance(tokens[i], labels[i]) for i in range(len(tokens))
+            TokenLabel(entity_type=labels[i], start=tokens[i].start, end=tokens[i].end)
+            for i in range(len(tokens))
         ]
     else:
         return [
-            TokenLabel.from_instance(tokens[i], labels[i])
+            TokenLabel(entity_type=labels[i], start=tokens[i].start, end=tokens[i].end)
             for i in range(len(tokens))
             if labels[i] != "O"
         ]
