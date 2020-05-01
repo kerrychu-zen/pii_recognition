@@ -18,23 +18,25 @@ def test_is_substring():
 
 
 def test_span_labels_to_token_labels():
-    # reference sentence: "This is Bob from Melbourne."
+    # reference sentence: "This is Bob Smith from Melbourne."
     span_labels = [
-        SpanLabel("PER", 8, 11),
-        SpanLabel("LOC", 17, 26),
+        SpanLabel("PER", 8, 17),
+        SpanLabel("LOC", 23, 32),
     ]
     tokens = [
         Token(0, 4),
         Token(5, 7),
         Token(8, 11),
-        Token(12, 16),
-        Token(17, 26),
-        Token(26, 27),
+        Token(12, 17),
+        Token(18, 22),
+        Token(23, 32),
+        Token(32, 33),
     ]
     actual = span_labels_to_token_labels(span_labels, tokens)
-    assert [x.entity_type for x in actual] == ["O", "O", "PER", "O", "LOC", "O"]
+    assert [x.entity_type for x in actual] == ["O", "O", "PER", "PER", "O", "LOC", "O"]
 
-    # TODO: add test case where span across multiple tokens
+    actual = span_labels_to_token_labels(span_labels, tokens, keep_o_label=False)
+    assert [x.entity_type for x in actual] == ["PER", "PER", "LOC"]
 
 
 def test_token_labels_to_span_labels():
