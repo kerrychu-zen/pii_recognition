@@ -4,7 +4,7 @@ from typing import Dict, List, Optional, Tuple
 import numpy as np
 
 from pii_recognition.labels.mapping import map_labels, mask_labels
-from pii_recognition.labels.schema import EvalLabel
+from pii_recognition.labels.schema import EvalLabel, TokenLabel
 from pii_recognition.labels.span import span_labels_to_token_labels
 from pii_recognition.recognisers.entity_recogniser import EntityRecogniser
 from pii_recognition.tokenisation import tokeniser_registry
@@ -41,7 +41,7 @@ class ModelEvaluator:
         )
         self._convert_labels = convert_labels
 
-    def get_token_based_prediction(self, text: str) -> List[str]:
+    def get_token_based_prediction(self, text: str) -> List[TokenLabel]:
         recognised_entities = self.recogniser.analyse(text, self.target_entities)
 
         tokens = self._tokeniser.tokenise(text)
