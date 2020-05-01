@@ -41,6 +41,14 @@ class ModelEvaluator:
         )
         self._convert_labels = convert_labels
 
+    def _validate_predictions(self, predicted: List[str]):
+        asked_entities = set(self.target_entities) | {"O"}
+        predicted_entities = set(predicted)
+        assert predicted_entities.issubset(asked_entities), (
+            f"Predictions contain unasked entities "
+            f"{sorted(list(predicted_entities - asked_entities))}"
+        )
+
     def get_token_based_prediction(self, text: str) -> List[TokenLabel]:
         recognised_entities = self.recogniser.analyse(text, self.target_entities)
 
@@ -48,12 +56,7 @@ class ModelEvaluator:
         token_labels = span_labels_to_token_labels(recognised_entities, tokens)
 
         # validate predictions
-        asked_entities = set(self.target_entities) | {"O"}
-        predicted_entities = set(token_labels)
-        assert predicted_entities.issubset(asked_entities), (
-            f"Predictions contain unasked entities "
-            f"{sorted(list(predicted_entities - asked_entities))}"
-        )
+        self._validate_predictions([label.entity_type for label in token_labels])
 
         return token_labels
 
