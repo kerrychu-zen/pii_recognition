@@ -105,7 +105,8 @@ class ModelEvaluator:
         new_annotations = mask_labels(annotations, translated_target_entities)
 
         # make prediction
-        predictions = self.get_token_based_prediction(text)
+        token_label_predictions = self.get_token_based_prediction(text)
+        predictions: List[str] = [pred.entity_type for pred in token_label_predictions]
         if self._convert_labels:
             new_predictions = map_labels(predictions, self._convert_labels)
         else:
