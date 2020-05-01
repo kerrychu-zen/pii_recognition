@@ -1,7 +1,8 @@
 from dataclasses import asdict
-from typing import List, Tuple, Dict
+from typing import Dict, List, Tuple
 
 from pii_recognition.tokenisation.token_schema import Token
+from pii_recognition.utils import is_ascending
 
 from .schema import SpanLabel, TokenLabel
 
@@ -23,7 +24,7 @@ def is_substring(
 
 
 def span_labels_to_token_labels(
-    span_labels: List[SpanLabel], tokens: List[Token]
+    span_labels: List[SpanLabel], tokens: List[Token], keep_o_label: bool = True
 ) -> List[TokenLabel]:
     """
     A conversion that breaks entity labeled by spans to tokens.
@@ -35,8 +36,6 @@ def span_labels_to_token_labels(
     Returns:
         Token based entity labels, e.g., ["O", "O", "LOC", "O"].
     """
-    # TODO: add param to control whether to include outside label
-    # TODO: span_labels and tokens should be ascending order
     labels = ["O"] * len(tokens)  # default is O, no chunck label
 
     for i in range(len(tokens)):
@@ -48,11 +47,23 @@ def span_labels_to_token_labels(
                 labels[i] = label.entity_type
                 break
 
-    return [TokenLabel.from_instance(tokens[i], labels[i]) for i in range(len(tokens))]
+    if keep_o_label:
+        return [
+            TokenLabel.from_instance(tokens[i], labels[i]) for i in range(len(tokens))
+        ]
+    else:
+        return [
+            TokenLabel.from_instance(tokens[i], labels[i])
+            for i in range(len(tokens))
+            if labels[i] != "O"
+        ]
 
 
 def token_labels_to_span_labels(token_labels: List[TokenLabel]) -> List[SpanLabel]:
-    # TODO: token_labels should be ascending order
+    assert is_ascending(
+        [label.start for label in token_labels]
+    ), "token_labels are not in ascending order"
+
     span_labels = []
     prior_span: Dict = asdict(token_labels[0])
 
