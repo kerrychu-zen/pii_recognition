@@ -29,6 +29,15 @@ def mock_recogniser():
 
 
 @fixture
+def mock_bad_recogniser():
+    recogniser = Mock()
+    recogniser.analyse.return_value = [
+        SpanLabel("PER", 8, 11),
+    ]
+    return recogniser
+
+
+@fixture
 def mock_tokeniser():
     # reference: text = "This is Bob from Melbourne."
     tokeniser = Mock()
@@ -222,6 +231,23 @@ def test_evaluate_sample_with_label_conversion(text, mock_recogniser, mock_token
         }
     )
     assert mistakes == SampleError(token_errors=[], full_text=text, failed=False)
+
+
+def test_evaluate_sample_with_mistakes(text, mock_bad_recogniser, mock_tokeniser):
+    evaluator = ModelEvaluator(
+        recogniser=mock_bad_recogniser,
+        tokeniser=mock_tokeniser,
+        target_entities=["PER", "LOC"],
+        convert_labels={"PER": "I-PER", "LOC": "I-LOC"},
+    )
+    counter, mistakes = evaluator.evaluate_sample(
+        text, annotations=["O", "I-MISC", "I-PER", "O", "I-LOC", "I-MISC"]
+    )
+    assert mistakes == SampleError(
+        token_errors=[TokenError(annotation="I-LOC", prediction="O", text="Melbourne")],
+        full_text="This is Bob from Melbourne.",
+        failed=False,
+    )
 
 
 def test_evaulate_all(text, mock_recogniser, mock_tokeniser):
