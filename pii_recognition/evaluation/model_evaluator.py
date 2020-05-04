@@ -31,7 +31,7 @@ class ModelEvaluator:
         self,
         recogniser: EntityRecogniser,
         tokeniser: Tokeniser,
-        target_entities: List[str],
+        target_entities: List[str],  # TODO: rename
         convert_labels: Optional[Dict[str, str]] = None,
     ):
         self.recogniser = recogniser

@@ -204,7 +204,7 @@ def test_evaluate_sample_no_label_conversion(text, mock_recogniser, mock_tokenis
     assert str(err.value) == f"Predictions contain unasked entities ['LOC']"
 
 
-def test_evaluate_sample_with_label_conversion(mock_recogniser, mock_tokeniser):
+def test_evaluate_sample_with_label_conversion(text, mock_recogniser, mock_tokeniser):
     evaluator = ModelEvaluator(
         recogniser=mock_recogniser,
         tokeniser=mock_tokeniser,
@@ -224,90 +224,85 @@ def test_evaluate_sample_with_label_conversion(mock_recogniser, mock_tokeniser):
     assert mistakes == SampleError(token_errors=[], full_text=text, failed=False)
 
 
-# def test_evaulate_all(mock_tokeniser, text, mock_recogniser, tokeniser_config):
-#     evaluator = ModelEvaluator(
-#         recogniser=mock_recogniser,
-#         target_entities=["PER", "LOC"],
-#         tokeniser=tokeniser_config,
-#     )
-#     counters, mistakes = evaluator.evaulate_all(
-#         texts=[text] * 2, annotations=[["O", "O", "PER", "O", "LOC", "O"]] * 2
-#     )
+def test_evaulate_all(text, mock_recogniser, mock_tokeniser):
+    evaluator = ModelEvaluator(
+        recogniser=mock_recogniser,
+        tokeniser=mock_tokeniser,
+        target_entities=["PER", "LOC"],
+    )
+    counters, mistakes = evaluator.evaulate_all(
+        texts=[text] * 2, annotations=[["O", "O", "PER", "O", "LOC", "O"]] * 2
+    )
 
-#     assert (
-#         counters
-#         == [
-#             Counter(
-#                 {
-#                     EvalLabel("O", "O"): 4,
-#                     EvalLabel("LOC", "LOC"): 1,
-#                     EvalLabel("PER", "PER"): 1,
-#                 }
-#             )
-#         ]
-#         * 2
-#     )
-#     assert mistakes == [SampleError(token_errors=[], full_text=text, failed=False)] * 2
+    assert (
+        counters
+        == [
+            Counter(
+                {
+                    EvalLabel("O", "O"): 4,
+                    EvalLabel("LOC", "LOC"): 1,
+                    EvalLabel("PER", "PER"): 1,
+                }
+            )
+        ]
+        * 2
+    )
+    assert mistakes == [SampleError(token_errors=[], full_text=text, failed=False)] * 2
 
 
-# @patch.object(
-#     target=tokeniser_registry,
-#     attribute="create_instance",
-#     new_callable=get_mock_tokeniser,
-# )
-# def test_calculate_score(mock_tokeniser, tokeniser_config):
-#     evaluator = ModelEvaluator(
-#         recogniser=Mock(), target_entities=["PER", "LOC"], tokeniser=tokeniser_config
-#     )
+def test_calculate_score(mock_tokeniser):
+    evaluator = ModelEvaluator(
+        recogniser=Mock(), tokeniser=mock_tokeniser, target_entities=["PER", "LOC"],
+    )
 
-#     # test 1: LOC 0.=presion=recall
-#     counters = [
-#         Counter(
-#             {
-#                 EvalLabel("O", "O"): 3,
-#                 EvalLabel("O", "LOC"): 1,
-#                 EvalLabel("LOC", "O"): 1,
-#                 EvalLabel("PER", "PER"): 1,
-#             }
-#         )
-#     ]
-#     recall, precision, f1 = evaluator.calculate_score(counters)
-#     assert recall == {"PER": 1.0, "LOC": 0.0}
-#     assert precision == {"PER": 1.0, "LOC": 0.0}
-#     assert f1 == {"PER": 1.0, "LOC": np.nan}
+    # test 1: LOC 0.=presion=recall
+    counters = [
+        Counter(
+            {
+                EvalLabel("O", "O"): 3,
+                EvalLabel("O", "LOC"): 1,
+                EvalLabel("LOC", "O"): 1,
+                EvalLabel("PER", "PER"): 1,
+            }
+        )
+    ]
+    recall, precision, f1 = evaluator.calculate_score(counters)
+    assert recall == {"PER": 1.0, "LOC": 0.0}
+    assert precision == {"PER": 1.0, "LOC": 0.0}
+    assert f1 == {"PER": 1.0, "LOC": np.nan}
 
-#     # test 2: multiple texts
-#     counters = [
-#         Counter(
-#             {
-#                 EvalLabel("O", "O"): 4,
-#                 EvalLabel("LOC", "LOC"): 1,
-#                 EvalLabel("PER", "PER"): 1,
-#             }
-#         )
-#     ] * 2
-#     recall, precision, f1 = evaluator.calculate_score(counters)
-#     assert recall == {"PER": 1.0, "LOC": 1.0}
-#     assert precision == {"PER": 1.0, "LOC": 1.0}
-#     assert f1 == {"PER": 1.0, "LOC": 1.0}
+    # test 2: multiple texts
+    counters = [
+        Counter(
+            {
+                EvalLabel("O", "O"): 4,
+                EvalLabel("LOC", "LOC"): 1,
+                EvalLabel("PER", "PER"): 1,
+            }
+        )
+    ] * 2
+    recall, precision, f1 = evaluator.calculate_score(counters)
+    assert recall == {"PER": 1.0, "LOC": 1.0}
+    assert precision == {"PER": 1.0, "LOC": 1.0}
+    assert f1 == {"PER": 1.0, "LOC": 1.0}
 
-#     # test 3: with entity mapping
-#     evaluator = ModelEvaluator(
-#         recogniser=Mock(),
-#         target_entities=["PER", "LOC"],
-#         tokeniser=tokeniser_config,
-#         convert_labels={"LOC": "LOCATION", "PER": "PERSON"},
-#     )
-#     counters = [
-#         Counter(
-#             {
-#                 EvalLabel("O", "O"): 4,
-#                 EvalLabel("LOCATION", "LOCATION"): 1,
-#                 EvalLabel("PERSON", "PERSON"): 1,
-#             }
-#         )
-#     ] * 2
-#     recall, precision, f1 = evaluator.calculate_score(counters)
-#     assert recall == {"PERSON": 1.0, "LOCATION": 1.0}
-#     assert precision == {"PERSON": 1.0, "LOCATION": 1.0}
-#     assert f1 == {"PERSON": 1.0, "LOCATION": 1.0}
+    # test 3: with entity mapping
+    evaluator = ModelEvaluator(
+        recogniser=Mock(),
+        tokeniser=mock_tokeniser,
+        target_entities=["PER", "LOC"],
+        convert_labels={"LOC": "LOCATION", "PER": "PERSON"},
+    )
+    counters = [
+        Counter(
+            {
+                EvalLabel("O", "O"): 4,
+                EvalLabel("LOCATION", "LOCATION"): 1,
+                EvalLabel("PERSON", "PERSON"): 1,
+            }
+        )
+    ] * 2
+    recall, precision, f1 = evaluator.calculate_score(counters)
+    assert recall == {"PERSON": 1.0, "LOCATION": 1.0}
+    assert precision == {"PERSON": 1.0, "LOCATION": 1.0}
+    assert f1 == {"PERSON": 1.0, "LOCATION": 1.0}
