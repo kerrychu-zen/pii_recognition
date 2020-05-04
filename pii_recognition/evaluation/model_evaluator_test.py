@@ -63,15 +63,15 @@ def test_class_init():
     evaluator = ModelEvaluator(
         recogniser=mock_recogniser,
         tokeniser=mock_tokeniser,
-        target_entities=["PER", "LOC"],
+        target_recogniser_entities=["PER", "LOC"],
         convert_labels={"PER": "PERSON", "LOC": "LOCATION"},
     )
 
     assert evaluator.recogniser == mock_recogniser
     assert evaluator.tokeniser == mock_tokeniser
-    assert evaluator.target_entities == ["PER", "LOC"]
+    assert evaluator.target_recogniser_entities == ["PER", "LOC"]
     assert evaluator._convert_labels == {"PER": "PERSON", "LOC": "LOCATION"}
-    assert evaluator._translated_target_entities == ["PERSON", "LOCATION"]
+    assert evaluator._translated_entities == ["PERSON", "LOCATION"]
 
 
 def test_get_token_based_prediction(mock_recogniser, mock_tokeniser, text):
@@ -79,14 +79,14 @@ def test_get_token_based_prediction(mock_recogniser, mock_tokeniser, text):
     evaluator = ModelEvaluator(
         recogniser=mock_recogniser,
         tokeniser=mock_tokeniser,
-        target_entities=["PER", "LOC"],
+        target_recogniser_entities=["PER", "LOC"],
     )
     actual = evaluator.get_token_based_prediction(text)
     assert [x.entity_type for x in actual] == ["O", "O", "PER", "O", "LOC", "O"]
 
     # test 2: raise assertion error
     evaluator = ModelEvaluator(
-        recogniser=mock_recogniser, tokeniser=mock_tokeniser, target_entities=["PER"],
+        recogniser=mock_recogniser, tokeniser=mock_tokeniser, target_recogniser_entities=["PER"],
     )
     with pytest.raises(AssertionError) as err:
         evaluator.get_token_based_prediction(text)
@@ -94,9 +94,9 @@ def test_get_token_based_prediction(mock_recogniser, mock_tokeniser, text):
 
 
 def test__compare_predicted_and_truth(text):
-    # target_entities does not matter for this test
+    # target_recogniser_entities does not matter for this test
     evaluator = ModelEvaluator(
-        recogniser=Mock(), tokeniser=Mock(), target_entities=["ANY"]
+        recogniser=Mock(), tokeniser=Mock(), target_recogniser_entities=["ANY"]
     )
 
     # test 1: predicted == truths
@@ -149,7 +149,7 @@ def test__compare_predicted_and_truth(text):
     evaluator = ModelEvaluator(
         recogniser=Mock(),
         tokeniser=Mock(),
-        target_entities=["ANY"],
+        target_recogniser_entities=["ANY"],
         convert_labels={"LOC": "LOCATION", "PER": "PERSON"},
     )
     counter, mistakes = evaluator._compare_predicted_and_truth(
@@ -172,7 +172,7 @@ def test_evaluate_sample_no_label_conversion(text, mock_recogniser, mock_tokenis
     evaluator = ModelEvaluator(
         recogniser=mock_recogniser,
         tokeniser=mock_tokeniser,
-        target_entities=["PER", "LOC"],
+        target_recogniser_entities=["PER", "LOC"],
     )
 
     # test 1: simple straightforward and pass
@@ -184,7 +184,7 @@ def test_evaluate_sample_no_label_conversion(text, mock_recogniser, mock_tokenis
     )
     assert mistakes == SampleError(token_errors=[], full_text=text, failed=False)
 
-    # test 2: annotated labels not in target_entities
+    # test 2: annotated labels not in target_recogniser_entities
     counter, mistakes = evaluator.evaluate_sample(
         text, annotations=["O", "MISC", "PER", "O", "LOC", "MISC"]
     )
@@ -204,7 +204,7 @@ def test_evaluate_sample_no_label_conversion(text, mock_recogniser, mock_tokenis
 
     # test 4: recogniser predicted on ["PER", "LOC"] but only asking for ["PER"]
     evaluator = ModelEvaluator(
-        recogniser=mock_recogniser, tokeniser=mock_tokeniser, target_entities=["PER"],
+        recogniser=mock_recogniser, tokeniser=mock_tokeniser, target_recogniser_entities=["PER"],
     )
     with pytest.raises(AssertionError) as err:
         counter, mistakes = evaluator.evaluate_sample(
@@ -217,7 +217,7 @@ def test_evaluate_sample_with_label_conversion(text, mock_recogniser, mock_token
     evaluator = ModelEvaluator(
         recogniser=mock_recogniser,
         tokeniser=mock_tokeniser,
-        target_entities=["PER", "LOC"],
+        target_recogniser_entities=["PER", "LOC"],
         convert_labels={"PER": "I-PER", "LOC": "I-LOC"},
     )
     counter, mistakes = evaluator.evaluate_sample(
@@ -237,7 +237,7 @@ def test_evaluate_sample_with_mistakes(text, mock_bad_recogniser, mock_tokeniser
     evaluator = ModelEvaluator(
         recogniser=mock_bad_recogniser,
         tokeniser=mock_tokeniser,
-        target_entities=["PER", "LOC"],
+        target_recogniser_entities=["PER", "LOC"],
         convert_labels={"PER": "I-PER", "LOC": "I-LOC"},
     )
     counter, mistakes = evaluator.evaluate_sample(
@@ -254,7 +254,7 @@ def test_evaulate_all(text, mock_recogniser, mock_tokeniser):
     evaluator = ModelEvaluator(
         recogniser=mock_recogniser,
         tokeniser=mock_tokeniser,
-        target_entities=["PER", "LOC"],
+        target_recogniser_entities=["PER", "LOC"],
     )
     counters, mistakes = evaluator.evaulate_all(
         texts=[text] * 2, annotations=[["O", "O", "PER", "O", "LOC", "O"]] * 2
@@ -278,7 +278,7 @@ def test_evaulate_all(text, mock_recogniser, mock_tokeniser):
 
 def test_calculate_score(mock_tokeniser):
     evaluator = ModelEvaluator(
-        recogniser=Mock(), tokeniser=mock_tokeniser, target_entities=["PER", "LOC"],
+        recogniser=Mock(), tokeniser=mock_tokeniser, target_recogniser_entities=["PER", "LOC"],
     )
 
     # test 1: LOC 0.=presion=recall
@@ -316,7 +316,7 @@ def test_calculate_score(mock_tokeniser):
     evaluator = ModelEvaluator(
         recogniser=Mock(),
         tokeniser=mock_tokeniser,
-        target_entities=["PER", "LOC"],
+        target_recogniser_entities=["PER", "LOC"],
         convert_labels={"LOC": "LOCATION", "PER": "PERSON"},
     )
     counters = [
