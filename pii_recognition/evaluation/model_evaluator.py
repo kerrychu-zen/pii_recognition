@@ -22,9 +22,9 @@ class ModelEvaluator:
         recogniser: an instanace of EntityRecogniser, a named entity recogniser.
         tokeniser: an instance of Tokeniser.
         target_entities: entities to be evaluated.
-        convert_labels: a dict facilitate entity conversion between predicted and
-            evaluated labels. Predicted entity labels could differ from evaluated
-            entity labels, e.g., PERSON and PER.
+        convert_labels: a dict {predicted: annotated} facilitate entity conversion
+            between predicted and evaluated labels. Predicted entity labels could
+            differ from evaluated entity labels, e.g., PERSON and PER.
     """
 
     def __init__(
@@ -58,20 +58,23 @@ class ModelEvaluator:
         )
 
     def get_span_based_prediction(self, text: str) -> List[SpanLabel]:
-        return self.recogniser.analyse(text, self.target_entities)
+        predicted_spans = self.recogniser.analyse(text, self.target_entities)
+        self._validate_predictions([label.entity_type for label in predicted_spans])
+        return predicted_spans
 
     def get_token_based_prediction(self, text: str) -> List[TokenLabel]:
         recognised_entities = self.get_span_based_prediction(text)
         tokens = self.tokeniser.tokenise(text)
         token_labels = span_labels_to_token_labels(recognised_entities, tokens)
 
-        # validate predictions
-        self._validate_predictions([label.entity_type for label in token_labels])
-
         return token_labels
 
     def _compare_predicted_and_truth(
-        self, text: str, annotations: List[str], predictions: List[str]
+        self,
+        text: str,
+        tokens: List[str],
+        annotations: List[str],
+        predictions: List[str],
     ) -> Tuple[Counter, SampleError]:
         """
         Given a user text, this function compares the predicted labels (predictions)
@@ -90,7 +93,6 @@ class ModelEvaluator:
             )
 
         sample_error = SampleError(token_errors=[], full_text=text, failed=False)
-        tokens = self.tokeniser.tokenise(text)
 
         for i in range(len(annotations)):
             label_pair_counter[EvalLabel(annotations[i], predictions[i])] += 1
@@ -100,7 +102,7 @@ class ModelEvaluator:
                     TokenError(
                         annotation=annotations[i],
                         prediction=predictions[i],
-                        text=tokens[i].text,
+                        text=tokens[i],
                     )
                 )
 
@@ -112,9 +114,8 @@ class ModelEvaluator:
         masked_annotations = mask_labels(annotations, self._translated_target_entities)
 
         # make prediction
-        predictions: List[str] = [
-            pred.entity_type for pred in self.get_token_based_prediction(text)
-        ]
+        token_based_predictions = self.get_token_based_prediction(text)
+        predictions = [pred.entity_type for pred in token_based_predictions]
         translated_predictions = (
             map_labels(predictions, self._convert_labels)
             if self._convert_labels
@@ -122,8 +123,9 @@ class ModelEvaluator:
         )
 
         # log results
+        tokens = [text[pred.start : pred.end] for pred in token_based_predictions]
         label_pair_counter, sample_error = self._compare_predicted_and_truth(
-            text, masked_annotations, translated_predictions
+            text, tokens, masked_annotations, translated_predictions
         )
         return label_pair_counter, sample_error
 
