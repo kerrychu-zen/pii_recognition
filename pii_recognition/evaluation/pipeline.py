@@ -1,4 +1,4 @@
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Tuple
 
 from pakkr import returns
 
@@ -10,11 +10,9 @@ from pii_recognition.tokenisation import tokeniser_registry
 
 # recogniser has been injected to meta
 @returns(recogniser=EntityRecogniser)
-def get_recogniser(
-    recogniser_name: str, recogniser_config: Optional[Dict] = None
-) -> Dict[str, EntityRecogniser]:
+def get_recogniser(recogniser_setup: Dict) -> Dict[str, EntityRecogniser]:
     recogniser_instance = recogniser_registry.create_instance(
-        recogniser_name, recogniser_config
+        recogniser_setup["name"], recogniser_setup.get("config")
     )
     return {"recogniser": recogniser_instance}
 

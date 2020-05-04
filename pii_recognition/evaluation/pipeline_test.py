@@ -26,12 +26,12 @@ def mock_registry():
 
 @patch("pii_recognition.evaluation.pipeline.recogniser_registry", new=mock_registry())
 def test_get_recogniser():
-    actual = get_recogniser("RegistryNoConfig")["recogniser"]  # it's in meta
+    tokeniser_setup = {"name": "RegistryNoConfig"}
+    actual = get_recogniser(tokeniser_setup)["recogniser"]  # it's in meta
     assert isinstance(actual, RegistryNoConfig)
 
-    actual = get_recogniser("RegistryWithConfig", {"param_a": "value_a"})[
-        "recogniser"
-    ]  # it's in meta
+    tokeniser_setup = {"name": "RegistryWithConfig", "config": {"param_a": "value_a"}}
+    actual = get_recogniser(tokeniser_setup)["recogniser"]  # it's in meta
     assert isinstance(actual, RegistryWithConfig)
     assert actual.param_a == "value_a"
 
