@@ -8,6 +8,7 @@ from pii_recognition.labels.schema import EvalLabel, TokenLabel
 from pii_recognition.labels.span import span_labels_to_token_labels
 from pii_recognition.recognisers.entity_recogniser import EntityRecogniser
 from pii_recognition.tokenisation import tokeniser_registry
+from pii_recognition.tokenisation.tokenisers import Tokeniser
 
 from .metrics import compute_f_beta
 from .prediction_error import SampleError, TokenError
@@ -18,30 +19,31 @@ class ModelEvaluator:
     Evaluates a named entity recogniser.
 
     Attributes:
-        recogniser: a named entity recogniser.
+        recogniser: an instanace of EntityRecogniser, a named entity recogniser.
+        tokeniser: an instance of Tokeniser.
         target_entities: entities to be evaluated.
-        tokeniser: a callable to break a string into tokens. Need tokeniser to convert
-            span labeled predictions to token labeled predictions, as the latter one is
-            used for evaluation.
-        convert_labels: a dict facilitate entity conversion. Predicted entity labels
-            may differ from evaluation entity labels, e.g., PERSON and PER.
+        convert_labels: a dict facilitate entity conversion between predicted and
+            evaluated labels. Predicted entity labels could differ from evaluated
+            entity labels, e.g., PERSON and PER.
     """
 
     def __init__(
         self,
         recogniser: EntityRecogniser,
+        tokeniser: Tokeniser,
         target_entities: List[str],
-        tokeniser: Dict,
         convert_labels: Optional[Dict[str, str]] = None,
     ):
         self.recogniser = recogniser
+        self._tokeniser = tokeniser
         self.target_entities = target_entities
-        self._tokeniser = tokeniser_registry.create_instance(
-            tokeniser["name"], tokeniser["config"]
-        )
         self._convert_labels = convert_labels
 
     def _validate_predictions(self, predicted: List[str]):
+        """
+        Validate predicted entity labels. Predictions should not contain any unasked
+        entities.
+        """
         asked_entities = set(self.target_entities) | {"O"}
         predicted_entities = set(predicted)
         assert predicted_entities.issubset(asked_entities), (
