@@ -1,8 +1,9 @@
+from typing import Any
 from unittest.mock import patch
 
-from .pipeline import get_recogniser, get_tokeniser
 from pii_recognition.registration.registry import Registry
-from typing import Any
+
+from .pipeline import get_recogniser, get_tokeniser
 
 
 class RegistryNoConfig:
