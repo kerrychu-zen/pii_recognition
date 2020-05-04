@@ -4,6 +4,7 @@ from pakkr import returns
 
 from pii_recognition.evaluation.model_evaluator import ModelEvaluator
 from pii_recognition.recognisers import registry as recogniser_registry
+from pii_recognition.tokenisation.tokenisers import Tokeniser
 from pii_recognition.recognisers.entity_recogniser import EntityRecogniser
 from pii_recognition.tokenisation import tokeniser_registry
 
@@ -17,10 +18,13 @@ def get_recogniser(recogniser_setup: Dict) -> Dict[str, EntityRecogniser]:
     return {"recogniser": recogniser_instance}
 
 
-def get_tokeniser(tokeniser_setup: Dict):
-    return tokeniser_registry.create_instance(
-        tokeniser_setup["name"], tokeniser_setup.get("config")
-    )
+# tokeniser has been injected to meta
+def get_tokeniser(tokeniser_setup: Dict) -> Dict[str, Tokeniser]:
+    return {
+        "tokeniser": tokeniser_registry.create_instance(
+            tokeniser_setup["name"], tokeniser_setup.get("config")
+        )
+    }
 
 
 # evaluator has been injected to meta
