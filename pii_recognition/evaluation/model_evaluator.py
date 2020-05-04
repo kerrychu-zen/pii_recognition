@@ -35,7 +35,7 @@ class ModelEvaluator:
         convert_labels: Optional[Dict[str, str]] = None,
     ):
         self.recogniser = recogniser
-        self._tokeniser = tokeniser
+        self.tokeniser = tokeniser
         self._convert_labels = convert_labels
         self.target_entities = target_entities
         if self._convert_labels:
@@ -62,7 +62,7 @@ class ModelEvaluator:
 
     def get_token_based_prediction(self, text: str) -> List[TokenLabel]:
         recognised_entities = self.get_span_based_prediction(text)
-        tokens = self._tokeniser.tokenise(text)
+        tokens = self.tokeniser.tokenise(text)
         token_labels = span_labels_to_token_labels(recognised_entities, tokens)
 
         # validate predictions
@@ -90,7 +90,7 @@ class ModelEvaluator:
             )
 
         sample_error = SampleError(token_errors=[], full_text=text, failed=False)
-        tokens = self._tokeniser.tokenise(text)
+        tokens = self.tokeniser.tokenise(text)
 
         for i in range(len(annotations)):
             label_pair_counter[EvalLabel(annotations[i], predictions[i])] += 1
