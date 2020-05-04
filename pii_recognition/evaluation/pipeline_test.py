@@ -27,23 +27,23 @@ def mock_registry():
 
 @patch("pii_recognition.evaluation.pipeline.recogniser_registry", new=mock_registry())
 def test_get_recogniser():
-    setup = {"name": "RegistryNoConfig"}
-    actual = get_recogniser(setup)["recogniser"]  # it's in meta
+    setup_no_config = {"name": "RegistryNoConfig"}
+    actual = get_recogniser(setup_no_config)["recogniser"]  # it's in meta
     assert isinstance(actual, RegistryNoConfig)
 
-    setup = {"name": "RegistryWithConfig", "config": {"param_a": "value_a"}}
-    actual = get_recogniser(setup)["recogniser"]  # it's in meta
+    setup_with_config = {"name": "RegistryWithConfig", "config": {"param_a": "value_a"}}
+    actual = get_recogniser(setup_with_config)["recogniser"]  # it's in meta
     assert isinstance(actual, RegistryWithConfig)
     assert actual.param_a == "value_a"
 
 
 @patch("pii_recognition.evaluation.pipeline.tokeniser_registry", new=mock_registry())
 def test_get_tokeniser():
-    setup = {"name": "RegistryNoConfig"}
-    actual = get_tokeniser(setup)
+    setup_no_config = {"name": "RegistryNoConfig"}
+    actual = get_tokeniser(setup_no_config)
     assert isinstance(actual, RegistryNoConfig)
 
-    setup = {"name": "RegistryWithConfig", "config": {"param_a": "value_a"}}
-    actual = get_tokeniser(setup)
+    setup_with_config = {"name": "RegistryWithConfig", "config": {"param_a": "value_a"}}
+    actual = get_tokeniser(setup_with_config)
     assert isinstance(actual, RegistryWithConfig)
     assert actual.param_a == "value_a"
