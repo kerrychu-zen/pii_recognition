@@ -1,6 +1,6 @@
 from unittest.mock import patch
 
-from .pipeline import get_recogniser
+from .pipeline import get_recogniser, get_tokeniser
 from pii_recognition.registration.registry import Registry
 from typing import Any
 
@@ -12,8 +12,8 @@ class RegistryNoConfig:
 
 class RegistryWithConfig:
     # must pass args to instantiate the class
-    def __init__(self, config_a):
-        self.config_a = config_a
+    def __init__(self, param_a):
+        self.param_a = param_a
 
 
 def mock_registry():
@@ -26,9 +26,23 @@ def mock_registry():
 
 @patch("pii_recognition.evaluation.pipeline.recogniser_registry", new=mock_registry())
 def test_get_recogniser():
-    actual = get_recogniser("RegistryNoConfig")["recogniser"]
+    actual = get_recogniser("RegistryNoConfig")["recogniser"]  # it's in meta
     assert isinstance(actual, RegistryNoConfig)
 
-    actual = get_recogniser("RegistryWithConfig", {"config_a": "attr_a"})["recogniser"]
+    actual = get_recogniser("RegistryWithConfig", {"param_a": "value_a"})[
+        "recogniser"
+    ]  # it's in meta
     assert isinstance(actual, RegistryWithConfig)
-    assert actual.config_a == "attr_a"
+    assert actual.param_a == "value_a"
+
+
+@patch("pii_recognition.evaluation.pipeline.tokeniser_registry", new=mock_registry())
+def test_get_tokeniser():
+    tokeniser_setup = {"name": "RegistryNoConfig"}
+    actual = get_tokeniser(tokeniser_setup)
+    assert isinstance(actual, RegistryNoConfig)
+
+    tokeniser_setup = {"name": "RegistryWithConfig", "config": {"param_a": "value_a"}}
+    actual = get_tokeniser(tokeniser_setup)
+    assert isinstance(actual, RegistryWithConfig)
+    assert actual.param_a == "value_a"
