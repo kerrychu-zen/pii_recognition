@@ -1,6 +1,6 @@
 from collections import Counter
 from typing import List
-from unittest.mock import Mock, patch
+from unittest.mock import Mock
 
 import numpy as np
 import pytest
@@ -9,7 +9,7 @@ from pytest import fixture
 from pii_recognition.labels.schema import EvalLabel, SpanLabel
 from pii_recognition.tokenisation.token_schema import Token
 
-from .model_evaluator import ModelEvaluator, tokeniser_registry
+from .model_evaluator import ModelEvaluator
 from .prediction_error import SampleError, TokenError
 
 
@@ -86,7 +86,9 @@ def test_get_token_based_prediction(mock_recogniser, mock_tokeniser, text):
 
     # test 2: raise assertion error
     evaluator = ModelEvaluator(
-        recogniser=mock_recogniser, tokeniser=mock_tokeniser, target_recogniser_entities=["PER"],
+        recogniser=mock_recogniser,
+        tokeniser=mock_tokeniser,
+        target_recogniser_entities=["PER"],
     )
     with pytest.raises(AssertionError) as err:
         evaluator.get_token_based_prediction(text)
@@ -204,7 +206,9 @@ def test_evaluate_sample_no_label_conversion(text, mock_recogniser, mock_tokenis
 
     # test 4: recogniser predicted on ["PER", "LOC"] but only asking for ["PER"]
     evaluator = ModelEvaluator(
-        recogniser=mock_recogniser, tokeniser=mock_tokeniser, target_recogniser_entities=["PER"],
+        recogniser=mock_recogniser,
+        tokeniser=mock_tokeniser,
+        target_recogniser_entities=["PER"],
     )
     with pytest.raises(AssertionError) as err:
         counter, mistakes = evaluator.evaluate_sample(
@@ -278,7 +282,9 @@ def test_evaulate_all(text, mock_recogniser, mock_tokeniser):
 
 def test_calculate_score(mock_tokeniser):
     evaluator = ModelEvaluator(
-        recogniser=Mock(), tokeniser=mock_tokeniser, target_recogniser_entities=["PER", "LOC"],
+        recogniser=Mock(),
+        tokeniser=mock_tokeniser,
+        target_recogniser_entities=["PER", "LOC"],
     )
 
     # test 1: LOC 0.=presion=recall
