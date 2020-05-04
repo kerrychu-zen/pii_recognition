@@ -74,6 +74,30 @@ def test_class_init():
     assert evaluator._translated_entities == ["PERSON", "LOCATION"]
 
 
+def test_get_span_based_prediction(mock_recogniser, mock_tokeniser, text):
+    # test 1: succeed
+    evaluator = ModelEvaluator(
+        recogniser=mock_recogniser,
+        tokeniser=mock_tokeniser,
+        target_recogniser_entities=["PER", "LOC"],
+    )
+    actual = evaluator.get_span_based_prediction(text)
+    assert actual == [
+        SpanLabel(entity_type="PER", start=8, end=11),
+        SpanLabel(entity_type="LOC", start=17, end=26),
+    ]
+
+    # test 2: raise assertion error
+    evaluator = ModelEvaluator(
+        recogniser=mock_recogniser,
+        tokeniser=mock_tokeniser,
+        target_recogniser_entities=["PER"],
+    )
+    with pytest.raises(AssertionError) as err:
+        evaluator.get_span_based_prediction(text)
+    assert str(err.value) == f"Predictions contain unasked entities ['LOC']"
+
+
 def test_get_token_based_prediction(mock_recogniser, mock_tokeniser, text):
     # test 1: succeed
     evaluator = ModelEvaluator(
