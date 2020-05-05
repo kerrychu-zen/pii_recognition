@@ -1,3 +1,7 @@
+"""
+Tracker module implementing Mlflow API.
+"""
+
 import logging
 import os
 import tempfile
@@ -10,17 +14,18 @@ from pii_recognition.constants import BASE_DIR
 from pii_recognition.evaluation.model_evaluator import ModelEvaluator
 from pii_recognition.recognisers.entity_recogniser import EntityRecogniser
 
+DEFAULT_TRACKER_URI = os.path.join(BASE_DIR, "mlruns")
 
-def start_tracker(experiment_name: str, run_name: str = "default"):
-    artifact_location = os.path.join(BASE_DIR, "artifacts", f"{experiment_name}")
 
-    try:
-        mlflow.create_experiment(
-            name=experiment_name, artifact_location=artifact_location
-        )
-    except MlflowException:
-        mlflow.set_experiment(experiment_name)
-        logging.info(f"Experiment {experiment_name} already exists.")
+def start_tracker(
+    experiment_name: str,
+    run_name: str = "default",
+    tracker_uri: str = DEFAULT_TRACKER_URI,
+):
+    mlflow.set_tracking_uri(tracker_uri)
+
+    # create experiments at tracker_uri
+    mlflow.set_experiment(experiment_name)
 
     experiment_id = get_experiment_id(experiment_name)
     mlflow.start_run(run_name=run_name, experiment_id=experiment_id)
