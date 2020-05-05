@@ -11,8 +11,7 @@ from pii_recognition.evaluation.model_evaluator import ModelEvaluator
 from pii_recognition.recognisers.entity_recogniser import EntityRecogniser
 
 
-def start_tracker(experiment_name: str, run_name: str):
-    # TODO: add test
+def start_tracker(experiment_name: str, run_name: str = "default"):
     artifact_location = os.path.join(BASE_DIR, "artifacts", f"{experiment_name}")
 
     try:
@@ -23,7 +22,13 @@ def start_tracker(experiment_name: str, run_name: str):
         mlflow.set_experiment(experiment_name)
         logging.info(f"Experiment {experiment_name} already exists.")
 
-    mlflow.start_run(run_name=run_name)
+    experiment_id = get_experiment_id(experiment_name)
+    mlflow.start_run(run_name=run_name, experiment_id=experiment_id)
+
+
+def get_experiment_id(experiment_name: str):
+    # TODO: add test
+    return mlflow.get_experiment_by_name(experiment_name).experiment_id
 
 
 def end_tracker():
