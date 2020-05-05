@@ -17,6 +17,10 @@ from pii_recognition.recognisers.entity_recogniser import EntityRecogniser
 DEFAULT_TRACKER_URI = os.path.join(BASE_DIR, "mlruns")
 
 
+def _get_experiment_id(experiment_name: str):
+    return mlflow.get_experiment_by_name(experiment_name).experiment_id
+
+
 def start_tracker(
     experiment_name: str,
     run_name: str = "default",
@@ -27,17 +31,11 @@ def start_tracker(
     # create experiments at tracker_uri
     mlflow.set_experiment(experiment_name)
 
-    experiment_id = get_experiment_id(experiment_name)
+    experiment_id = _get_experiment_id(experiment_name)
     mlflow.start_run(run_name=run_name, experiment_id=experiment_id)
 
 
-def get_experiment_id(experiment_name: str):
-    # TODO: add test
-    return mlflow.get_experiment_by_name(experiment_name).experiment_id
-
-
 def end_tracker():
-    # TODO: add test
     mlflow.end_run()
 
 
