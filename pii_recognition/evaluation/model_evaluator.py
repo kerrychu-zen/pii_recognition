@@ -127,6 +127,8 @@ class ModelEvaluator:
         label_pair_counter, sample_error = self._compare_predicted_and_truth(
             text, tokens, masked_annotations, translated_predictions
         )
+
+        # TODO: if no mistakes return None instead of empty sample_error
         return label_pair_counter, sample_error
 
     def evaulate_all(
