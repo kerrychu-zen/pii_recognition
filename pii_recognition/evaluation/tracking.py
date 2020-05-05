@@ -32,23 +32,10 @@ def end_tracker():
     mlflow.end_run()
 
 
-def log_metrics(metrics: Dict, suffix: Optional[str] = None):
+def log_metric_per_entity(metric: Dict[str, float], metric_name: str = None):
     # TODO: add test!
-    for key, value in metrics.items():
-        assert isinstance(key, str), f"Metric key must be string but got {type(key)}"
-
-        if key in LABEL_COMPLIANCE:
-            if suffix:
-                key_name = LABEL_COMPLIANCE[key] + f"_{suffix}"
-            else:
-                key_name = LABEL_COMPLIANCE[key]
-        else:
-            if suffix:
-                key_name = key + f"_{suffix}"
-            else:
-                key_name = key
-
-        mlflow.log_metric(key_name, value)
+    for entity_name, entity_score in metric.items():
+        mlflow.log_metric(entity_name + f"_{metric_name}", entity_score)
 
 
 def log_params(params: Dict[str, Any]):
