@@ -6,10 +6,9 @@ from typing import Any, Dict, List, Optional
 import mlflow
 from mlflow.exceptions import MlflowException
 
-from constants import BASE_DIR, LABEL_COMPLIANCE
-from evaluation.model_evaluator import ModelEvaluator
-from recognisers.entity_recogniser import EntityRecogniser
-from utils import write_iterable_to_text
+from pii_recognition.constants import BASE_DIR
+from pii_recognition.evaluation.model_evaluator import ModelEvaluator
+from pii_recognition.recognisers.entity_recogniser import EntityRecogniser
 
 
 def start_tracker(experiment_name: str, run_name: str):
@@ -23,7 +22,7 @@ def start_tracker(experiment_name: str, run_name: str):
     except MlflowException:
         mlflow.set_experiment(experiment_name)
         logging.info(f"Experiment {experiment_name} already exists.")
-    
+
     mlflow.start_run(run_name=run_name)
 
 
@@ -33,6 +32,5 @@ def end_tracker():
 
 
 def log_metric_per_entity(metric: Dict[str, float], metric_name: str = None):
-    # TODO: add test!
     for entity_name, entity_score in metric.items():
         mlflow.log_metric(entity_name + f"_{metric_name}", entity_score)
