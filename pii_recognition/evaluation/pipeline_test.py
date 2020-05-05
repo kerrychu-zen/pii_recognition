@@ -25,10 +25,6 @@ def mock_registry():
     return regsitry
 
 
-def mock_reader_registry():
-    ...
-
-
 @patch("pii_recognition.evaluation.pipeline.recogniser_registry", new=mock_registry())
 def test_get_recogniser():
     setup_no_config = {"name": "RegistryNoConfig"}
