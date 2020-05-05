@@ -1,10 +1,9 @@
-import os
 from tempfile import TemporaryDirectory
 from unittest.mock import call, patch
 
 import mlflow
 
-from .tracking import log_metric_per_entity, mlflow, start_tracker, end_tracker
+from .tracking import end_tracker, log_metric_per_entity, start_tracker
 
 
 def test_start_tracker_fresh_start():

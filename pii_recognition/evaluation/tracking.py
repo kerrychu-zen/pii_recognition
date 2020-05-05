@@ -2,17 +2,12 @@
 Tracker module implementing Mlflow API.
 """
 
-import logging
 import os
-import tempfile
-from typing import Any, Dict, List, Optional
+from typing import Dict
 
 import mlflow
-from mlflow.exceptions import MlflowException
 
 from pii_recognition.constants import BASE_DIR
-from pii_recognition.evaluation.model_evaluator import ModelEvaluator
-from pii_recognition.recognisers.entity_recogniser import EntityRecogniser
 
 DEFAULT_TRACKER_URI = os.path.join(BASE_DIR, "mlruns")
 
