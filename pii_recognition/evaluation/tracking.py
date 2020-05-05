@@ -36,14 +36,3 @@ def log_metric_per_entity(metric: Dict[str, float], metric_name: str = None):
     # TODO: add test!
     for entity_name, entity_score in metric.items():
         mlflow.log_metric(entity_name + f"_{metric_name}", entity_score)
-
-
-def log_params(params: Dict[str, Any]):
-    # TODO: add test!
-    for key, value in params.items():
-        if callable(value):
-            mlflow.log_param(key, value.__name__)
-        elif isinstance(value, list):
-            mlflow.log_param(key, ", ".join(map(str, value)))
-        else:
-            mlflow.log_param(key, value)
