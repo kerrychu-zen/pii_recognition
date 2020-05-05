@@ -3,8 +3,7 @@ from unittest.mock import patch
 
 from pii_recognition.registration.registry import Registry
 
-from .pipeline import (get_recogniser, get_tokeniser, load_test_data,
-                       reader_registry)
+from .pipeline import get_recogniser, get_tokeniser, load_test_data, reader_registry
 
 
 class RegistryNoConfig:
