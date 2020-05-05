@@ -8,26 +8,33 @@ from mlflow.exceptions import MlflowException
 
 from constants import BASE_DIR, LABEL_COMPLIANCE
 from evaluation.model_evaluator import ModelEvaluator
-from recognisers.entity_recogniser import Rec_co
+from recognisers.entity_recogniser import EntityRecogniser
 from utils import write_iterable_to_text
 
 
-def activate_experiment(exp_name: str, artifact_location: str):
-    # TODO: add test!
+def start_tracker(experiment_name: str, run_name: str, artifact_location: str):
+    # TODO: add test
     try:
         mlflow.create_experiment(
-            name=exp_name, artifact_location=artifact_location,
+            name=experiment_name, artifact_location=artifact_location
         )
     except MlflowException:
-        logging.info(f"Experiment {exp_name} already exists.")
+        logging.info(f"Experiment {experiment_name} already exists.")
+
+    mlflow.start_run(run_name=run_name)
 
 
-def delete_experiment(exp_name: str):
-    # TODO: add test!
+def end_tracker():
+    # TODO: add test
+    mlflow.end_run()
+
+
+def delete_experiment(experiment_name: str):
+    # TODO: add test
     try:
-        experiment_id = mlflow.get_experiment_by_name(exp_name).experiment_id
+        experiment_id = mlflow.get_experiment_by_name(experiment_name).experiment_id
     except AttributeError:
-        logging.info(f"No {exp_name} experiment found.")
+        logging.info(f"No {experiment_name} experiment found.")
         return
 
     try:
@@ -36,40 +43,41 @@ def delete_experiment(exp_name: str):
         logging.info(f"Experiment has already been deleted.")
 
 
-def log_evaluation_to_mlflow(
-    experiment_name: str,
-    recogniser: Rec_co,
+def track_evaluation(
     evaluator: ModelEvaluator,
     X_test: List[str],
     y_test: List[List[str]],
+    experiment_name: Optional[str] = None,
     run_name: str = "default",
+    f_beta: float = 1.0,
 ):
-    artifact_path = os.path.join(BASE_DIR, "artifacts", f"{experiment_name}")
+    recogniser = evaluator.recogniser
+    tokeniser = evaluator.tokeniser
 
+    if experiment_name is None:
+        experiment_name = recogniser.name
+
+    artifact_path = os.path.join(BASE_DIR, "artifacts", f"{experiment_name}")
     activate_experiment(experiment_name, artifact_path)
     mlflow.set_experiment(experiment_name)
 
     with mlflow.start_run(run_name=run_name):
         counters, mistakes = evaluator.evaulate_all(X_test, y_test)
-        # remove returns with no mistakes
-        mistakes = list(filter(lambda x: x.token_errors, mistakes))
 
-        recall, precision, f1 = evaluator.calculate_score(counters, f_beta=1.0)
-        _, _, f2 = evaluator.calculate_score(counters, f_beta=2.0)
+        recall, precision, f_score = evaluator.calculate_score(counters, f_beta)
 
         with tempfile.TemporaryDirectory() as tempdir:
-            error_file_path = os.path.join(tempdir, f"{run_name}.mis")
-            write_iterable_to_text(mistakes, error_file_path)
-            mlflow.log_artifact(error_file_path)
-
-        # TODO: don't pass params, read params from
-        # recogniser and evaluator
-        # log_params(params)
+            output_file = os.path.join(tempdir, f"{run_name}.mistakes")
+            write_iterable_to_text(mistakes, output_file)
+            mlflow.log_artifact(output_file)
 
         log_metrics(recall, suffix="recall")
         log_metrics(precision, suffix="precision")
-        log_metrics(f1, suffix="f1")
-        log_metrics(f2, suffix="f2")
+        log_metrics(f_score, suffix="f1")
+
+        mlflow.log_param("supported_languages", recogniser.supported_languages)
+        mlflow.log_param("supported_entities", recogniser.supported_entities)
+        mlflow.log_param("tokeniser", tokeniser.__name__)
 
 
 def log_metrics(metrics: Dict, suffix: Optional[str] = None):
