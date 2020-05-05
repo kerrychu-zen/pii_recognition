@@ -2,6 +2,7 @@ from typing import Dict, List, Tuple
 
 from pakkr import returns
 
+from pii_recognition.data_readers import reader_registry
 from pii_recognition.evaluation.model_evaluator import ModelEvaluator
 from pii_recognition.paths.data_path import DataPath
 from pii_recognition.recognisers import registry as recogniser_registry
@@ -45,8 +46,12 @@ def get_evaluator(
 
 # Multiple outputs
 @returns(List, List)
-def load_test_data(test_data_path: str) -> Tuple[List[str], List[List[str]]]:
-    ...
+def load_test_data(
+    test_data_path: str, detokeniser_setup: Dict
+) -> Tuple[List[str], List[List[str]]]:
+    data_path = DataPath(test_data_path)
+    reader = reader_registry.create_instance(data_path.reader_name, detokeniser_setup)
+    return reader.get_test_data(data_path.path)
 
 
 @returns
