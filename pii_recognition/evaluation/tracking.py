@@ -29,20 +29,6 @@ def end_tracker():
     mlflow.end_run()
 
 
-def delete_experiment(experiment_name: str):
-    # TODO: add test
-    try:
-        experiment_id = mlflow.get_experiment_by_name(experiment_name).experiment_id
-    except AttributeError:
-        logging.info(f"No {experiment_name} experiment found.")
-        return
-
-    try:
-        mlflow.delete_experiment(experiment_id)
-    except MlflowException:
-        logging.info(f"Experiment has already been deleted.")
-
-
 def track_evaluation(
     evaluator: ModelEvaluator,
     X_test: List[str],
