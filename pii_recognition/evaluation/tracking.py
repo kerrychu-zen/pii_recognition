@@ -23,8 +23,8 @@ def start_tracker(
 ) -> mlflow.ActiveRun:
     """
     Start a new tracker. This tracker stays active under which metrics and parameters
-    will be logged. To terminate the current tracker, call `end_tracker()` to terminate
-    or use a context manager within a `with` block.
+    will be logged. To terminate the current tracker, call `end_tracker()` or use a
+    context manager within a `with` block.
     """
     # Connect to a tracking URI.
     # URI can either be a HTTP/HTTPS URI for a remote server, a database connection
