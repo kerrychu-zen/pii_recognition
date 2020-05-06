@@ -106,7 +106,7 @@ class ModelEvaluator:
                         text=tokens[i],
                     )
                 )
-        
+
         # avoid variable reassignment; otherwise mypy would complain
         if (sample_error.failed is False) and (not sample_error.token_errors):
             rectified_sample_error = None  # if no error found
