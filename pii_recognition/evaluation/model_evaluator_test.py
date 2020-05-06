@@ -258,7 +258,7 @@ def test_evaluate_sample_with_label_conversion(text, mock_recogniser, mock_token
             EvalLabel("I-PER", "I-PER"): 1,
         }
     )
-    assert mistakes == SampleError(token_errors=[], full_text=text, failed=False)
+    assert mistakes is None
 
 
 def test_evaluate_sample_with_mistakes(text, mock_bad_recogniser, mock_tokeniser):
@@ -301,7 +301,7 @@ def test_evaulate_all(text, mock_recogniser, mock_tokeniser):
         ]
         * 2
     )
-    assert mistakes == [SampleError(token_errors=[], full_text=text, failed=False)] * 2
+    assert mistakes == []
 
 
 def test_calculate_score(mock_tokeniser):
