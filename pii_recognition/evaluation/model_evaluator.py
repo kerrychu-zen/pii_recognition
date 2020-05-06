@@ -139,7 +139,7 @@ class ModelEvaluator:
 
     def evaulate_all(
         self, texts: List[str], annotations: List[List[str]]
-    ) -> Tuple[List[Counter], List[Optional[SampleError]]]:
+    ) -> Tuple[List[Counter], List[SampleError]]:
         assert len(texts) == len(annotations)
 
         counters = []
@@ -149,7 +149,8 @@ class ModelEvaluator:
                 texts[i], annotations[i]
             )
             counters.append(label_pair_counter)
-            mistakes.append(sample_error)
+            if sample_error is not None:
+                mistakes.append(sample_error)
         return counters, mistakes
 
     def calculate_score(
