@@ -1,5 +1,6 @@
 from typing import Dict, List, Tuple
 
+import mlflow
 from mlflow import ActiveRun
 from pakkr import returns
 
@@ -11,7 +12,7 @@ from pii_recognition.recognisers.entity_recogniser import EntityRecogniser
 from pii_recognition.tokenisation import tokeniser_registry
 from pii_recognition.tokenisation.tokenisers import Tokeniser
 
-from .tracking import end_tracker, start_tracker
+from .tracking import end_tracker, log_entities_metric, start_tracker
 
 
 @returns(ActiveRun)
@@ -64,15 +65,17 @@ def load_test_data(
 
 
 @returns
-def evaluate_and_logging(
+def evaluate(
     X_test: List[str],
     y_test: List[List[str]],
-    recogniser: EntityRecogniser,
     evaluator: ModelEvaluator,
-    experiment_name: str,
-    run_name: str,
 ):
-    ...
+    counters, mistakes = evaluator.evaulate_all(X_test, y_test)
+    recall, precision, f1 = evaluator.calculate_score(counters)
+
+    log_entities_metric(recall)
+    log_entities_metric(precision)
+    log_entities_metric(f1)
 
 
 @returns
