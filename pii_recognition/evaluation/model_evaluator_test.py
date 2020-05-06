@@ -358,7 +358,14 @@ def test_calculate_score(mock_tokeniser):
             }
         )
     ] * 2
+
     recall, precision, f1 = evaluator.calculate_score(counters)
     assert recall == {"PERSON": 1.0, "LOCATION": 1.0}
     assert precision == {"PERSON": 1.0, "LOCATION": 1.0}
     assert f1 == {"PERSON": 1.0, "LOCATION": 1.0}
+
+    # test 4: with entity mapping and use recogniser labels
+    recall, precision, f1 = evaluator.calculate_score(counters, use_test_labels=False)
+    assert recall == {"PER": 1.0, "LOC": 1.0}
+    assert precision == {"PER": 1.0, "LOC": 1.0}
+    assert f1 == {"PER": 1.0, "LOC": 1.0}
