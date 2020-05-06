@@ -29,6 +29,7 @@ def get_recogniser(recogniser_setup: Dict) -> Dict[str, EntityRecogniser]:
 
 
 # tokeniser has been injected to meta
+@returns(tokeniser=Tokeniser)
 def get_tokeniser(tokeniser_setup: Dict) -> Dict[str, Tokeniser]:
     return {
         "tokeniser": tokeniser_registry.create_instance(
