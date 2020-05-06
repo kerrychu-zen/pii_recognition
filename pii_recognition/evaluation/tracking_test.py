@@ -11,20 +11,20 @@ def test_start_tracker_fresh_start():
         start_tracker("TEST-EXP", "TEST-RUN", tempdir)
         assert mlflow.active_run().info.run_id is not None
         assert mlflow.active_run().info.experiment_id == "0"
-        # terminate an active run
+        # terminate an active tracker
         end_tracker()
 
 
 def test_start_tracker_reload_experiment():
     with TemporaryDirectory() as tempdir:
         start_tracker("TEST-EXP", "TEST-RUN", tempdir)
-        # terminate an active run
+        # terminate an active tracker
         end_tracker()
 
         start_tracker("TEST-EXP", "TEST-RUN", tempdir)
         assert mlflow.active_run().info.run_id is not None
         assert mlflow.active_run().info.experiment_id == "0"
-        # terminate an active run
+        # terminate an active tracker
         end_tracker()
 
 
