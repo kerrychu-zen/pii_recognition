@@ -30,7 +30,9 @@ def mock_registry():
     return regsitry
 
 
-@patch("pii_recognition.evaluation.pakkr_pipeline.recogniser_registry", new=mock_registry())
+@patch(
+    "pii_recognition.evaluation.pakkr_pipeline.recogniser_registry", new=mock_registry()
+)
 def test_get_recogniser():
     setup_no_config = {"name": "RegistryNoConfig"}
     actual = get_recogniser(setup_no_config)["recogniser"]  # it's in meta
@@ -42,7 +44,9 @@ def test_get_recogniser():
     assert actual.param_a == "value_a"
 
 
-@patch("pii_recognition.evaluation.pakkr_pipeline.tokeniser_registry", new=mock_registry())
+@patch(
+    "pii_recognition.evaluation.pakkr_pipeline.tokeniser_registry", new=mock_registry()
+)
 def test_get_tokeniser():
     setup_no_config = {"name": "RegistryNoConfig"}
     actual = get_tokeniser(setup_no_config)["tokeniser"]  # it's in meta
