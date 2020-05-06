@@ -22,7 +22,7 @@ class ModelEvaluator:
         tokeniser: an instance of Tokeniser.
         target_recogniser_entities: entities to be evaluated, the entities are labels
             defined within the recogniser model.
-        convert_labels: a dict {predicted: annotated} facilitate entity conversion
+        convert_to_test_labels: a dict {predicted: annotated} facilitate entity conversion
             between predicted and test labels. Predicted entity labels could differ
             from test entity labels, e.g., PERSON and PER.
     """
@@ -32,15 +32,15 @@ class ModelEvaluator:
         recogniser: EntityRecogniser,
         tokeniser: Tokeniser,
         target_recogniser_entities: List[str],
-        convert_labels: Optional[Dict[str, str]] = None,
+        convert_to_test_labels: Optional[Dict[str, str]] = None,
     ):
         self.recogniser = recogniser
         self.tokeniser = tokeniser
-        self._convert_labels = convert_labels
+        self._convert_to_test_labels = convert_to_test_labels
         self.target_recogniser_entities = target_recogniser_entities
-        if self._convert_labels:
+        if convert_to_test_labels:
             self._translated_entities = map_labels(
-                target_recogniser_entities, self._convert_labels
+                target_recogniser_entities, convert_to_test_labels
             )
         else:
             self._translated_entities = target_recogniser_entities
@@ -81,8 +81,8 @@ class ModelEvaluator:
         the labels of ground truth (annotations). A counter and a container that holds
         prediction errors are returned.
         """
-        if self._convert_labels:
-            predictions = map_labels(predictions, self._convert_labels)
+        if self._convert_to_test_labels:
+            predictions = map_labels(predictions, self._convert_to_test_labels)
 
         label_pair_counter: Counter = Counter()
         # token mismatch -- the tokeniser we use produces different token set from the
@@ -124,8 +124,8 @@ class ModelEvaluator:
         token_based_predictions = self.get_token_based_prediction(text)
         predictions = [pred.entity_type for pred in token_based_predictions]
         translated_predictions = (
-            map_labels(predictions, self._convert_labels)
-            if self._convert_labels
+            map_labels(predictions, self._convert_to_test_labels)
+            if self._convert_to_test_labels
             else predictions
         )
 
@@ -194,10 +194,10 @@ class ModelEvaluator:
             else:
                 entity_f_score[entity] = np.NaN
 
-        # using entity labels in recogniser
-        if (use_test_labels is False) and (self._convert_labels is not None):
+        # use recogniser entity labels
+        if (use_test_labels is False) and (self._convert_to_test_labels is not None):
             convert_to_recogniser_labels = {
-                value: key for key, value in self._convert_labels.items()
+                value: key for key, value in self._convert_to_test_labels.items()
             }
 
             entity_recall = self._convert_metric_labels(
