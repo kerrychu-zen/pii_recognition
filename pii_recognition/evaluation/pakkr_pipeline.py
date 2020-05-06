@@ -11,7 +11,7 @@ from pii_recognition.recognisers.entity_recogniser import EntityRecogniser
 from pii_recognition.tokenisation import tokeniser_registry
 from pii_recognition.tokenisation.tokenisers import Tokeniser
 
-from .tracking import start_tracker
+from .tracking import end_tracker, start_tracker
 
 
 @returns(ActiveRun)
@@ -73,3 +73,8 @@ def evaluate_and_logging(
     run_name: str,
 ):
     ...
+
+
+@returns
+def disable_tracker():
+    end_tracker()
