@@ -22,9 +22,9 @@ class ModelEvaluator:
         tokeniser: an instance of Tokeniser.
         target_recogniser_entities: entities to be evaluated, the entities are labels
             defined within the recogniser model.
-        convert_to_test_labels: a dict {predicted: annotated} facilitate entity conversion
-            between predicted and test labels. Predicted entity labels could differ
-            from test entity labels, e.g., PERSON and PER.
+        convert_to_test_labels: a dict {predicted: annotated} facilitate entity
+            conversion between predicted and test labels. Predicted entity labels could
+            differ from test entity labels, e.g., PERSON and PER.
     """
 
     def __init__(
