@@ -154,11 +154,11 @@ class ModelEvaluator:
         return counters, mistakes
 
     def calculate_score(
-        self, all_eval_counters: List[Counter], f_beta: float = 1.0
+        self,
+        all_eval_counters: List[Counter],
+        f_beta: float = 1.0,
+        use_test_labels: bool = True,
     ) -> Tuple[Dict, Dict, Dict]:
-        # TODO: we have test labels and labels come from recogniser,
-        # be specific of which label is used for eval
-
         # aggregate results
         all_results: Counter = sum(all_eval_counters, Counter())
 
@@ -194,4 +194,25 @@ class ModelEvaluator:
             else:
                 entity_f_score[entity] = np.NaN
 
+        # using entity labels in recogniser
+        if (use_test_labels is False) and (self._convert_labels is not None):
+            convert_to_recogniser_labels = {
+                value: key for key, value in self._convert_labels.items()
+            }
+
+            entity_recall = self._convert_metric_labels(
+                entity_recall, convert_to_recogniser_labels
+            )
+            entity_precision = self._convert_metric_labels(
+                entity_precision, convert_to_recogniser_labels
+            )
+            entity_f_score = self._convert_metric_labels(
+                entity_f_score, convert_to_recogniser_labels
+            )
+
         return entity_recall, entity_precision, entity_f_score
+
+    def _convert_metric_labels(
+        self, metric: Dict[str, float], converter: Dict[str, str]
+    ) -> Dict[str, float]:
+        return {converter[name]: score for name, score in metric.items()}
