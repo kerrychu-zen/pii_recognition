@@ -11,6 +11,7 @@ def test_start_tracker_fresh_start():
         start_tracker("TEST-EXP", "TEST-RUN", tempdir)
         assert mlflow.active_run().info.run_id is not None
         assert mlflow.active_run().info.experiment_id == "0"
+        mlflow.log_metric("test", "test-value")
         # terminate an active tracker
         end_tracker()
 
@@ -31,7 +32,7 @@ def test_start_tracker_reload_experiment():
 @patch.object(mlflow, "log_metric")
 def test_log_entities_metric(mock_log_metric):
     recall = {"PER": 0.8, "LOC": 1.0, "ORG": 0.3}
-    log_metric_per_entity(recall, "recall")
+    log_entities_metric(recall, "recall")
     mock_log_metric.assert_has_calls(
         [call("PER_recall", 0.8), call("LOC_recall", 1.0), call("ORG_recall", 0.3)]
     )
