@@ -77,10 +77,10 @@ def test_get_detokeniser():
 
 def test_load_test_data():
     data_path = "pii_recognition/datasets/conll2003/eng.testa"
-    detokeniser_setup = {"name": "SimpleDetokeniser"}
+    detokeniser = Mock()
     with patch.object(reader_registry, "create_instance") as mock_registry:
-        load_test_data(data_path, detokeniser_setup)
-        mock_registry.assert_called_with("ConllReader", detokeniser_setup)
+        load_test_data(data_path, detokeniser)
+        mock_registry.assert_called_with("ConllReader", {"detokeniser": detokeniser})
 
 
 @patch("pii_recognition.evaluation.pakkr_pipeline.log_entities_metric")
