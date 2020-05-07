@@ -1,5 +1,5 @@
 from pathlib import PurePath
-from typing import Dict, List, Tuple
+from typing import List, Tuple
 
 from nltk.corpus.reader import ConllCorpusReader
 

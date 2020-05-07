@@ -1,4 +1,4 @@
-from typing import Dict, List, Tuple
+from typing import List, Tuple
 
 from pii_recognition.labels.mapping import map_bio_to_io_labels
 from pii_recognition.tokenisation.detokenisers import Detokeniser
