@@ -1,6 +1,5 @@
 from typing import Dict, List, Tuple
 
-import mlflow
 from mlflow import ActiveRun
 from pakkr import returns
 
