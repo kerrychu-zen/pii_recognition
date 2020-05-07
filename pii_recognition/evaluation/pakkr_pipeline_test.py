@@ -9,6 +9,7 @@ from .pakkr_pipeline import (
     get_tokeniser,
     load_test_data,
     reader_registry,
+    get_detokeniser,
 )
 
 
@@ -55,6 +56,21 @@ def test_get_tokeniser():
 
     setup_with_config = {"name": "RegistryWithConfig", "config": {"param_a": "value_a"}}
     actual = get_tokeniser(setup_with_config)["tokeniser"]  # it's in meta
+    assert isinstance(actual, RegistryWithConfig)
+    assert actual.param_a == "value_a"
+
+
+@patch(
+    "pii_recognition.evaluation.pakkr_pipeline.detokeniser_registry",
+    new=mock_registry(),
+)
+def test_get_detokeniser():
+    setup_no_config = {"name": "RegistryNoConfig"}
+    actual = get_detokeniser(setup_no_config)["detokeniser"]  # it's in meta
+    assert isinstance(actual, RegistryNoConfig)
+
+    setup_with_config = {"name": "RegistryWithConfig", "config": {"param_a": "value_a"}}
+    actual = get_detokeniser(setup_with_config)["detokeniser"]  # it's in meta
     assert isinstance(actual, RegistryWithConfig)
     assert actual.param_a == "value_a"
 

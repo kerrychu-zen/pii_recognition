@@ -69,12 +69,11 @@ def get_evaluator(
 # Multiple outputs
 @returns(List, List)
 def load_test_data(
-    test_data_path: str, reader_setup: Dict
+    test_data_path: str, detokeniser: Detokeniser
 ) -> Tuple[List[str], List[List[str]]]:
     data_path = DataPath(test_data_path)
-    reader = reader_registry.create_instance(
-        data_path.reader_name, reader_setup.get("config")
-    )
+    reader_config = {"detokeniser": detokeniser}
+    reader = reader_registry.create_instance(data_path.reader_name, reader_config)
     return reader.get_test_data(data_path.path)
 
 
