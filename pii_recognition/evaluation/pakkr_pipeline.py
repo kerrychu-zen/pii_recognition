@@ -1,7 +1,8 @@
 from typing import Dict, List, Tuple
 
+import yaml
 from mlflow import ActiveRun
-from pakkr import returns
+from pakkr import Pipeline, returns
 
 from pii_recognition.data_readers import reader_registry
 from pii_recognition.evaluation.model_evaluator import ModelEvaluator
@@ -10,6 +11,7 @@ from pii_recognition.recognisers import registry as recogniser_registry
 from pii_recognition.recognisers.entity_recogniser import EntityRecogniser
 from pii_recognition.tokenisation import tokeniser_registry
 from pii_recognition.tokenisation.tokenisers import Tokeniser
+from pii_recognition.utils import load_yaml_file
 
 from .tracking import end_tracker, log_entities_metric, start_tracker
 
@@ -78,3 +80,19 @@ def evaluate(
 @returns()
 def disable_tracker():
     end_tracker()
+
+
+def execute_evaluation_pipeline(config_yaml: str):
+    
+    eval_pipeline = Pipeline(
+        enable_tracker,
+        get_recogniser,
+        get_tokeniser,
+        get_evaluator,
+        load_test_data,
+        evaluate,
+        disable_tracker,
+        name="pii_evaluation_pipeline"
+    )
+    config = load_yaml_file(config_yaml)
+    return eval_pipeline(**config)
