@@ -97,5 +97,9 @@ def test_evaluate(mock_log):
 
     evaluate(X_test, y_test, evaluator)
     mock_log.assert_has_calls(
-        [call({"I-PER": 0.5}), call({"I-PER": 0.4}), call({"I-PER": 0.3})]
+        [
+            call({"I-PER": 0.5}, "recall"),
+            call({"I-PER": 0.4}, "precision"),
+            call({"I-PER": 0.3}, "f1"),
+        ]
     )
