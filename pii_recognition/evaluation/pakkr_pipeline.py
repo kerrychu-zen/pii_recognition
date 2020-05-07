@@ -48,7 +48,9 @@ def get_evaluator(
     target_recogniser_entities: List[str],
     convert_labels: Optional[Dict[str, str]] = None,
 ) -> Dict[str, ModelEvaluator]:
-    import pdb; pdb.set_trace()
+    import pdb
+
+    pdb.set_trace()
     return {
         "evaluator": ModelEvaluator(
             recogniser, tokeniser, target_recogniser_entities, convert_labels
@@ -84,7 +86,6 @@ def disable_tracker():
 
 
 def execute_evaluation_pipeline(config_yaml: str):
-    
     eval_pipeline = Pipeline(
         enable_tracker,
         get_recogniser,
@@ -93,7 +94,7 @@ def execute_evaluation_pipeline(config_yaml: str):
         load_test_data,
         evaluate,
         disable_tracker,
-        name="pii_evaluation_pipeline"
+        name="pii_evaluation_pipeline",
     )
     config = load_yaml_file(config_yaml)
     return eval_pipeline(**config)

@@ -32,6 +32,6 @@ def is_ascending(sequence: Sequence) -> bool:
 
 
 def load_yaml_file(path: str) -> Optional[Dict]:
-    with open(path, 'r') as stream:
+    with open(path, "r") as stream:
         data = yaml.safe_load(stream)
     return data
