@@ -63,6 +63,7 @@ def load_test_data(
     return reader.get_test_data(data_path.path)
 
 
+@returns()
 def evaluate(
     X_test: List[str], y_test: List[List[str]], evaluator: ModelEvaluator,
 ):
@@ -74,6 +75,6 @@ def evaluate(
     log_entities_metric(f1)
 
 
-@returns
+@returns()
 def disable_tracker():
     end_tracker()
