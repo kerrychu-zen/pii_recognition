@@ -1,4 +1,4 @@
-from typing import Dict, List, Tuple
+from typing import Dict, List, Optional, Tuple
 
 import yaml
 from mlflow import ActiveRun
@@ -16,9 +16,9 @@ from pii_recognition.utils import load_yaml_file
 from .tracking import end_tracker, log_entities_metric, start_tracker
 
 
-@returns(ActiveRun)
-def enable_tracker(experiment_name: str, run_name: str) -> ActiveRun:
-    return start_tracker(experiment_name, run_name)
+@returns()
+def enable_tracker(experiment_name: str, run_name: str):
+    start_tracker(experiment_name, run_name)
 
 
 # recogniser has been injected to meta
@@ -46,8 +46,9 @@ def get_evaluator(
     recogniser: EntityRecogniser,
     tokeniser: Tokeniser,
     target_recogniser_entities: List[str],
-    convert_labels: Dict[str, str],
+    convert_labels: Optional[Dict[str, str]] = None,
 ) -> Dict[str, ModelEvaluator]:
+    import pdb; pdb.set_trace()
     return {
         "evaluator": ModelEvaluator(
             recogniser, tokeniser, target_recogniser_entities, convert_labels
