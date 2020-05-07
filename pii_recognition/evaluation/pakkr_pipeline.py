@@ -86,6 +86,8 @@ def evaluate(
     log_entities_metric(precision, "precision")
     log_entities_metric(f1, "f1")
 
+    # TODO: add artefacts
+
 
 @returns()
 def disable_tracker():
