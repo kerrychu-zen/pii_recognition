@@ -95,8 +95,9 @@ def disable_tracker():
 def execute_evaluation_pipeline(config_yaml: str):
     eval_pipeline = Pipeline(
         enable_tracker,
-        get_recogniser,
         get_tokeniser,
+        get_detokeniser,
+        get_recogniser,
         get_evaluator,
         load_test_data,
         evaluate,
