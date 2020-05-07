@@ -9,7 +9,8 @@ from pii_recognition.evaluation.model_evaluator import ModelEvaluator
 from pii_recognition.paths.data_path import DataPath
 from pii_recognition.recognisers import registry as recogniser_registry
 from pii_recognition.recognisers.entity_recogniser import EntityRecogniser
-from pii_recognition.tokenisation import tokeniser_registry
+from pii_recognition.tokenisation import detokeniser_registry, tokeniser_registry
+from pii_recognition.tokenisation.detokenisers import Detokeniser
 from pii_recognition.tokenisation.tokenisers import Tokeniser
 from pii_recognition.utils import load_yaml_file
 
@@ -21,15 +22,6 @@ def enable_tracker(experiment_name: str, run_name: str):
     start_tracker(experiment_name, run_name)
 
 
-# recogniser has been injected to meta
-@returns(recogniser=EntityRecogniser)
-def get_recogniser(recogniser_setup: Dict) -> Dict[str, EntityRecogniser]:
-    recogniser_instance = recogniser_registry.create_instance(
-        recogniser_setup["name"], recogniser_setup.get("config")
-    )
-    return {"recogniser": recogniser_instance}
-
-
 # tokeniser has been injected to meta
 @returns(tokeniser=Tokeniser)
 def get_tokeniser(tokeniser_setup: Dict) -> Dict[str, Tokeniser]:
@@ -38,6 +30,25 @@ def get_tokeniser(tokeniser_setup: Dict) -> Dict[str, Tokeniser]:
             tokeniser_setup["name"], tokeniser_setup.get("config")
         )
     }
+
+
+# detokeniser has been injected to meta
+@returns(detokeniser=Detokeniser)
+def get_detokeniser(detokeniser_setup: Dict) -> Dict[str, Detokeniser]:
+    return {
+        "detokeniser": detokeniser_registry.create_instance(
+            detokeniser_setup["name"], detokeniser_setup.get("config")
+        )
+    }
+
+
+# recogniser has been injected to meta
+@returns(recogniser=EntityRecogniser)
+def get_recogniser(recogniser_setup: Dict) -> Dict[str, EntityRecogniser]:
+    recogniser_instance = recogniser_registry.create_instance(
+        recogniser_setup["name"], recogniser_setup.get("config")
+    )
+    return {"recogniser": recogniser_instance}
 
 
 # evaluator has been injected to meta
