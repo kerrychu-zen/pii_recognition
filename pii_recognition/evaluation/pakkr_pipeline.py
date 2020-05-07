@@ -48,9 +48,6 @@ def get_evaluator(
     target_recogniser_entities: List[str],
     convert_labels: Optional[Dict[str, str]] = None,
 ) -> Dict[str, ModelEvaluator]:
-    import pdb
-
-    pdb.set_trace()
     return {
         "evaluator": ModelEvaluator(
             recogniser, tokeniser, target_recogniser_entities, convert_labels
