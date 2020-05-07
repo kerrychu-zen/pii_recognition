@@ -67,7 +67,7 @@ def test_load_test_data():
         mock_registry.assert_called_with("ConllReader", detokeniser_setup)
 
 
-@patch("pii_recognition.evaluation.tracking.log_entities_metric")
+@patch("pii_recognition.evaluation.pakkr_pipeline.log_entities_metric")
 def test_evaluate(mock_log):
     X_test = ["This is Bob from Melbourne ."]
     y_test = [["O", "O", "I-PER", "O", "O", "O"]]
@@ -80,4 +80,6 @@ def test_evaluate(mock_log):
     )
 
     evaluate(X_test, y_test, evaluator)
-    mock_log.has_calls([call({"I-PER": 0.5}), call({"I-PER": 0.4})])
+    mock_log.assert_has_calls(
+        [call({"I-PER": 0.5}), call({"I-PER": 0.4}), call({"I-PER": 0.3})]
+    )
