@@ -1,4 +1,6 @@
-from typing import Any, Iterable, Optional, Sequence, Type
+from typing import Any, Dict, Iterable, Optional, Sequence, Type
+
+import yaml
 
 
 # TODO: add test
@@ -27,3 +29,9 @@ class cached_property(property):  # class name follows the convention of propert
 
 def is_ascending(sequence: Sequence) -> bool:
     return all(sequence[i] < sequence[i + 1] for i in range(len(sequence) - 1))
+
+
+def load_yaml_file(path: str) -> Optional[Dict]:
+    with open(path, 'r') as stream:
+        data = yaml.safe_load(stream)
+    return data
