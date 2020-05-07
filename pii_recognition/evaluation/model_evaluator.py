@@ -137,7 +137,7 @@ class ModelEvaluator:
 
         return label_pair_counter, sample_error
 
-    def evaulate_all(
+    def evaluate_all(
         self, texts: List[str], annotations: List[List[str]]
     ) -> Tuple[List[Counter], List[SampleError]]:
         assert len(texts) == len(annotations)

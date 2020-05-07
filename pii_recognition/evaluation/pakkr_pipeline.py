@@ -63,13 +63,10 @@ def load_test_data(
     return reader.get_test_data(data_path.path)
 
 
-@returns
 def evaluate(
-    X_test: List[str],
-    y_test: List[List[str]],
-    evaluator: ModelEvaluator,
+    X_test: List[str], y_test: List[List[str]], evaluator: ModelEvaluator,
 ):
-    counters, mistakes = evaluator.evaulate_all(X_test, y_test)
+    counters, mistakes = evaluator.evaluate_all(X_test, y_test)
     recall, precision, f1 = evaluator.calculate_score(counters)
 
     log_entities_metric(recall)
