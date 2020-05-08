@@ -5,7 +5,6 @@ from pii_recognition.utils import (
     is_ascending,
     load_yaml_file,
     write_iterable_to_file,
-    yaml,
 )
 
 
@@ -54,8 +53,6 @@ def test_is_ascending():
 
 
 def test_load_yaml_file():
-    with patch(
-        "builtins.open", mock_open(read_data="TEST-KEY: TEST-VALUE\n")
-    ) as mock_file:
+    with patch("builtins.open", mock_open(read_data="TEST-KEY: TEST-VALUE\n")):
         data = load_yaml_file("fake_path")
-    data = {"TEST-KEY: TEST-VALUE"}
+    assert data == {"TEST-KEY": "TEST-VALUE"}
