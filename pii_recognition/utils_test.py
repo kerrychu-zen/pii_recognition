@@ -1,6 +1,6 @@
-from unittest.mock import Mock, patch
+from unittest.mock import Mock, mock_open, patch
 
-from pii_recognition.utils import cached_property, is_ascending
+from pii_recognition.utils import cached_property, is_ascending, load_yaml_file, yaml
 
 
 def test_cached_property():
@@ -38,3 +38,11 @@ def test_is_ascending():
 
     actual = is_ascending(range(5))
     assert actual is True
+
+
+def test_load_yaml_file():
+    with patch(
+        "builtins.open", mock_open(read_data="TEST-KEY: TEST-VALUE\n")
+    ) as mock_file:
+        data = load_yaml_file("fake_path")
+    data = {"TEST-KEY: TEST-VALUE"}

@@ -23,7 +23,6 @@ def enable_tracker(experiment_name: str, run_name: str):
     start_tracker(experiment_name, run_name)
 
 
-# TODO: add test
 @returns()
 def log_config_yaml_path(config_yaml_path: str):
     mlflow.log_param("config_yaml_path", config_yaml_path)
