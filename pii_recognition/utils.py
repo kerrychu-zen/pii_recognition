@@ -3,7 +3,6 @@ from typing import Any, Dict, Iterable, Optional, Sequence, Type
 import yaml
 
 
-# TODO: add test
 def write_iterable_to_file(iterable: Iterable, file_path: str):
     with open(file_path, "w") as f:
         for elem in iterable:

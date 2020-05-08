@@ -1,6 +1,19 @@
-from unittest.mock import Mock, mock_open, patch
+from unittest.mock import Mock, call, mock_open, patch
 
-from pii_recognition.utils import cached_property, is_ascending, load_yaml_file, yaml
+from pii_recognition.utils import (
+    cached_property,
+    is_ascending,
+    load_yaml_file,
+    write_iterable_to_file,
+    yaml,
+)
+
+
+def test_write_iterable_to_file():
+    with patch("builtins.open", mock_open()) as m:
+        write_iterable_to_file([1, 2], "fake_path")
+        handle = m()
+        handle.write.assert_has_calls([call("1\n"), call("2\n")])
 
 
 def test_cached_property():
