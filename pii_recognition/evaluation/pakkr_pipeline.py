@@ -1,5 +1,8 @@
+import os
+import tempfile
 from typing import Dict, List, Optional, Tuple
 
+import mlflow
 from pakkr import Pipeline, returns
 
 from pii_recognition.data_readers import reader_registry
@@ -7,10 +10,11 @@ from pii_recognition.evaluation.model_evaluator import ModelEvaluator
 from pii_recognition.paths.data_path import DataPath
 from pii_recognition.recognisers import registry as recogniser_registry
 from pii_recognition.recognisers.entity_recogniser import EntityRecogniser
-from pii_recognition.tokenisation import detokeniser_registry, tokeniser_registry
+from pii_recognition.tokenisation import (detokeniser_registry,
+                                          tokeniser_registry)
 from pii_recognition.tokenisation.detokenisers import Detokeniser
 from pii_recognition.tokenisation.tokenisers import Tokeniser
-from pii_recognition.utils import load_yaml_file
+from pii_recognition.utils import load_yaml_file, write_iterable_to_file
 
 from .tracking import end_tracker, log_entities_metric, start_tracker
 
@@ -86,7 +90,11 @@ def evaluate(
     log_entities_metric(precision, "precision")
     log_entities_metric(f1, "f1")
 
-    # TODO: add artefacts
+    # save wrong predicitons to artefacts
+    with tempfile.TemporaryDirectory() as tempdir:
+        error_file_path = os.path.join(tempdir, "prediction_mistakes.txt")
+        write_iterable_to_file(mistakes, error_file_path)
+        mlflow.log_artifact(error_file_path)
 
 
 @returns()
