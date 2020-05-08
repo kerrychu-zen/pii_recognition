@@ -23,6 +23,12 @@ def enable_tracker(experiment_name: str, run_name: str):
     start_tracker(experiment_name, run_name)
 
 
+# TODO: add test
+@returns()
+def log_config_yaml_path(config_yaml_path: str):
+    mlflow.log_param("config_yaml_path", config_yaml_path)
+
+
 # tokeniser has been injected to meta
 @returns(tokeniser=Tokeniser)
 def get_tokeniser(tokeniser_setup: Dict) -> Dict[str, Tokeniser]:
@@ -104,6 +110,7 @@ def disable_tracker():
 def execute_evaluation_pipeline(config_yaml: str):
     eval_pipeline = Pipeline(
         enable_tracker,
+        log_config_yaml_path,
         get_tokeniser,
         get_detokeniser,
         get_recogniser,
@@ -113,5 +120,11 @@ def execute_evaluation_pipeline(config_yaml: str):
         disable_tracker,
         name="pii_evaluation_pipeline",
     )
+
     config = load_yaml_file(config_yaml)
-    return eval_pipeline(**config)
+
+    if config:
+        config["config_yaml_path"] = config_yaml
+        return eval_pipeline(**config)
+    else:
+        raise ValueError("Config YAML is empty.")
