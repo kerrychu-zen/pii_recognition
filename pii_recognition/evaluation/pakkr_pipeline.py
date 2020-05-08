@@ -10,8 +10,7 @@ from pii_recognition.evaluation.model_evaluator import ModelEvaluator
 from pii_recognition.paths.data_path import DataPath
 from pii_recognition.recognisers import registry as recogniser_registry
 from pii_recognition.recognisers.entity_recogniser import EntityRecogniser
-from pii_recognition.tokenisation import (detokeniser_registry,
-                                          tokeniser_registry)
+from pii_recognition.tokenisation import detokeniser_registry, tokeniser_registry
 from pii_recognition.tokenisation.detokenisers import Detokeniser
 from pii_recognition.tokenisation.tokenisers import Tokeniser
 from pii_recognition.utils import load_yaml_file, write_iterable_to_file
@@ -90,7 +89,7 @@ def evaluate(
     log_entities_metric(precision, "precision")
     log_entities_metric(f1, "f1")
 
-    # save wrong predicitons to artefacts
+    # save wrong predicitons to artifact
     with tempfile.TemporaryDirectory() as tempdir:
         error_file_path = os.path.join(tempdir, "prediction_mistakes.txt")
         write_iterable_to_file(mistakes, error_file_path)

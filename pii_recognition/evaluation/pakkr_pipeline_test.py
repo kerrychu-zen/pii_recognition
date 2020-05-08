@@ -5,11 +5,12 @@ from pii_recognition.registration.registry import Registry
 
 from .pakkr_pipeline import (
     evaluate,
+    get_detokeniser,
     get_recogniser,
     get_tokeniser,
     load_test_data,
+    mlflow,
     reader_registry,
-    get_detokeniser,
 )
 
 
@@ -84,6 +85,7 @@ def test_load_test_data():
 
 
 @patch("pii_recognition.evaluation.pakkr_pipeline.log_entities_metric")
+@patch.object(mlflow, "log_artifact", new=Mock())
 def test_evaluate(mock_log):
     X_test = ["This is Bob from Melbourne ."]
     y_test = [["O", "O", "I-PER", "O", "O", "O"]]
