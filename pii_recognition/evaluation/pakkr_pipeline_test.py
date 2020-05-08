@@ -9,6 +9,7 @@ from .pakkr_pipeline import (
     get_recogniser,
     get_tokeniser,
     load_test_data,
+    log_config_yaml_path,
     mlflow,
     reader_registry,
 )
@@ -31,6 +32,12 @@ def mock_registry():
     regsitry.register(RegistryNoConfig)
     regsitry.register(RegistryWithConfig)
     return regsitry
+
+
+@patch.object(mlflow, "log_param")
+def test_log_config_yaml_path(mock_log_param):
+    log_config_yaml_path("fake_path")
+    mock_log_param.assert_called_with("config_yaml_path", "fake_path")
 
 
 @patch(
