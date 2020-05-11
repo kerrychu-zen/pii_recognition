@@ -33,12 +33,14 @@ class WnutReader(Reader):
                     # hit empty line and the next line is the start of a new sentence
                     # flush the collected sentence and labels
                     if is_io_schema:
-                        sent_labels = map_bio_to_io_labels(sentence_entities)
+                        processed_labels = map_bio_to_io_labels(sentence_entities)
                     else:
-                        sent_labels = sentence_entities
-                    self._validate_entity(set(sent_labels), set(supported_entities))
+                        processed_labels = sentence_entities
+                    self._validate_entity(
+                        set(processed_labels), set(supported_entities)
+                    )
 
-                    labels.append(sent_labels)
+                    labels.append(processed_labels)
                     sents.append(self._detokeniser.detokenise(sentence_tokens))
 
                     # refresh containers

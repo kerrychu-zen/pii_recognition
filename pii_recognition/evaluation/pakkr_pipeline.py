@@ -78,13 +78,15 @@ def get_evaluator(
 def load_test_data(
     test_data_path: str,
     test_data_support_entities: List[str],
-    is_io_schema: bool,
+    test_is_io_schema: bool,
     detokeniser: Detokeniser,
 ) -> Data:
     data_path = DataPath(test_data_path)
     reader_config = {"detokeniser": detokeniser}
     reader = reader_registry.create_instance(data_path.reader_name, reader_config)
-    return reader.get_test_data(data_path.path, test_data_support_entities, True)
+    return reader.get_test_data(
+        data_path.path, test_data_support_entities, test_is_io_schema
+    )
 
 
 @returns()
