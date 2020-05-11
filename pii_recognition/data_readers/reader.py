@@ -1,6 +1,6 @@
 from abc import ABCMeta, abstractmethod
-from typing import List, Tuple
 from dataclasses import dataclass
+from typing import List, Tuple
 
 
 class Reader(metaclass=ABCMeta):
@@ -8,7 +8,7 @@ class Reader(metaclass=ABCMeta):
         ...
 
     @abstractmethod
-    def get_test_data(self, file_path: str) -> Tuple[List[str], List[List[str]]]:
+    def get_test_data(self, file_path: str, supported_entities: List[str]) -> Data:
         """
         Read test data and split into features and labels, where features are inputs
         to a model and labels are the ground truths.

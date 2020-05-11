@@ -5,7 +5,7 @@ from nltk.corpus.reader import ConllCorpusReader
 
 from pii_recognition.tokenisation.detokenisers import Detokeniser
 
-from .reader import Reader
+from .reader import Data, Reader
 
 
 def _sent2tokens(sent: List[Tuple[str, str, str]]) -> List[str]:
@@ -28,13 +28,9 @@ class ConllReader(Reader):
             columntypes=["words", "pos", "ignore", "chunk"],
         )
 
-    def get_test_data(self, file_path: str) -> Tuple[List[str], List[List[str]]]:
+    def get_test_data(self, file_path: str, supported_entities: List[str]) -> Data:
         """
-        Label types of CONLL 2003 evaluation data:
-            I-PER
-            I-LOC
-            I_ORG
-            I-MISC
+        Read CONLL type of data.
         """
         data = self._get_corpus(file_path)
 
@@ -46,4 +42,6 @@ class ConllReader(Reader):
         ]
         labels = [_sent2labels(sent) for sent in sent_features]
 
-        return sents, labels
+        return Data(
+            sentences=sents, labels=labels, supported_entities=supported_entities
+        )
