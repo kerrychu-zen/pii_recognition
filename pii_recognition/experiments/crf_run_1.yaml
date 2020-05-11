@@ -18,13 +18,9 @@ recogniser_setup:
   name: CrfRecogniser
   config:
     supported_entities:
-      - B-LOC
       - I-LOC
-      - B-ORG
       - I-ORG
-      - B-PER
       - I-PER
-      - B-MISC
       - I-MISC
     supported_languages:
       - en
