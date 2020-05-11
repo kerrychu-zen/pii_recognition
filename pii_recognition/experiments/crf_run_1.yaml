@@ -4,7 +4,11 @@ target_recogniser_entities:
   - I-PER
   - I-LOC
 test_data_path: pii_recognition/datasets/conll2003/eng.testb
-test_data_support_entities: ["I-LOC", "I-PER", "I-ORG", "I-MISC"]
+test_data_support_entities:
+  - I-LOC
+  - I-PER
+  - I-ORG
+  - I-MISC
 test_is_io_schema: true
 tokeniser_setup:  # tokeniser for evaluator
   name: TreebankWordTokeniser
