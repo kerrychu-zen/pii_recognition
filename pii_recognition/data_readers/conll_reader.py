@@ -1,5 +1,5 @@
 from pathlib import PurePath
-from typing import List, Tuple
+from typing import List, Tuple, Set
 
 from nltk.corpus.reader import ConllCorpusReader
 
@@ -28,7 +28,9 @@ class ConllReader(Reader):
             columntypes=["words", "pos", "ignore", "chunk"],
         )
 
-    def get_test_data(self, file_path: str, supported_entities: List[str]) -> Data:
+    def get_test_data(
+        self, file_path: str, supported_entities: List[str], is_io_schema: bool = True
+    ) -> Data:
         """
         Read CONLL type of data.
         """
@@ -37,11 +39,13 @@ class ConllReader(Reader):
         sent_features = list(data.iob_sents())
         sent_features = [x for x in sent_features if x]  # remove empty features
 
-        sents = [
-            self._detokeniser.detokenise(_sent2tokens(sent)) for sent in sent_features
-        ]
-        labels = [_sent2labels(sent) for sent in sent_features]
+        labels = []
+        sents = []
+        for sent_feat in sent_features:
+            sent_labels = _sent2labels(sent_feat)
+            self._validate_entity(set(sent_labels), set(supported_entities))
+            sent_str = self._detokeniser.detokenise(_sent2tokens(sent_feat))
+            labels.append(sent_labels)
+            sents.append(sent_str)
 
-        return Data(
-            sentences=sents, labels=labels, supported_entities=supported_entities
-        )
+        return Data(sents, labels, supported_entities, is_io_schema,)
