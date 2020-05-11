@@ -1,5 +1,6 @@
 from abc import ABCMeta, abstractmethod
 from typing import List, Tuple
+from dataclasses import dataclass
 
 
 class Reader(metaclass=ABCMeta):
@@ -13,3 +14,13 @@ class Reader(metaclass=ABCMeta):
         to a model and labels are the ground truths.
         """
         ...
+
+
+@dataclass
+class Data:
+    # a recogniser takes a string as input so need a setence
+    # instead of a list of tokens
+    sentences: List[str]
+    # labels are token based
+    labels: List[List[str]]
+    supported_entities: List[str]
