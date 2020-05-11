@@ -53,5 +53,4 @@ class ConllReader(Reader):
             sent_str = self._detokeniser.detokenise(_sent2tokens(sent_feat))
             labels.append(processed_labels)
             sents.append(sent_str)
-
         return Data(sents, labels, supported_entities, is_io_schema,)

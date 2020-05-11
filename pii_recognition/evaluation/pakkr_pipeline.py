@@ -74,7 +74,7 @@ def get_evaluator(
 
 
 # Multiple outputs
-@returns(List, List)
+@returns(Data)
 def load_test_data(
     test_data_path: str,
     test_data_support_entities: List[str],
@@ -124,6 +124,7 @@ def execute_evaluation_pipeline(config_yaml: str):
         evaluate,
         disable_tracker,
         name="pii_evaluation_pipeline",
+        _suppress_timing_logs=False,
     )
 
     config = load_yaml_file(config_yaml)
