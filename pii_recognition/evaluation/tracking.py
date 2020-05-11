@@ -8,9 +8,9 @@ from typing import Dict
 import mlflow
 from mlflow import ActiveRun
 
-from pii_recognition.constants import BASE_DIR
+from pii_recognition.constants import ROOT_DIR
 
-DEFAULT_TRACKER_URI = os.path.join(BASE_DIR, "mlruns")
+DEFAULT_TRACKER_URI = os.path.join(ROOT_DIR, "mlruns")
 
 
 def _get_experiment_id(experiment_name: str):
