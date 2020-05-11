@@ -31,7 +31,7 @@ class Reader(metaclass=ABCMeta):
 
     @abstractmethod
     def get_test_data(
-        self, file_path: str, supported_entities: List[str], io_schema: bool = True
+        self, file_path: str, supported_entities: List[str], is_io_schema: bool = True
     ) -> Data:
         """
         Read test data and split into features and labels. Features are inputs
