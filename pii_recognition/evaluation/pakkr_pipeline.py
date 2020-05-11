@@ -6,11 +6,13 @@ import mlflow
 from pakkr import Pipeline, returns
 
 from pii_recognition.data_readers import reader_registry
+from pii_recognition.data_readers.reader import Data
 from pii_recognition.evaluation.model_evaluator import ModelEvaluator
 from pii_recognition.paths.data_path import DataPath
 from pii_recognition.recognisers import registry as recogniser_registry
 from pii_recognition.recognisers.entity_recogniser import EntityRecogniser
-from pii_recognition.tokenisation import detokeniser_registry, tokeniser_registry
+from pii_recognition.tokenisation import (detokeniser_registry,
+                                          tokeniser_registry)
 from pii_recognition.tokenisation.detokenisers import Detokeniser
 from pii_recognition.tokenisation.tokenisers import Tokeniser
 from pii_recognition.utils import load_yaml_file, write_iterable_to_file
@@ -75,19 +77,19 @@ def get_evaluator(
 # Multiple outputs
 @returns(List, List)
 def load_test_data(
-    test_data_path: str, detokeniser: Detokeniser
-) -> Tuple[List[str], List[List[str]]]:
+    test_data_path: str, test_support_entities: List[str], is_io_schema: bool, detokeniser: Detokeniser
+) -> Data:
     data_path = DataPath(test_data_path)
     reader_config = {"detokeniser": detokeniser}
     reader = reader_registry.create_instance(data_path.reader_name, reader_config)
-    return reader.get_test_data(data_path.path)
+    return reader.get_test_data(data_path.path, test_support_entities, True)
 
 
 @returns()
 def evaluate(
-    X_test: List[str], y_test: List[List[str]], evaluator: ModelEvaluator,
+    data: Data, evaluator: ModelEvaluator,
 ):
-    counters, mistakes = evaluator.evaluate_all(X_test, y_test)
+    counters, mistakes = evaluator.evaluate_all(data.sentences, data.labels)
     recall, precision, f1 = evaluator.calculate_score(counters)
 
     log_entities_metric(recall, "recall")
