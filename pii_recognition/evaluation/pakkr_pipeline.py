@@ -1,6 +1,6 @@
 import os
 import tempfile
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional
 
 import mlflow
 from pakkr import Pipeline, returns

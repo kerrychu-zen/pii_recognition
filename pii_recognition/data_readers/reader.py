@@ -1,6 +1,6 @@
 from abc import ABCMeta, abstractmethod
 from dataclasses import dataclass
-from typing import List, Set, Tuple
+from typing import List, Set
 
 
 @dataclass

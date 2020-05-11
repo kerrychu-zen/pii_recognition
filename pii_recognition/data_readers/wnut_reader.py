@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import List
 
 from pii_recognition.labels.mapping import map_bio_to_io_labels
 from pii_recognition.tokenisation.detokenisers import Detokeniser
@@ -14,7 +14,7 @@ class WnutReader(Reader):
         self, file_path: str, supported_entities: List[str], is_io_schema: bool = True
     ) -> Data:
         """
-        Read WNUT type of data. 
+        Read WNUT type of data.
         """
         sents = []
         labels = []
