@@ -49,9 +49,12 @@ def mock_detokeniser():
 )
 def test_get_conll_eval_data(mock_detokeniser):
     reader = ConllReader(detokeniser=mock_detokeniser)
-    sents, labels = reader.get_test_data(file_path="fake_path")
-    assert sents == ["SOCCER - JAPAN GET", "Nadim Ladki"]
-    assert labels == [["O", "O", "I-LOC", "O"], ["I-PER", "I-PER"]]
+    data = reader.get_test_data(
+        file_path="fake_path", supported_entities=["I-LOC", "I-PER"]
+    )
+    assert data.sentences == ["SOCCER - JAPAN GET", "Nadim Ladki"]
+    assert data.labels == [["O", "O", "I-LOC", "O"], ["I-PER", "I-PER"]]
+    assert data.supported_entities == ["I-LOC", "I-PER"]
 
 
 def test_sent2tokens(sent):
