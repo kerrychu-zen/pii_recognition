@@ -1,4 +1,4 @@
-"""CLI to run Pakkr evaluation pipeline."""
+"""CLI support for running Pakkr evaluation pipeline."""
 import argparse
 
 from pii_recognition.evaluation.pakkr_pipeline import execute_evaluation_pipeline
