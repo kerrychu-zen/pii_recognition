@@ -1,10 +1,6 @@
-# CRF on CONLL testa
+# CRF recogniser on CONLL 2003 testa
 experiment_name: Crf
 run_name: run_2
-target_recogniser_entities:
-  - I-PER
-  - I-LOC
-  - I-ORG
 test_data_path: pii_recognition/datasets/conll2003/eng.testa
 test_data_support_entities:
   - I-LOC
@@ -29,3 +25,7 @@ recogniser_setup:
     model_path: pii_recognition/exported_models/conll2003-en.crfsuite
     tokeniser_setup:
       name: TreebankWordTokeniser
+predict_on:  # using recogniser labels
+  - I-PER
+  - I-LOC
+  - I-ORG

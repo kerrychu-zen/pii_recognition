@@ -1,10 +1,6 @@
-# CRF on CONLL wnut
+# CRF recogniser on WNUT 2017 test
 experiment_name: Crf
 run_name: run_3
-target_recogniser_entities:
-  - I-PER
-  - I-LOC
-  - I-ORG
 test_data_path: pii_recognition/datasets/wnut2017/emerging.test.annotated
 test_data_support_entities:
 - I-person
@@ -35,3 +31,7 @@ recogniser_setup:
     model_path: pii_recognition/exported_models/conll2003-en.crfsuite
     tokeniser_setup:
       name: TreebankWordTokeniser
+predict_on:  # using recogniser labels
+  - I-PER
+  - I-LOC
+  - I-ORG
