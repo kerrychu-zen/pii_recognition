@@ -63,8 +63,8 @@ class ModelEvaluator:
             if not (switch_keys_set <= recogniser_entity_set):
                 unsupported = switch_keys_set - recogniser_entity_set
                 raise ValueError(
-                    f"Keys of switch_label must be entity names from recogniser, but"
-                    f"it contains unknown labels {unsupported}."
+                    f"Must use entity names from recogniser for switch_label keys, "
+                    f"but contains unknown labels {unsupported}."
                 )
 
     def _validate_target_entities(self):
@@ -76,7 +76,7 @@ class ModelEvaluator:
             unsupported = target_entity_set - recogniser_entity_set
             raise ValueError(
                 f"Entities taken for evaluation must use recogniser labels, "
-                f"but contains unknown labels {unsupported}"
+                f"but contains unknown labels {unsupported}."
             )
 
     def _validate_predictions(self, predicted: List[str]):
