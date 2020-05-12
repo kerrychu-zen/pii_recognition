@@ -69,9 +69,7 @@ def get_evaluator(
     switch_labels: Optional[Dict[str, str]] = None,
 ) -> Dict[str, ModelEvaluator]:
     return {
-        "evaluator": ModelEvaluator(
-            recogniser, tokeniser, predict_on, switch_labels
-        )
+        "evaluator": ModelEvaluator(recogniser, tokeniser, predict_on, switch_labels)
     }
 
 
