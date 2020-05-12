@@ -27,10 +27,9 @@ recogniser_setup:
     model_name: ner
 switch_labels:
   LOC: I-location
-  GPE: I-location
   ORG: I-corporation
-  PERSON: I-person
+  PER: I-person
 predict_on:
-  - PER
   - LOC
   - ORG
+  - PER
