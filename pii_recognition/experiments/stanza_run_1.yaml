@@ -1,4 +1,4 @@
-# Stanza recogniser on CONLL 2003
+# Stanza recogniser on CONLL 2003 testb
 experiment_name: Stanza
 run_name: run_1
 test_data_path: pii_recognition/datasets/conll2003/eng.testb
