@@ -38,15 +38,8 @@ class ModelEvaluator:
         self.tokeniser = tokeniser
         self._convert_to_test_labels = convert_to_test_labels
 
-        if not (set(target_entities) <= set(recogniser.supported_entities)):
-            unsupported_labels = set(target_entities) - set(
-                recogniser.supported_entities
-            )
-            raise ValueError(
-                f"Entities taken for evaluation must use recogniser labels, "
-                f"but contains unknown labels {unsupported_labels}"
-            )
         self.target_entities = target_entities
+        self._validate_target_entities()
 
         if convert_to_test_labels:
             self._translated_entities = map_labels(
@@ -54,6 +47,18 @@ class ModelEvaluator:
             )
         else:
             self._translated_entities = target_entities
+
+    def _validate_target_entities(self):
+        """Target entities must using entity labels defined by recogniser."""
+        target_entity_set = set(self.target_entities)
+        recogniser_entity_set = set(self.recogniser.supported_entities)
+
+        if not (target_entity_set <= recogniser_entity_set):
+            unsupported = target_entity_set - recogniser_entity_set
+            raise ValueError(
+                f"Entities taken for evaluation must use recogniser labels, "
+                f"but contains unknown labels {unsupported_labels}"
+            )
 
     def _validate_predictions(self, predicted: List[str]):
         """
