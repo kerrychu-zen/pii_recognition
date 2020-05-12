@@ -1,0 +1,37 @@
+# CRF on CONLL wnut
+experiment_name: Crf
+run_name: run_3
+target_recogniser_entities:
+  - I-PER
+  - I-LOC
+  - I-ORG
+test_data_path: pii_recognition/datasets/wnut2017/emerging.test.annotated
+test_data_support_entities:
+- I-person
+- I-location
+- I-corporation
+- I-product
+- I-creative-work
+- I-group
+test_is_io_schema: true
+convert_to_test_labels:
+  I-LOC: I-location
+  I-PER: I-person
+  I-ORG: I-corporation
+tokeniser_setup:  # tokeniser for evaluator
+  name: TreebankWordTokeniser
+detokeniser_setup:  # detokeniser for data reader
+  name: TreebankWordDetokeniser
+recogniser_setup:
+  name: CrfRecogniser
+  config:
+    supported_entities:
+      - I-LOC
+      - I-ORG
+      - I-PER
+      - I-MISC
+    supported_languages:
+      - en
+    model_path: pii_recognition/exported_models/conll2003-en.crfsuite
+    tokeniser_setup:
+      name: TreebankWordTokeniser
