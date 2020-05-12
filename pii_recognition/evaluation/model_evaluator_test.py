@@ -68,13 +68,13 @@ def test_class_init():
         recogniser=mock_recogniser,
         tokeniser=mock_tokeniser,
         target_entities=["PER", "LOC"],
-        convert_to_test_labels={"PER": "PERSON", "LOC": "LOCATION"},
+        switch_labels={"PER": "PERSON", "LOC": "LOCATION"},
     )
 
     assert evaluator.recogniser == mock_recogniser
     assert evaluator.tokeniser == mock_tokeniser
     assert evaluator.target_entities == ["PER", "LOC"]
-    assert evaluator._convert_to_test_labels == {"PER": "PERSON", "LOC": "LOCATION"}
+    assert evaluator._switch_labels == {"PER": "PERSON", "LOC": "LOCATION"}
     assert evaluator._translated_entities == ["PERSON", "LOCATION"]
 
 
@@ -176,7 +176,7 @@ def test__compare_predicted_and_truth(text, mock_recogniser):
         recogniser=mock_recogniser,
         tokeniser=Mock(),
         target_entities=["LOC", "PER"],
-        convert_to_test_labels={"LOC": "LOCATION", "PER": "PERSON"},
+        switch_labels={"LOC": "LOCATION", "PER": "PERSON"},
     )
     counter, mistakes = evaluator._compare_predicted_and_truth(
         text,
@@ -244,7 +244,7 @@ def test_evaluate_sample_with_label_conversion(text, mock_recogniser, mock_token
         recogniser=mock_recogniser,
         tokeniser=mock_tokeniser,
         target_entities=["PER", "LOC"],
-        convert_to_test_labels={"PER": "I-PER", "LOC": "I-LOC"},
+        switch_labels={"PER": "I-PER", "LOC": "I-LOC"},
     )
     counter, mistakes = evaluator.evaluate_sample(
         text, annotations=["O", "I-MISC", "I-PER", "O", "I-LOC", "I-MISC"]
@@ -264,7 +264,7 @@ def test_evaluate_sample_with_mistakes(text, mock_bad_recogniser, mock_tokeniser
         recogniser=mock_bad_recogniser,
         tokeniser=mock_tokeniser,
         target_entities=["PER", "LOC"],
-        convert_to_test_labels={"PER": "I-PER", "LOC": "I-LOC"},
+        switch_labels={"PER": "I-PER", "LOC": "I-LOC"},
     )
     counter, mistakes = evaluator.evaluate_sample(
         text, annotations=["O", "I-MISC", "I-PER", "O", "I-LOC", "I-MISC"]
@@ -345,7 +345,7 @@ def test_calculate_score(mock_recogniser, mock_tokeniser):
         recogniser=mock_recogniser,
         tokeniser=mock_tokeniser,
         target_entities=["PER", "LOC"],
-        convert_to_test_labels={"LOC": "LOCATION", "PER": "PERSON"},
+        switch_labels={"LOC": "LOCATION", "PER": "PERSON"},
     )
     counters = [
         Counter(

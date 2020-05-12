@@ -22,7 +22,7 @@ class ModelEvaluator:
         tokeniser: an instance of Tokeniser.
         target_entities: entities to be evaluated, using entity labels from the
             recogniser.
-        convert_to_test_labels: a dict {model_label: test_label} facilitates the entity
+        switch_labels: a dict {model_label: test_data_label} facilitates the entity
             conversion between predicted and test labels. Predicted entity labels could
             differ from the test entity labels, e.g., PERSON and PER.
     """
@@ -32,21 +32,38 @@ class ModelEvaluator:
         recogniser: EntityRecogniser,
         tokeniser: Tokeniser,
         target_entities: List[str],
-        convert_to_test_labels: Optional[Dict[str, str]] = None,
+        switch_labels: Optional[Dict[str, str]] = None,
     ):
         self.recogniser = recogniser
         self.tokeniser = tokeniser
-        self._convert_to_test_labels = convert_to_test_labels
+
+        self._switch_labels = switch_labels
+        self._validate__switch_labels()
 
         self.target_entities = target_entities
         self._validate_target_entities()
 
-        if convert_to_test_labels:
-            self._translated_entities = map_labels(
-                target_entities, convert_to_test_labels
-            )
+        if switch_labels:
+            self._translated_entities = map_labels(target_entities, switch_labels)
         else:
             self._translated_entities = target_entities
+
+    def _validate__switch_labels(self):
+        """
+        Switch labels is a dict attribute with keys of it are entity names supplied
+        in recogniser.
+        """
+        if self._switch_labels is None:
+            pass
+        else:
+            switch_keys_set = set(self._switch_labels.keys())
+            recogniser_entity_set = set(self.recogniser.supported_entities)
+            if not (switch_keys_set <= recogniser_entity_set):
+                unsupported = switch_keys_set - recogniser_entity_set
+                raise ValueError(
+                    f"Keys of switch_label must be entity names from recogniser, but"
+                    f"it contains unknown labels {unsupported}."
+                )
 
     def _validate_target_entities(self):
         """Target entities must using entity labels defined by recogniser."""
@@ -96,8 +113,8 @@ class ModelEvaluator:
         the labels of ground truth (annotations). A counter and a container that holds
         prediction errors are returned.
         """
-        if self._convert_to_test_labels:
-            predictions = map_labels(predictions, self._convert_to_test_labels)
+        if self._switch_labels:
+            predictions = map_labels(predictions, self._switch_labels)
 
         label_pair_counter: Counter = Counter()
         # token mismatch -- the tokeniser we use produces different token set from the
@@ -139,8 +156,8 @@ class ModelEvaluator:
         token_based_predictions = self.get_token_based_prediction(text)
         predictions = [pred.entity_type for pred in token_based_predictions]
         translated_predictions = (
-            map_labels(predictions, self._convert_to_test_labels)
-            if self._convert_to_test_labels
+            map_labels(predictions, self._switch_labels)
+            if self._switch_labels
             else predictions
         )
 
@@ -210,9 +227,9 @@ class ModelEvaluator:
                 entity_f_score[entity] = np.NaN
 
         # use recogniser entity labels
-        if (use_test_labels is False) and (self._convert_to_test_labels is not None):
+        if (use_test_labels is False) and (self._switch_labels is not None):
             convert_to_recogniser_labels = {
-                value: key for key, value in self._convert_to_test_labels.items()
+                value: key for key, value in self._switch_labels.items()
             }
 
             entity_recall = self._convert_metric_labels(
