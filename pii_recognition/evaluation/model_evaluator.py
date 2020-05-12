@@ -37,6 +37,8 @@ class ModelEvaluator:
         self.recogniser = recogniser
         self.tokeniser = tokeniser
 
+        # TODO: Add many-to-one support. The switch_labels dict supports one to one and
+        # one to many
         self._switch_labels = switch_labels
         self._validate__switch_labels()
 
