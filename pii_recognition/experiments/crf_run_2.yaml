@@ -1,4 +1,4 @@
-# CRF on CONLL testb
+# CRF on CONLL testa
 experiment_name: Crf
 run_name: run_2
 target_recogniser_entities:
