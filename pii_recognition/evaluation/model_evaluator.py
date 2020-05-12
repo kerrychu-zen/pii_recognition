@@ -76,7 +76,7 @@ class ModelEvaluator:
             unsupported = target_entity_set - recogniser_entity_set
             raise ValueError(
                 f"Entities taken for evaluation must use recogniser labels, "
-                f"but contains unknown labels {unsupported_labels}"
+                f"but contains unknown labels {unsupported}"
             )
 
     def _validate_predictions(self, predicted: List[str]):
