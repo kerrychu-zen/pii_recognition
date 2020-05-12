@@ -66,11 +66,11 @@ def get_evaluator(
     recogniser: EntityRecogniser,
     tokeniser: Tokeniser,
     target_recogniser_entities: List[str],
-    convert_labels: Optional[Dict[str, str]] = None,
+    convert_to_test_labels: Optional[Dict[str, str]] = None,
 ) -> Dict[str, ModelEvaluator]:
     return {
         "evaluator": ModelEvaluator(
-            recogniser, tokeniser, target_recogniser_entities, convert_labels
+            recogniser, tokeniser, target_recogniser_entities, convert_to_test_labels
         )
     }
 
