@@ -4,6 +4,7 @@ run_name: run_1
 target_recogniser_entities:
   - I-PER
   - I-LOC
+  - I-ORG
 test_data_path: pii_recognition/datasets/conll2003/eng.testb
 test_data_support_entities:
   - I-LOC
