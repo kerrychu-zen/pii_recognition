@@ -1,4 +1,4 @@
-# Spacy recogniser on CONLL 2003 testb
+# Spacy recogniser on CONLL 2003 testb with en_core_web_lg model
 experiment_name: Spacy
 run_name: run_1
 test_data_path: pii_recognition/datasets/conll2003/eng.testb
@@ -39,9 +39,11 @@ recogniser_setup:
     model_name: en_core_web_lg
 switch_labels:
   LOC: I-LOC
+  GPE: I-LOC
   ORG: I-ORG
   PERSON: I-PER
 predict_on:
   - LOC
+  - GPE
   - ORG
   - PERSON

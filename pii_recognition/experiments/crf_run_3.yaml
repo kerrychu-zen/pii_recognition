@@ -3,12 +3,12 @@ experiment_name: Crf
 run_name: run_3
 test_data_path: pii_recognition/datasets/wnut2017/emerging.test.annotated
 test_data_support_entities:
-- I-person
-- I-location
-- I-corporation
-- I-product
-- I-creative-work
-- I-group
+  - I-person
+  - I-location
+  - I-corporation
+  - I-product
+  - I-creative-work
+  - I-group
 test_is_io_schema: true
 convert_to_test_labels:
   I-LOC: I-location
