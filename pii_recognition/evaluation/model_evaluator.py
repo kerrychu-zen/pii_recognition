@@ -20,8 +20,8 @@ class ModelEvaluator:
     Attributes:
         recogniser: an instanace of EntityRecogniser, a named entity recogniser.
         tokeniser: an instance of Tokeniser.
-        target_recogniser_entities: entities to be evaluated, the entities are labels
-            defined within the recogniser model.
+        target_entities: entities to be evaluated, using entity labels from the
+            recogniser.
         convert_to_test_labels: a dict {model_label: test_label} facilitates the entity
             conversion between predicted and test labels. Predicted entity labels could
             differ from the test entity labels, e.g., PERSON and PER.
@@ -31,26 +31,36 @@ class ModelEvaluator:
         self,
         recogniser: EntityRecogniser,
         tokeniser: Tokeniser,
-        target_recogniser_entities: List[str],
+        target_entities: List[str],
         convert_to_test_labels: Optional[Dict[str, str]] = None,
     ):
         self.recogniser = recogniser
         self.tokeniser = tokeniser
         self._convert_to_test_labels = convert_to_test_labels
-        self.target_recogniser_entities = target_recogniser_entities
+
+        if not (set(target_entities) <= set(recogniser.supported_entities)):
+            unsupported_labels = set(target_entities) - set(
+                recogniser.supported_entities
+            )
+            raise ValueError(
+                f"Entities taken for evaluation must use recogniser labels, "
+                f"but contains unknown labels {unsupported_labels}"
+            )
+        self.target_entities = target_entities
+
         if convert_to_test_labels:
             self._translated_entities = map_labels(
-                target_recogniser_entities, convert_to_test_labels
+                target_entities, convert_to_test_labels
             )
         else:
-            self._translated_entities = target_recogniser_entities
+            self._translated_entities = target_entities
 
     def _validate_predictions(self, predicted: List[str]):
         """
         Validate predicted entity labels. Predictions should not contain any unasked
         entities.
         """
-        asked_entities = set(self.target_recogniser_entities) | {"O"}
+        asked_entities = set(self.target_entities) | {"O"}
         predicted_entities = set(predicted)
         assert predicted_entities.issubset(asked_entities), (
             f"Predictions contain unasked entities "
@@ -58,7 +68,7 @@ class ModelEvaluator:
         )
 
     def get_span_based_prediction(self, text: str) -> List[SpanLabel]:
-        predicted_spans = self.recogniser.analyse(text, self.target_recogniser_entities)
+        predicted_spans = self.recogniser.analyse(text, self.target_entities)
         self._validate_predictions([label.entity_type for label in predicted_spans])
         return predicted_spans
 
