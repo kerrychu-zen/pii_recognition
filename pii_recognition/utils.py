@@ -1,4 +1,4 @@
-from typing import IO, Any, Dict, Iterable, Optional, Sequence, Type
+from typing import Any, Dict, Iterable, Optional, Sequence, Type
 
 import yaml
 
@@ -36,6 +36,6 @@ def load_yaml_file(path: str) -> Optional[Dict]:
     return data
 
 
-def dump_yaml_file(path: str, data: IO[str]):
+def dump_yaml_file(path: str, data: Any):
     with open(path, "w") as stream:
         yaml.dump(data, stream)
