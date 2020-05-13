@@ -74,7 +74,7 @@ Many other off-the-shelf models are provided as well with the detail implementat
 Training is not the focus for this project. Two directories, `features` and `exported_models`, have been maintained for training as it is needed for developing CRF models and should be aware that files within are not tested.
 
 ## Evaluate a Recogniser
-### Data Format
+### Evaluation Dataset Format
 Evaluation requires sentences to be the *input*.
 ```python
 input_data: List[str] = ["A sentence to be evaluated.", "I love Melbourne."]
