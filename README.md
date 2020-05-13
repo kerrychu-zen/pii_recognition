@@ -1,5 +1,26 @@
 # Personal Identifiable Information (PII) Recognition
 
+## Installation
+The project is developed in Python3, make sure you have Python 3.7 or above available.
+
+Installing `poetry` for dependency management.
+```
+pip install poetry
+```
+Using `install` command to download and install dependencies from `poetry.lock`. This could take a while.
+```
+poetry install
+```
+
+If you want to enable creating virtualenv inside the project's root directory, you can change the config.
+```
+poetry config virtualenvs.in-project true
+```
+Sapwning a shell with the virtual environment activated.
+```
+poetry shell
+```
+
 ## Quick Start
 
 ### Example Usage
