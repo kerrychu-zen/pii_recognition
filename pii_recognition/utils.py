@@ -36,7 +36,6 @@ def load_yaml_file(path: str) -> Optional[Dict]:
     return data
 
 
-# TODO: add test
 def dump_yaml_file(path: str, data: IO[str]):
     with open(path, "w") as stream:
         yaml.dump(data, stream)
