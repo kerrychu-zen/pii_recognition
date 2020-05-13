@@ -118,3 +118,18 @@ Evaluation of experiments are conducted on CONLL 2003 English data -- `eng.testb
 |Stanza     | pretrained_en          |  Conll-03 en.testb  |  0.855 | 0.846| 0.850| 10.6min|
 
 notes: no batch is enabled, all models are running on CPU and tested with English dataset on PERSON entity
+
+## Evaluation Pipeline
+### Pakkr + MLflow Tracking
+Pakkr is a lightweight tool published by Zendesk ML team for pipeline development. MLflow Tracking is an API to log results and parameters in machine learning experiments and report them in interactive UI.
+
+
+The experiments put at `pii_recognition/experiments/` folder, you can pick one or create one on you won and run it within the pipeline. Note, batch and GPU are not supported yet, evaluate over deep learning models can be slow.
+```
+python pii_recognition/pipelines/pakkr_evaluation.py --config_yaml pii_recognition/experiments/you_pick
+```
+
+MLflow Tracking UI will log the run and interaction is available at http://localhost:5000. Start it with:
+```
+mlflow ui
+```
