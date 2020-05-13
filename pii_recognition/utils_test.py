@@ -6,7 +6,6 @@ from pii_recognition.utils import (
     is_ascending,
     load_yaml_file,
     write_iterable_to_file,
-    yaml,
 )
 
 
