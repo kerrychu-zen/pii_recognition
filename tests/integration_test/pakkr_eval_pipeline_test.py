@@ -15,6 +15,7 @@ def test_execute_evaluation_pipeline():
         temp_config_yaml = os.path.join(tempdir, "config.yaml")
         tracker_uri = os.path.join(tempdir, "mlruns")
 
+        # add tracker_uri field to config_yaml
         data = load_yaml_file(config_yaml)
         data["tracker_uri"] = tracker_uri
         dump_yaml_file(temp_config_yaml, data)
