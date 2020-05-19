@@ -78,6 +78,22 @@ You will get span labels as follows
 Many other off-the-shelf models are provided as well with the detail implementations found in `recognisers` folder, including two neural networks based inference models [`flair`](https://github.com/flairNLP/flair) and [`stanza`](https://github.com/stanfordnlp/stanza).
 
 
+#### Customise a Recogniser
+Add a custom recogniser by inheriting `EntityRecogniser` class and implementing the `analyse` method.
+```python
+from typing import List
+from pii_recognition.labels.schema import SpanLabel
+from pii_recognition.recognisers.entity_recogniser import EntityRecogniser
+
+class CustomRecogniser(EntityRecogniser):
+    def __init__(self, supported_entities: List[str], supported_languages: List[str], name: str, **kwargs):
+        ...
+
+    def analyse(self, text: str, entities: List[str]) -> List[SpanLabel]:
+        ...
+```
+
+
 ## Train a Recogniser
 Training is not the focus for this project. Two directories, `features` and `exported_models`, have been maintained for training as it is needed for developing CRF models and should be aware that files within are not tested.
 
