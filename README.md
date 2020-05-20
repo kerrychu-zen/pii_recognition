@@ -127,6 +127,7 @@ MLflow Tracking will log the run and the associated artefacts to local file or a
 ```
 mlflow ui
 ```
+![Demo Animation](../assets/mlflow_tracking_ui.png?raw=true)
 
 ### Performance
 Evaluation of experiments are performed on CONLL 2003 English data -- `eng.testb` with `MLflow` on `f1`, `precision` and `recall`. We will be updating the table as the project moves forward.
