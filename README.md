@@ -135,15 +135,15 @@ Evaluations are carried out on CONLL 2003 and WNUT 2017 datasets and test perfor
 * `emerging.test.annotated` of WNUT 2017
 
 ----------
-Table 1: Evaluation results on `eng.testb` of CONLL 2003
+Table 1: Evaluation results on `eng.testb` for CONLL 2003
 
 |Experiment |Run             |Num of Examples |I-LOC F1 |I-LOC Precision |I-LOC Recall |I-ORG F1 |I-ORG Precision |I-ORG Recall |I-PER F1 |I-LOC Precision |I-LOC Recall |Evaluation Duration |
 | --------- | -------------- | -------------- | ------- | -------------- | ----------- | ------- | -------------- | ----------- | ------- | -------------- | ----------- | ------------------ |
-| Heuristic | Uppercase      | 3453           |         |                |             |         |                |             | 0.4563  | 0.2980         | 0.9732      |
-| CRF       | In-house CRF   | 3453           | 0.7957  | 0.8389         | 0.7567      | 0.7405  | 0.7621         | 0.7200      | 0.8543  | 0.8237         | 0.8872      |
-| Spacy     | en_core_web_lg | 3453           | 0.7670  | 0.7067         | 0.8385      | 0.5734  | 0.5821	      | 0.5650      | 0.8256  | 0.8277         | 0.8235      |
-|           | xx_ent_wiki_sm | 3453           | 0.5966  | 0.5310         | 0.6807      | 0.4483  | 0.6008         | 0.3576	    | 0.7759  | 0.7884         | 0.7639      |
-|Flair      | pretrained_en  | 3453           | 0.7269  | 0.7622         | 0.6947      | 0.8208  | 0.7573         |	0.8960      | 0.8349  | 0.7453         | 0.9490      |
-|Stanza     | pretrained_en  | 3453           | 0.7874  | 0.7666         | 0.8093      | 0.5206  | 0.6337         | 0.4418      | 0.8488  | 0.8451         | 0.8524      |
+| Heuristic | Uppercase      | 3453           |         |                |             |         |                |             | 0.4563  | 0.2980         | 0.9732      | 1.6s               |
+| CRF       | In-house CRF   | 3453           | 0.7957  | 0.8389         | 0.7567      | 0.7405  | 0.7621         | 0.7200      | 0.8543  | 0.8237         | 0.8872      | 2.0s               |
+| Spacy     | en_core_web_lg | 3453           | 0.7670  | 0.7067         | 0.8385      | 0.5734  | 0.5821	      | 0.5650      | 0.8256  | 0.8277         | 0.8235      | 15.8s              |
+|           | xx_ent_wiki_sm | 3453           | 0.5966  | 0.5310         | 0.6807      | 0.4483  | 0.6008         | 0.3576	    | 0.7759  | 0.7884         | 0.7639      | 7.4s               |
+|Flair      | pretrained_en  | 3453           | 0.7269  | 0.7622         | 0.6947      | 0.8208  | 0.7573         |	0.8960      | 0.8349  | 0.7453         | 0.9490      | 21min              |
+|Stanza     | pretrained_en  | 3453           | 0.7874  | 0.7666         | 0.8093      | 0.5206  | 0.6337         | 0.4418      | 0.8488  | 0.8451         | 0.8524      | 8.6min             |
 
 	
