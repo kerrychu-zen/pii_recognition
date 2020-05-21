@@ -129,7 +129,10 @@ mlflow ui
 ```
 
 ### Performance
-Evaluation of experiments are performed on CONLL 2003 English data -- `eng.testb` with `MLflow` on `f1`, `precision` and `recall`. We will be updating the table as the project moves forward.
+Evaluations are carried out on CONLL 2003 and WNUT 2017 datasets and performance measured by `f1`, `precision`, `recall` and time of inference. Specifically, we are using the following files for testing
+* `eng.testa` of CONLL 2003
+* `eng.testb` of CONLL 2003
+* `emerging.test.annotated` of WNUT 2017
 
 
 | Experiment | Run | Test Set | Recall | Precision | F1 |  Evaluation Duration |
