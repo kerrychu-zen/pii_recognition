@@ -28,6 +28,6 @@ jobs:
     - name: mypy
       script: poetry run mypy --config-file pyproject.toml pii_recognition
     - name: unittest
-      script: poetry run pytest pii_recognition
+      script: poetry run pytest pii_recognition app_remote
     - name: integration test
       script: poetry run pytest tests
