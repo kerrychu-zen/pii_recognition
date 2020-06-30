@@ -11,6 +11,6 @@ def create_app(test_config=None):
 
     @app.route("/sidebar")
     def sidebar():
-        return render_template("start.html")
+        return render_template("sidebar.html")
 
     return app
