@@ -1,7 +1,9 @@
+from typing import Optional
+
 from flask import Flask, render_template
 
 
-def create_app(test_config=None):
+def create_app(test_config: Optional[dict] = None) -> Flask:
     app = Flask(__name__)
 
     if test_config is None:
@@ -10,7 +12,7 @@ def create_app(test_config=None):
         app.config.from_mapping(test_config)
 
     @app.route("/sidebar")
-    def sidebar():
+    def sidebar() -> str:
         return render_template("sidebar.html")
 
     return app
