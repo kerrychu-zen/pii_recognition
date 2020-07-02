@@ -1,6 +1,9 @@
 from typing import Optional
 
-from flask import Flask, render_template
+from flask import Flask, render_template, request, Response
+
+
+TICKET_ID: Optional[str] = None
 
 
 def create_app(test_config: Optional[dict] = None) -> Flask:
@@ -14,5 +17,10 @@ def create_app(test_config: Optional[dict] = None) -> Flask:
     @app.route("/sidebar")
     def sidebar() -> str:
         return render_template("sidebar.html")
+
+    @app.route("/update_ticket_id", methods=["POST"])
+    def update_ticket_id() -> Response:
+        TICKET_ID = request.get_json()
+        return Response(status=204)
 
     return app
