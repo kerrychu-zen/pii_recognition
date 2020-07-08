@@ -12,6 +12,7 @@ class PiiAppClient {
             cache: "no-cache",
             headers: {'Content-Type': 'application/json'},
         });
+        //TODO: callback to report error otherwise goes silent
     }        
 }
 
