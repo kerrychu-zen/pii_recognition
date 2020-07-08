@@ -1,5 +1,9 @@
-import { PiiAppClient } from './piiAppClient.js'
-
+/**
+ * Forward ticket id to redaction app for a replacement where the ticket id is
+ * retrieved from requesting ZAFClient.
+ * @param {ZAFClient} zafClient
+ * @param {RedactionAppClient} appClient
+ */
 const forwardTicketId = function (zafClient, appClient) {
   zafClient.get('ticket.id')
     .then(payload => appClient.replaceTicketId(payload))
@@ -11,7 +15,4 @@ const forwardTicketId = function (zafClient, appClient) {
     .catch(error => console.log(error))
 }
 
-const zafClient = ZAFClient.init() // takes some time to initialise
-const appClient = new PiiAppClient(window.origin)
-
-forwardTicketId(zafClient, appClient)
+export { forwardTicketId }

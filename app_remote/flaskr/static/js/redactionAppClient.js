@@ -1,8 +1,14 @@
-const PiiAppClient = class {
+/** A client communicates with redaction Flask app. */
+const RedactionAppClient = class {
   constructor (host) {
     this.host = host
   }
 
+  /**
+   * Send ticket id to redaction app for a replacement.
+   * @param {object} payload A payload has key `ticket.id`.
+   * @return {Promise}
+   */
   replaceTicketId (payload) {
     const jsonifyBody = JSON.stringify(payload['ticket.id'])
 
@@ -17,4 +23,4 @@ const PiiAppClient = class {
   }
 }
 
-export { PiiAppClient }
+export { RedactionAppClient }
