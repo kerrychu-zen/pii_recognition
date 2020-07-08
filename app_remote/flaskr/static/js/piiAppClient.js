@@ -1,19 +1,20 @@
 class PiiAppClient {
-    constructor(host) {
-        this.host = host;
-    }
+  constructor (host) {
+    this.host = host
+  }
 
-    replaceTicketId(payload) {
-        let jsonifyBody = JSON.stringify(payload['ticket.id']);
+  replaceTicketId (payload) {
+    const jsonifyBody = JSON.stringify(payload['ticket.id'])
 
-        return fetch(`${this.host}/update-ticket-id`, {
-            method: "PUT",
-            body: jsonifyBody,
-            cache: "no-cache",
-            headers: {'Content-Type': 'application/json'},
-        });
-        //TODO: callback to report error otherwise goes silent
-    }        
+    return fetch(`${this.host}/update-ticket-id`, {
+      method: 'PUT',
+      body: jsonifyBody,
+      cache: 'no-cache',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+  }
 }
 
-export {PiiAppClient};
+export { PiiAppClient }
