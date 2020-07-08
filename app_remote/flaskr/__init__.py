@@ -1,9 +1,6 @@
 from typing import Optional
 
-from flask import Flask, render_template, request, Response
-
-
-TICKET_ID: Optional[str] = None
+from flask import Flask, render_template, Response
 
 
 def create_app(test_config: Optional[dict] = None) -> Flask:
@@ -20,7 +17,7 @@ def create_app(test_config: Optional[dict] = None) -> Flask:
 
     @app.route("/update-ticket-id", methods=["PUT"])
     def update_ticket_id() -> Response:
-        TICKET_ID: int = request.get_json()
-        return Response(status=204)
+        ...
+        # stub will be implemented
 
     return app
