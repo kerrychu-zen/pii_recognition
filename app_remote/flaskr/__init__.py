@@ -18,9 +18,9 @@ def create_app(test_config: Optional[dict] = None) -> Flask:
     def sidebar() -> str:
         return render_template("sidebar.html")
 
-    @app.route("/update_ticket_id", methods=["POST"])
+    @app.route("/update-ticket-id", methods=["PUT"])
     def update_ticket_id() -> Response:
-        TICKET_ID = request.get_json()
+        TICKET_ID: int = request.get_json()
         return Response(status=204)
 
     return app
