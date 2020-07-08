@@ -1,4 +1,4 @@
-class PiiAppClient {
+const PiiAppClient = class {
   constructor (host) {
     this.host = host
   }
