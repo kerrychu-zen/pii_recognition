@@ -15,7 +15,7 @@ def create_app(test_config: Optional[dict] = None) -> Flask:
     def sidebar() -> str:
         return render_template("sidebar.html")
 
-    @app.route("/update-ticket-id", methods=["PUT"])
+    @app.route("/replace-ticket-id", methods=["PUT"])
     def update_ticket_id() -> Response:
         ...
         # stub will be implemented

@@ -6,7 +6,7 @@ class PiiAppClient {
   replaceTicketId (payload) {
     const jsonifyBody = JSON.stringify(payload['ticket.id'])
 
-    return fetch(`${this.host}/update-ticket-id`, {
+    return fetch(`${this.host}/replace-ticket-id`, {
       method: 'PUT',
       body: jsonifyBody,
       cache: 'no-cache',
