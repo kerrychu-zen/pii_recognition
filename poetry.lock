@@ -208,48 +208,6 @@ python-versions = "*"
 version = "3.0.4"
 
 [[package]]
-category = "dev"
-description = "Highly-optimized, pure-python HTTP server"
-name = "cheroot"
-optional = false
-python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,>=2.7"
-version = "8.3.0"
-
-[package.dependencies]
-"jaraco.functools" = "*"
-more-itertools = ">=2.6"
-six = ">=1.11.0"
-
-[package.extras]
-docs = ["sphinx (>=1.8.2)", "jaraco.packaging (>=3.2)", "sphinx-tabs (>=1.1.0)", "docutils", "alabaster", "python-dateutil", "sphinxcontrib-spelling (>=4.3.0)"]
-testing = ["pytest (>=4.6.6)", "pytest-mock (>=1.11.0)", "pytest-sugar (>=0.9.1)", "pytest-testmon (<1.0.0)", "pytest-watch (4.2.0)", "pytest-xdist (>=1.28.0)", "jaraco.text (>=3.1)", "coverage (4.5.3)", "codecov (2.0.15)", "pytest-cov (2.7.1)", "trustme (>=0.4.0)", "pyopenssl", "requests-unixsocket", "urllib3 (>=1.25)", "urllib3 (<1.25)", "colorama (!=0.4.2)"]
-
-[[package]]
-category = "dev"
-description = "Object-Oriented HTTP framework"
-name = "cherrypy"
-optional = false
-python-versions = ">=3.5"
-version = "18.6.0"
-
-[package.dependencies]
-cheroot = ">=8.2.1"
-"jaraco.collections" = "*"
-more-itertools = "*"
-portend = ">=2.1.1"
-pywin32 = "*"
-"zc.lockfile" = "*"
-
-[package.extras]
-docs = ["sphinx", "docutils", "alabaster", "rst.linker (>=1.11)", "jaraco.packaging (>=3.2)"]
-json = ["simplejson"]
-memcached_session = ["python-memcached (>=1.58)"]
-routes_dispatcher = ["routes (>=2.3.1)"]
-ssl = ["pyopenssl"]
-testing = ["coverage", "codecov", "objgraph", "pytest (>=5.3.5,<5.4.0)", "pytest-cov", "pytest-sugar", "backports.unittest-mock", "path.py", "requests-toolbelt", "pytest-services (>=2)"]
-xcgi = ["flup"]
-
-[[package]]
 category = "main"
 description = "Composable command line interface toolkit"
 name = "click"
@@ -685,14 +643,6 @@ version = "3.1.0"
 gitdb = ">=4.0.1,<5"
 
 [[package]]
-category = "dev"
-description = "Version of the glob module that can capture patterns and supports recursive wildcards"
-name = "glob2"
-optional = false
-python-versions = "*"
-version = "0.7"
-
-[[package]]
 category = "main"
 description = "Google API client core library"
 name = "google-api-core"
@@ -1058,96 +1008,6 @@ name = "itsdangerous"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 version = "1.1.0"
-
-[[package]]
-category = "dev"
-description = "Utility functions for Python class constructs"
-name = "jaraco.classes"
-optional = false
-python-versions = ">=3.6"
-version = "3.1.0"
-
-[package.dependencies]
-more-itertools = "*"
-
-[package.extras]
-docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
-testing = ["pytest (>=3.5,<3.7.3 || >3.7.3)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pytest-black-multipy", "pytest-cov"]
-
-[[package]]
-category = "dev"
-description = "Collection objects similar to those in stdlib by jaraco"
-name = "jaraco.collections"
-optional = false
-python-versions = ">=3.6"
-version = "3.0.0"
-
-[package.dependencies]
-"jaraco.classes" = "*"
-"jaraco.text" = "*"
-six = ">=1.7.0"
-
-[package.extras]
-docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
-testing = ["pytest (>=3.5,<3.7.3 || >3.7.3)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pytest-black-multipy", "pytest-cov"]
-
-[[package]]
-category = "dev"
-description = "Functools like those found in stdlib"
-name = "jaraco.functools"
-optional = false
-python-versions = ">=3.6"
-version = "3.0.1"
-
-[package.dependencies]
-more-itertools = "*"
-
-[package.extras]
-docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
-testing = ["pytest (>=3.5,<3.7.3 || >3.7.3)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pytest-black (>=0.3.7)", "pytest-cov", "jaraco.classes"]
-
-[[package]]
-category = "dev"
-description = "Module for text manipulation"
-name = "jaraco.text"
-optional = false
-python-versions = ">=2.7"
-version = "3.2.0"
-
-[package.dependencies]
-"jaraco.functools" = "*"
-six = "*"
-
-[package.extras]
-docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
-testing = ["pytest (>=3.5,<3.7.3 || >3.7.3)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pytest-black-multipy", "pytest-cov"]
-
-[[package]]
-category = "dev"
-description = "Jasmine is a Behavior Driven Development testing framework for JavaScript. It does not rely on browsers, DOM, or any JavaScript framework. Thus it's suited for websites, Node.js (http://nodejs.org) projects, or anywhere that JavaScript can run."
-name = "jasmine"
-optional = false
-python-versions = "*"
-version = "3.5.0"
-
-[package.dependencies]
-CherryPy = ">=11"
-Jinja2 = ">=2.0,<3.0"
-PyYAML = ">=4.2b1"
-jasmine-core = ">=3.5.0,<4.0"
-selenium = ">=3.0"
-
-[[package]]
-category = "dev"
-description = "Jasmine is a Behavior Driven Development testing framework for JavaScript. It does not rely on browsers, DOM, or any JavaScript framework. Thus it's suited for websites, Node.js (http://nodejs.org) projects, or anywhere that JavaScript can run."
-name = "jasmine-core"
-optional = false
-python-versions = "*"
-version = "3.5.0"
-
-[package.dependencies]
-glob2 = ">=0.4.1"
-ordereddict = "1.1"
 
 [[package]]
 category = "main"
@@ -1545,14 +1405,6 @@ docs = ["sphinx (1.2.3)", "sphinxcontrib-napoleon", "sphinx-rtd-theme", "numpydo
 tests = ["pytest", "pytest-cov", "pytest-pep8"]
 
 [[package]]
-category = "dev"
-description = "A drop-in substitute for Py2.7's new collections.OrderedDict that works in Python 2.4-2.6."
-name = "ordereddict"
-optional = false
-python-versions = "*"
-version = "1.1"
-
-[[package]]
 category = "main"
 description = "Core utilities for Python packages"
 name = "packaging"
@@ -1635,21 +1487,6 @@ version = ">=0.12"
 
 [package.extras]
 dev = ["pre-commit", "tox"]
-
-[[package]]
-category = "dev"
-description = "TCP port monitoring and discovery"
-name = "portend"
-optional = false
-python-versions = ">=2.7"
-version = "2.6"
-
-[package.dependencies]
-tempora = ">=1.8"
-
-[package.extras]
-docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
-testing = ["pytest (>=3.5,<3.7.3 || >3.7.3)", "pytest-checkdocs", "pytest-flake8", "pytest-black-multipy", "pytest-cov"]
 
 [[package]]
 category = "main"
@@ -2038,17 +1875,6 @@ version = "1.5.7"
 regex = "*"
 
 [[package]]
-category = "dev"
-description = "Python bindings for Selenium"
-name = "selenium"
-optional = false
-python-versions = "*"
-version = "3.141.0"
-
-[package.dependencies]
-urllib3 = "*"
-
-[[package]]
 category = "main"
 description = "SentencePiece python wrapper"
 name = "sentencepiece"
@@ -2217,22 +2043,6 @@ version = "0.8.6"
 
 [package.extras]
 widechars = ["wcwidth"]
-
-[[package]]
-category = "dev"
-description = "Objects and routines pertaining to date and time (tempora)"
-name = "tempora"
-optional = false
-python-versions = ">=3.6"
-version = "3.0.0"
-
-[package.dependencies]
-"jaraco.functools" = ">=1.20"
-pytz = "*"
-
-[package.extras]
-docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
-testing = ["pytest (>=3.5,<3.7.3 || >3.7.3)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pytest-black-multipy", "pytest-cov", "backports.unittest-mock", "freezegun", "pytest-freezegun"]
 
 [[package]]
 category = "main"
@@ -2560,20 +2370,6 @@ python-versions = "*"
 version = "1.12.0"
 
 [[package]]
-category = "dev"
-description = "Basic inter-process locks"
-name = "zc.lockfile"
-optional = false
-python-versions = "*"
-version = "2.0"
-
-[package.dependencies]
-setuptools = "*"
-
-[package.extras]
-test = ["zope.testing"]
-
-[[package]]
 category = "main"
 description = "Backport of pathlib-compatible object wrapper for zip files"
 marker = "python_version < \"3.8\""
@@ -2587,7 +2383,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools", "func-timeout"]
 
 [metadata]
-content-hash = "7c0c71a8b69417a1319f6e942ec702e0ab933375f7f63abcb00e14925996564e"
+content-hash = "7ffe181ea5fe63136fbb1c0f2e31d3604a29d9e16a2602780a8f33e51370aee0"
 python-versions = "^3.7"
 
 [metadata.files]
@@ -2700,14 +2496,6 @@ cffi = [
 chardet = [
     {file = "chardet-3.0.4-py2.py3-none-any.whl", hash = "sha256:fc323ffcaeaed0e0a02bf4d117757b98aed530d9ed4531e3e15460124c106691"},
     {file = "chardet-3.0.4.tar.gz", hash = "sha256:84ab92ed1c4d4f16916e05906b6b75a6c0fb5db821cc65e70cbd64a3e2a5eaae"},
-]
-cheroot = [
-    {file = "cheroot-8.3.0-py2.py3-none-any.whl", hash = "sha256:2b48c88959b5b80a79aca627ae5212acb398becaa70b576b8b89bec1ad0d1367"},
-    {file = "cheroot-8.3.0.tar.gz", hash = "sha256:a0577e1f28661727d472671a7cc4e0c12ea0cbc5220265e70f00a8b8cb628931"},
-]
-cherrypy = [
-    {file = "CherryPy-18.6.0-py2.py3-none-any.whl", hash = "sha256:c0a7283f02a384c112a0a18404fd3abd849fc7fd4bec19378067150a2573d2e4"},
-    {file = "CherryPy-18.6.0.tar.gz", hash = "sha256:56608edd831ad00991ae585625e0206ed61cf1a0850e4b2cc48489fb2308c499"},
 ]
 click = [
     {file = "Click-7.0-py2.py3-none-any.whl", hash = "sha256:2335065e6395b9e67ca716de5f7526736bfa6ceead690adf616d925bdc622b13"},
@@ -2882,9 +2670,6 @@ gitdb = [
 gitpython = [
     {file = "GitPython-3.1.0-py3-none-any.whl", hash = "sha256:43da89427bdf18bf07f1164c6d415750693b4d50e28fc9b68de706245147b9dd"},
     {file = "GitPython-3.1.0.tar.gz", hash = "sha256:e426c3b587bd58c482f0b7fe6145ff4ac7ae6c82673fc656f489719abca6f4cb"},
-]
-glob2 = [
-    {file = "glob2-0.7.tar.gz", hash = "sha256:85c3dbd07c8aa26d63d7aacee34fa86e9a91a3873bc30bf62ec46e531f92ab8c"},
 ]
 google-api-core = [
     {file = "google-api-core-1.16.0.tar.gz", hash = "sha256:92e962a087f1c4b8d1c5c88ade1c1dfd550047dcffb320c57ef6a534a20403e2"},
@@ -3123,28 +2908,6 @@ itsdangerous = [
     {file = "itsdangerous-1.1.0-py2.py3-none-any.whl", hash = "sha256:b12271b2047cb23eeb98c8b5622e2e5c5e9abd9784a153e9d8ef9cb4dd09d749"},
     {file = "itsdangerous-1.1.0.tar.gz", hash = "sha256:321b033d07f2a4136d3ec762eac9f16a10ccd60f53c0c91af90217ace7ba1f19"},
 ]
-"jaraco.classes" = [
-    {file = "jaraco.classes-3.1.0-py2.py3-none-any.whl", hash = "sha256:116429c2047953f525afdcae165475c4589c7b14870e78b2d068ecb01018827e"},
-    {file = "jaraco.classes-3.1.0.tar.gz", hash = "sha256:c38698ff8ef932eb33d91c0e8fc192ad7c44ecee03f7f585afd4f35aeaef7aab"},
-]
-"jaraco.collections" = [
-    {file = "jaraco.collections-3.0.0-py2.py3-none-any.whl", hash = "sha256:a7889f28c80c4875bd6256d9924e8526dacfef22cd7b80ff8469b4d312f9f144"},
-    {file = "jaraco.collections-3.0.0.tar.gz", hash = "sha256:be570ef4f2e7290b757449395238fa63d70a9255574624e73c5ff9f1ee554721"},
-]
-"jaraco.functools" = [
-    {file = "jaraco.functools-3.0.1-py3-none-any.whl", hash = "sha256:d3dc9f6c1a1d45d7f59682a3bf77aceb685c1a60891606c7e4161e72ecc399ad"},
-    {file = "jaraco.functools-3.0.1.tar.gz", hash = "sha256:9fedc4be3117512ca3e03e1b2ffa7a6a6ffa589bfb7d02bfb324e55d493b94f4"},
-]
-"jaraco.text" = [
-    {file = "jaraco.text-3.2.0-py2.py3-none-any.whl", hash = "sha256:c87569c9afae14f71b2e1c57f316770ab6981ab675d9c602be1c7981161bacdd"},
-    {file = "jaraco.text-3.2.0.tar.gz", hash = "sha256:e5078b1126cc0f166c7859aa75103a56c0d0f39ebcafc21695615472e0f810ec"},
-]
-jasmine = [
-    {file = "jasmine-3.5.0.tar.gz", hash = "sha256:10e44a405c3c85cfc890aca382930cdd9922018d9da2dc91645523d2f05f8e76"},
-]
-jasmine-core = [
-    {file = "jasmine-core-3.5.0.tar.gz", hash = "sha256:1ccb7e3eec4b158f7f9025e34c506e60b2406152a97c4b8ae4c199a25c15294f"},
-]
 jinja2 = [
     {file = "Jinja2-2.11.1-py2.py3-none-any.whl", hash = "sha256:b0eaf100007721b5c16c1fc1eecb87409464edc10469ddc9a22a27a99123be49"},
     {file = "Jinja2-2.11.1.tar.gz", hash = "sha256:93187ffbc7808079673ef52771baa950426fd664d3aad1d0fa3e95644360e250"},
@@ -3378,9 +3141,6 @@ opt-einsum = [
     {file = "opt_einsum-3.2.0-py3-none-any.whl", hash = "sha256:f6fbfbb759e670305c5c9a4dc4432e30f65e06fede88293dacfe19915af73386"},
     {file = "opt_einsum-3.2.0.tar.gz", hash = "sha256:738b0a1db1d3084d360081bb64d826f9db06d2df7cc0bf8e2c9356028da1fa31"},
 ]
-ordereddict = [
-    {file = "ordereddict-1.1.tar.gz", hash = "sha256:1c35b4ac206cef2d24816c89f89cf289dd3d38cf7c449bb3fab7bf6d43f01b1f"},
-]
 packaging = [
     {file = "packaging-20.3-py2.py3-none-any.whl", hash = "sha256:82f77b9bee21c1bafbf35a84905d604d5d1223801d639cf3ed140bd651c08752"},
     {file = "packaging-20.3.tar.gz", hash = "sha256:3c292b474fda1671ec57d46d739d072bfd495a4f51ad01a055121d81e952b7a3"},
@@ -3424,10 +3184,6 @@ plac = [
 pluggy = [
     {file = "pluggy-0.13.1-py2.py3-none-any.whl", hash = "sha256:966c145cd83c96502c3c3868f50408687b38434af77734af1e9ca461a4081d2d"},
     {file = "pluggy-0.13.1.tar.gz", hash = "sha256:15b2acde666561e1298d71b523007ed7364de07029219b604cf808bfa1c765b0"},
-]
-portend = [
-    {file = "portend-2.6-py2.py3-none-any.whl", hash = "sha256:62dd00b94a6a55fbf0320365fbdeba37f0d1fe14d613841037dc4780bedfda8f"},
-    {file = "portend-2.6.tar.gz", hash = "sha256:600dd54175e17e9347e5f3d4217aa8bcf4bf4fa5ffbc4df034e5ec1ba7cdaff5"},
 ]
 preshed = [
     {file = "preshed-3.0.2-cp27-cp27m-macosx_10_6_intel.macosx_10_9_intel.macosx_10_9_x86_64.macosx_10_10_intel.macosx_10_10_x86_64.whl", hash = "sha256:448d9df12e63fe4a3024f6153ee6703bb95d2be0ce887b5eda7ddc41acfba825"},
@@ -3741,10 +3497,6 @@ scipy = [
 segtok = [
     {file = "segtok-1.5.7.tar.gz", hash = "sha256:e9ccb989648877e29c6e59782148e8fc6731ca3027dc9f05a48769a24bc0f328"},
 ]
-selenium = [
-    {file = "selenium-3.141.0-py2.py3-none-any.whl", hash = "sha256:2d7131d7bc5a5b99a2d9b04aaf2612c411b03b8ca1b1ee8d3de5845a9be2cb3c"},
-    {file = "selenium-3.141.0.tar.gz", hash = "sha256:deaf32b60ad91a4611b98d8002757f29e6f2c2d5fcaf202e1c9ad06d6772300d"},
-]
 sentencepiece = [
     {file = "sentencepiece-0.1.85-cp27-cp27m-macosx_10_6_x86_64.whl", hash = "sha256:0f72c4151791de7242e7184a9b7ef12503cef42e9a5a0c1b3510f2c68874e810"},
     {file = "sentencepiece-0.1.85-cp27-cp27m-manylinux1_i686.whl", hash = "sha256:97b8ee26892d236b2620af8ddae11713fbbb2dae9adf4ad5e988e5a82ce50a90"},
@@ -3861,10 +3613,6 @@ stanza = [
 ]
 tabulate = [
     {file = "tabulate-0.8.6.tar.gz", hash = "sha256:5470cc6687a091c7042cee89b2946d9235fe9f6d49c193a4ae2ac7bf386737c8"},
-]
-tempora = [
-    {file = "tempora-3.0.0-py2.py3-none-any.whl", hash = "sha256:70503a3a10fb341f49e7919d193f0b6362bbfddffb560fac47df3e977414c0c6"},
-    {file = "tempora-3.0.0.tar.gz", hash = "sha256:e370d822cf48f5356aab0734ea45807250f5120e291c76712a1d766b49ae34f8"},
 ]
 tensorboard = [
     {file = "tensorboard-2.1.1-py3-none-any.whl", hash = "sha256:3a36da59d4e13fb140d04636aaf544f1a38364a7e3609a15cdaf01a5d3073b37"},
@@ -4021,10 +3769,6 @@ wheel = [
 ]
 wrapt = [
     {file = "wrapt-1.12.0.tar.gz", hash = "sha256:0ec40d9fd4ec9f9e3ff9bdd12dbd3535f4085949f4db93025089d7a673ea94e8"},
-]
-"zc.lockfile" = [
-    {file = "zc.lockfile-2.0-py2.py3-none-any.whl", hash = "sha256:cc33599b549f0c8a248cb72f3bf32d77712de1ff7ee8814312eb6456b42c015f"},
-    {file = "zc.lockfile-2.0.tar.gz", hash = "sha256:307ad78227e48be260e64896ec8886edc7eae22d8ec53e4d528ab5537a83203b"},
 ]
 zipp = [
     {file = "zipp-3.1.0-py3-none-any.whl", hash = "sha256:aa36550ff0c0b7ef7fa639055d797116ee891440eac1a56f378e2d3179e0320b"},
