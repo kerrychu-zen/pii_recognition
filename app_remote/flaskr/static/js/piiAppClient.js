@@ -4,7 +4,7 @@ class PiiAppClient {
     }
 
     replaceTicketId(payload) {
-        jsonifyBody = JSON.stringify(payload['ticket.id']);
+        let jsonifyBody = JSON.stringify(payload['ticket.id']);
 
         return fetch(`${this.host}/update-ticket-id`, {
             method: "PUT",
