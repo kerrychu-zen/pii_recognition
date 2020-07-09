@@ -6,7 +6,7 @@ const RedactionAppClient = class {
 
   /**
    * Send ticket id to redaction app for a replacement.
-   * @param {object} payload A payload has key `ticket.id`.
+   * @param {object} payload An object has key `ticket.id`.
    * @return {Promise}
    */
   async replaceTicketId (payload) {
