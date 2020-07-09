@@ -9,7 +9,7 @@ const RedactionAppClient = class {
    * @param {object} payload A payload has key `ticket.id`.
    * @return {Promise}
    */
-  replaceTicketId (payload) {
+  async replaceTicketId (payload) {
     const jsonifyBody = JSON.stringify(payload['ticket.id'])
 
     return fetch(`${this.host}/replace-ticket-id`, {
