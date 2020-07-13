@@ -6,7 +6,7 @@
 1. [Installing the Zendesk App Tools (ZAT)](#dev-zat)
 2. [Setting up the Python environment](#dev-python)
 3. [Lauching the Flask app](#dev-flask)
-4. [Having browser connected to the Zendesk Support instance](#dev-support)
+4. [Having browser connected to the Zendesk Support instance](#dev-instance)
 
 
 ## Installing the Zendesk App Tools (ZAT) <a name='dev-zat'></a>
@@ -63,7 +63,7 @@ Run the application on localhost at port 8080 under directory `app_remote`.
 flask run -p 8080
 ```
 
-## Having a browser connecting to the Zendesk Support instance <a name='dev-zat'></a>
+## Having a browser connecting to the Zendesk Support instance <a name='dev-instance'></a>
 Open your favorite browser and type `https://z3n-numbat-piiredaction.zendesk.com/` in the location bar and hit Enter! You are now in the Support instance. Append `?zat=true` to the page url and open a ticket now you shall be seeing the app running in the sidebar. Or you may have to ask @gabechu for access to the instance.
 
 ## Troubleshooting
