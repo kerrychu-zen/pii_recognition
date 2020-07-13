@@ -12,7 +12,7 @@
 ## Installing the Zendesk App Tools (ZAT) <a name='dev-zat'></a>
 ZAT is the bridge that enables bi-directional communications between your local (or remote) app and your Zendesk product instance.
 
-Tog get it running, first you must install Ruby as ZAT is a Ruby gem.
+To get it running, first you must install Ruby since ZAT is a Ruby gem.
 
 Then, install `rake` a build automation tool.
 ```sh
@@ -24,12 +24,12 @@ Next, install ZAT
 gem install zendesk_apps_tools
 ```
 
-In the project structure, navigate to **app_local** directory, this directory contains all necessary files for any ZAT commands to run. Here, start a local HTTP server talking to your Zendesk instance.
+Navigate to **app_local** directory, this directory contains all necessary files for any ZAT commands to run. Here, start a local HTTP server talking to your Zendesk product instance.
 ``` sh
 zat server
 ```
 
-If you want to customise anything the ZAT service, use **manifest.json** file. This file specifies one or more locations in one or more Zendesk products. We are building a Support app and will serve this app at `localhost:8080/sidebar`.
+If you want to customise the ZAT service, use **manifest.json** file. This file specifies one or more locations in one or more Zendesk products. We are building a Support app and will serve this app at `localhost:8080/sidebar`.
 ```
 ...
 
@@ -52,7 +52,7 @@ Install ML libraries and Flask dependencies using `poetry`. Make sure the instal
 ```sh
 poetry install
 ```
-Activate the virtual environment and use commands starting a poetry shell.
+Activate the virtual environment and use this command starting a poetry shell.
 ```
 poetry shell
 ```
