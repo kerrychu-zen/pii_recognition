@@ -6,11 +6,11 @@
 1. [Installing the Zendesk App Tools (ZAT)](#dev-zat)
 2. [Setting up the Python environment](#dev-python)
 3. [Lauching the Flask app](#dev-flask)
-4. [Having browser connected to the Zendesk Support instance](#dev-instance)
+4. [Getting browser connected to the Zendesk instance](#dev-instance)
 
 
 ## Installing the Zendesk App Tools (ZAT) <a name='dev-zat'></a>
-ZAT is the bridge that enables bi-directional communications between your local (or remote) app and your Zendesk product instance.
+ZAT is used for developling Zendesk apps and it bridges communications between your local (or remote) app and your Zendesk product instance.
 
 To get it running, first you must install Ruby since ZAT is a Ruby gem.
 
@@ -24,12 +24,12 @@ Next, install ZAT
 gem install zendesk_apps_tools
 ```
 
-Navigate to **app_local** directory, this directory contains all necessary files for any ZAT commands to run. Here, start a local HTTP server talking to your Zendesk product instance.
+Navigate to **app_local** directory it contains all necessary files for any ZAT commands to run. Here, start a local HTTP server and then you will be able to talk to your Zendesk product instance.
 ``` sh
 zat server
 ```
 
-If you want to customise the ZAT service, use **manifest.json** file. This file specifies one or more locations in one or more Zendesk products. We are building a Support app and will serve this app at `localhost:8080/sidebar`.
+If you want to customise the ZAT service, use **manifest.json** file. This file specifies one or more locations in one or more Zendesk products. In this project, we will build a Support app served at `localhost:8080/sidebar`.
 ```
 ...
 
@@ -44,15 +44,15 @@ If you want to customise the ZAT service, use **manifest.json** file. This file 
 ```
 
 ## Setting up the Python environment <a name='dev-python'></a>
-Install Python 3.7 and then `poetry` package. `poetry` is a dependency management tool. If you have multiple Pythons running, I recommend `pyenv` for version management.
+Install Python 3.7 and pip install `poetry` package. `poetry` is a dependency management tool.
 ```
 pip install --user poetry
 ```
-Install ML libraries and Flask dependencies using `poetry`. Make sure the installation happens in the root directory.
+Install ML libraries dependencies and Flask using `poetry`. Make sure the installation happens in the root directory.
 ```sh
 poetry install
 ```
-Activate the virtual environment and use this command starting a poetry shell.
+Activate the virtual environment.
 ```
 poetry shell
 ```
@@ -63,12 +63,12 @@ Run the application on localhost at port 8080 under directory `app_remote`.
 flask run -p 8080
 ```
 
-## Having a browser connecting to the Zendesk Support instance <a name='dev-instance'></a>
-Open your favorite browser and type `https://z3n-numbat-piiredaction.zendesk.com/` in the location bar and hit Enter! You are now in the Support instance. Append `?zat=true` to the page url and open a ticket now you shall be seeing the app running in the sidebar. Or you may have to ask @gabechu for access to the instance.
+## Getting browser connecting to the Zendesk instance <a name='dev-instance'></a>
+Open your favorite browser and type `https://z3n-numbat-piiredaction.zendesk.com/` in the location bar and hit Enter! You are now in the Support instance. Append `?zat=true` to the end of the page url and open a ticket, you shall be seeing the app running in the sidebar. You may have to ask @gabechu for access to the instance.
 
 ## Troubleshooting
 - Is your ZAT server running?
 - Is your Flask app running at port 8080?
 - Have you connected to the correct instance at `https://z3n-numbat-piiredaction.zendesk.com/`?
 - Have you appended to append `?zat=true` to the page url?
-- Getting troubles installing ZAT [page](https://develop.zendesk.com/hc/en-us/articles/360001075048-Installing-and-using-the-Zendesk-apps-tools) for details.
+- Getting troubles installing ZAT, see [this page](https://develop.zendesk.com/hc/en-us/articles/360001075048-Installing-and-using-the-Zendesk-apps-tools) for details.
