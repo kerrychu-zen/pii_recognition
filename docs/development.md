@@ -10,7 +10,7 @@
 
 
 ## Installing the Zendesk App Tools (ZAT) <a name='dev-zat'></a>
-ZAT is used for developling Zendesk apps and it bridges communications between your local (or remote) app and your Zendesk product instance.
+ZAT is used for developing Zendesk apps and it bridges communications between your local (or remote) app and your Zendesk product instance.
 
 To get it running, first you must install Ruby since ZAT is a Ruby gem.
 
