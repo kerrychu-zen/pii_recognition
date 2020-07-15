@@ -24,7 +24,7 @@ Next, install ZAT
 gem install zendesk_apps_tools
 ```
 
-Navigate to **app_local** directory it contains all necessary files for any ZAT commands to run. Here, start a local HTTP server and then you will be able to talk to your Zendesk product instance.
+Navigate to **app_local** directory it contains all necessary files for any ZAT commands to run. Here, start a local HTTP server and then you can talk to your Zendesk product instance.
 ``` sh
 zat server
 ```
