@@ -1,8 +1,9 @@
 import client from "./zafClient.js";
+import { handle } from "../utils.js";
 
 const getCommentTexts = async () => {
-  // TODO: add error handle
-  const response = await client.get("ticket.comments");
+  const [response, err] = await handle(client.get("ticket.comments"));
+  if (err) throw new Error("Could not get comment strings");
   const ticketComments = response["ticket.comments"];
   // note text contains HTML
   const commentTexts = ticketComments.map((comment) => comment.value);
@@ -10,8 +11,8 @@ const getCommentTexts = async () => {
 };
 
 const getComments = async () => {
-  // TODO: add error handle
-  const response = await client.get("ticket.comments");
+  const [response, err] = await handle(client.get("ticket.comments"));
+  if (err) throw new Error("Could not get comments");
   const comments = response["ticket.comments"];
   const commentIdValue = comments.map((comment) => ({
     id: comment.id,
@@ -22,13 +23,12 @@ const getComments = async () => {
 };
 
 const getTicketId = async () => {
-  // TODO: add error handle
-  const response = await client.get("ticket.id");
+  const [response, err] = await handle(client.get("ticket.id"));
+  if (err) throw new Error("Could not get comments");
   return response["ticket.id"];
 };
 
 const requestRedactApi = async (ticketId, commentId, text) => {
-  let response;
   let options = {
     url: `/api/v2/tickets/${ticketId}/comments/${commentId}/redact.json`,
     type: "PUT",
@@ -37,11 +37,9 @@ const requestRedactApi = async (ticketId, commentId, text) => {
   };
 
   // TODO: are we satisfied with this error handler?
-  try {
-    response = await client.request(options);
-  } catch (err) {
-    console.log("redaction error: ", err);
-  }
+
+  const [_, err] = await handle(client.request(options));
+  if (err) throw new Error("Could not redact this text");
 };
 
 export { getCommentTexts, getComments, getTicketId, requestRedactApi };

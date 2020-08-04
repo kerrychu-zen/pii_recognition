@@ -1,10 +1,14 @@
 import { getCommentTexts } from "../apis/zafApis.js";
 import { detectPiiEntities as comprehendModel } from "../apis/comprehendApis.js";
 import { stripHtml, concatStrings } from "../utils.js";
+import {
+  commentsConcatDelimiter,
+  entitiesConcatDelimiter,
+} from "../constants.js";
 
 const textPreprocessor = (texts) => {
   const cleanTexts = texts.map((text) => stripHtml(text));
-  return concatTexts(cleanTexts, " ");
+  return concatStrings(cleanTexts, commentsConcatDelimiter);
 };
 
 const predictPiiEntities = async (text, modelName) => {
@@ -13,7 +17,7 @@ const predictPiiEntities = async (text, modelName) => {
     return new Error("Flair model is not implemented");
   else if (modelName === "Comprehend") {
     const entityArray = await comprehendModel(text);
-    return concatStrings(entityArray, ", ");
+    return concatStrings(entityArray, entitiesConcatDelimiter);
   }
 };
 

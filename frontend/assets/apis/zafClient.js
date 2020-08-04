@@ -1,7 +1,7 @@
 let client;
 
 if (typeof ZAFClient === "undefined") {
-  throw new Error("ZAFClient cannot run outside Zendesk");
+  throw new Error("Could not initiate ZAFClient");
 } else {
   client = ZAFClient.init();
 }

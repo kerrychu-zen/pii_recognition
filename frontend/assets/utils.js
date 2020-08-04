@@ -12,4 +12,10 @@ const removeWhitespace = (string) => {
   return string.trim();
 };
 
-export { stripHtml, concatStrings, removeWhitespace };
+const handle = (promise) => {
+  return promise
+    .then((data) => [data, undefined])
+    .catch((error) => Promise.resolve([undefined, error]));
+};
+
+export { stripHtml, concatStrings, removeWhitespace, handle };
