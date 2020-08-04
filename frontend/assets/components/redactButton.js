@@ -7,16 +7,13 @@ const redact = async (text) => {
   // TODO: DO NOT hard code split delimiter
   const texts = text.split(",").map((text) => text.trim());
 
-  comments.forEach(async (comment) => {
-    texts.forEach(async (text) => {
-      console.log("Comment: ", comment["text"]);
-      console.log("Text: ", text);
-
+  for (const comment of comments) {
+    for (const text of texts) {
       if (comment["text"].includes(text)) {
         await requestRedactApi(ticketId, comment["id"], text);
       }
-    });
-  });
+    }
+  }
 
   // TODO: use Garden notification
   console.log("Redaction done!");
