@@ -1,5 +1,7 @@
 import { comprehendClient } from "./awsClients.js";
 
+
+// TODO: second pass generalise this interface
 const detectPiiEntities = async (text, language = "en") => {
   let params = {
     Text: text,

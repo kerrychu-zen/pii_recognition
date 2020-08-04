@@ -7,7 +7,7 @@ if (typeof AWS === "undefined") {
   awsClient.config.region = "us-west-2"; // Region
   // TODO: DO NOT expose this crediential
   awsClient.config.credentials = new AWS.CognitoIdentityCredentials({
-    IdentityPoolId: "us-west-2:placeholder-for-credentials",
+    IdentityPoolId: "placeholder",
   });
 }
 

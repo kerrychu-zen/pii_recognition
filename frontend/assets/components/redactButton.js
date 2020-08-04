@@ -1,11 +1,12 @@
 import { getComments, getTicketId, requestRedactApi } from "../apis/zafApis.js";
+import { removeWhitespace } from "../utils.js";
 
 const redact = async (text) => {
   const ticketId = await getTicketId();
   const comments = await getComments();
 
   // TODO: DO NOT hard code split delimiter
-  const texts = text.split(",").map((text) => text.trim());
+  const texts = text.split(",").map(removeWhitespace);
 
   for (const comment of comments) {
     for (const text of texts) {

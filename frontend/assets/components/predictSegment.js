@@ -4,6 +4,7 @@ import getPiiEntities from "./piiDetectButton.js";
 const onClickDetect = async () => {
   const modelName = document.querySelector("#model-name").value;
   const piiEntities = await getPiiEntities(modelName);
+
   document.querySelector("#pii-entities").innerHTML = piiEntities;
 };
 
