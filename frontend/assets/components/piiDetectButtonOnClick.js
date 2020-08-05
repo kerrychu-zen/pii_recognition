@@ -1,4 +1,4 @@
-import getPiiEntities from "./piiDetectButton.js";
+import getPiiEntities from "./piiDetect.js";
 
 // must take no argument
 const onClickDetect = async () => {

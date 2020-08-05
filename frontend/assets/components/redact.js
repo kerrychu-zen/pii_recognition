@@ -17,7 +17,7 @@ const redact = async (text) => {
     }
   }
 
-  client.invoke('notify', 'Redaction completed!');
+  client.invoke("notify", "Redaction completed!");
 };
 
 export default redact;
