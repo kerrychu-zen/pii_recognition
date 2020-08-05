@@ -1,7 +1,7 @@
 import redact from "./redact.js";
 
 const onClickRedact = () => {
-  const text = document.querySelector("#pii-entities").innerText;
+  const text = document.querySelector("#pii-entities").value;
   redact(text);
 };
 
