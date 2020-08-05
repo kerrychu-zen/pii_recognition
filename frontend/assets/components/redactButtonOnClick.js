@@ -1,4 +1,4 @@
-import redact from "./redactButton.js";
+import redact from "./redact.js";
 
 const onClickRedact = () => {
   const text = document.querySelector("#pii-entities").innerText;
