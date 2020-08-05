@@ -39,7 +39,13 @@ const requestRedactApi = async (ticketId, commentId, text) => {
   // TODO: are we satisfied with this error handler?
 
   const [_, err] = await handle(client.request(options));
-  if (err) throw new Error("Could not redact this text");
+  if (err) {
+    if (err.status == 400) {
+      console.log("Text not found");
+    } else {
+      throw new Error("Redaction error");
+    }
+  }
 };
 
 export { getCommentTexts, getComments, getTicketId, requestRedactApi };
