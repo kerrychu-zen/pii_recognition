@@ -36,8 +36,6 @@ const requestRedactApi = async (ticketId, commentId, text) => {
     data: JSON.stringify({ text: `${text}` }),
   };
 
-  // TODO: are we satisfied with this error handler?
-
   const [_, err] = await handle(client.request(options));
   if (err) throw new Error("Could not redact this text");
 };
