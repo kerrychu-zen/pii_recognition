@@ -1,4 +1,5 @@
 const stripHtml = (text) => {
+  text = text.replace(/<br\s*\/?>/gi,' ');
   let dom = document.createElement("div");
   dom.innerHTML = text;
   return dom.textContent || dom.innerText;
