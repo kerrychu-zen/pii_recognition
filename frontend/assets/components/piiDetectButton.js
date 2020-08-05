@@ -12,6 +12,7 @@ const textPreprocessor = (texts) => {
 };
 
 const predictPiiEntities = async (text, modelName) => {
+  // use return to show error to users
   if (modelName === "Spacy") return new Error("Spacy model is not implemented");
   else if (modelName === "Flair")
     return new Error("Flair model is not implemented");

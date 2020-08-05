@@ -42,23 +42,14 @@
       <strong class="c-callout__title">
         Identified PII entities:
       </strong>
-      <p class="c-callout__paragraph" id="pii-entities">
-      </p>
+      <p class="c-callout__paragraph" id="pii-entities"></p>
     </div>
     <!-- Proceed? -->
     <div class="cotainer-fluid" style="margin-top: 15px;" }>
       <div class="row justify-content-between">
         <div class="col-auto">
           <button class="c-btn c-btn--primary" id="reset">Reset</button>
-          <script>
-            const resetCallout = () => {
-              const emptyString = "";
-              document.querySelector("#pii-entities").innerHTML = emptyString;
-            };
-            document
-              .querySelector("#reset")
-              .addEventListener("click", resetCallout);
-          </script>
+          <script src="components/resetButton.js"></script>
         </div>
         <div class="col-auto">
           <button class="c-btn c-btn--primary" id="redact">Redact</button>
