@@ -2,19 +2,20 @@
 
 PII redaction app runs on Zendesk Support.
 
-This app aims to help agents and admins automate the process of ticket de-identification by leveraging machine learning.
+This app aims to help agents and admins automate the process of ticket de-identification.
 
-This folder contains all the necessary files for your app to communicate to a Zendesk product, here it is the Support instance. ZAT commands are available for you to validate and testing the app locally via `zat server` and `zat validate`. At then end, use `zat package` to wrap up this folder and uploading to Zendesk instance and get installed as a private app.
+This folder contains all the necessary files for this app to run on a Zendesk Support product. You may need [ZAT](https://developer.zendesk.com/apps/docs/developer-guide/zat) for local development. ZAT will allow you to validate and testing this app by simply typing `zat validate` and `zat server`. In the end, use command `zat package` to wrap up the folder to a zip file and upload to the Support instance and install it as a private app.
 
 ### The following information is displayed:
 Content will be provide soon.
 
-* info1
-* info2
-* info3
+* Dropdown box to select a machine learning model
+* Detect button to identify PII data in comments
+* Callout box to render PII findings
+* Reset button to clear out contents in callout box
+* Redact button to redact contents in callout box
 
-Please submit bug reports to [Insert Link](). Pull requests are welcome.
+Please submit bug reports to [Insert Link](https://github.com/gabechu/pii_recognition/issues). Pull requests are welcome.
 
 ### Screenshot(s):
-Content will be provide soon.
-[put your screenshots down here.]
+![App Demo](../assets/app_demo.gif?raw=true)
