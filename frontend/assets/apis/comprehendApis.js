@@ -17,7 +17,8 @@ const detectPiiEntities = async (text, language = "en") => {
   if (err) throw new Error("Could not run comprehend for entity detection");
 
   // if no entities found this returns []
-  const entityArray = response["Entities"].map((entity) => entity["Text"]);
+  var entities = response["Entities"].map((entity) => entity["Text"])
+  const entityArray = Array.from(new Set(entities));
 
   return entityArray;
 };
