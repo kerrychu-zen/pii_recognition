@@ -1,5 +1,4 @@
 import { comprehendClient } from "./awsClients.js";
-import { handle } from "../utils.js";
 
 // TODO: second pass generalise this interface
 const detectPiiEntities = async (text, language = "en", threshold = 0.9) => {
@@ -9,8 +8,7 @@ const detectPiiEntities = async (text, language = "en", threshold = 0.9) => {
   };
 
   const request = comprehendClient.detectEntities(params);
-  const [response, err] = await handle(request.promise());
-  if (err) throw new Error("Could not run comprehend for entity detection");
+  const response = await request.promise();
 
   // if no entities found this returns []
   const entityArray = response["Entities"]

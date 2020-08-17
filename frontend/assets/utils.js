@@ -1,5 +1,5 @@
 const stripHtml = (text) => {
-  text = text.replace(/<br\s*\/?>/gi,' ');
+  text = text.replace(/<br\s*\/?>/gi, " ");
   let dom = document.createElement("div");
   dom.innerHTML = text;
   return dom.textContent || dom.innerText;
@@ -13,10 +13,4 @@ const removeWhitespace = (string) => {
   return string.trim();
 };
 
-const handle = (promise) => {
-  return promise
-    .then((data) => [data, undefined])
-    .catch((error) => Promise.resolve([undefined, error]));
-};
-
-export { stripHtml, concatStrings, removeWhitespace, handle };
+export { stripHtml, concatStrings, removeWhitespace };
