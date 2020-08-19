@@ -24,7 +24,7 @@ const predictPiiEntities = async (text, modelName) => {
 
 const getPiiEntities = async (modelName) => {
   const comments = await getCommentTexts();
-  const comment = textPreprocessor(comments);
+  const concatenatedComments = textPreprocessor(comments);
   const entities = await predictPiiEntities(comment, modelName);
   return entities;
 };
