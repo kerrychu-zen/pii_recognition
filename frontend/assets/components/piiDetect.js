@@ -9,7 +9,7 @@ const textPreprocessor = (texts) => {
 };
 
 const predictPiiEntities = (text, modelName) => {
-  return models[modelName.toLowerCase()](text);
+  return models[modelName](text);
 };
 
 const getPiiEntities = async (modelName) => {

@@ -25,9 +25,9 @@
       <div class="row">
         <div class="col-auto">
           <select class="c-txt__input c-txt__input--select" id="model-name">
-            <option>Comprehend</option>
-            <option>Flair</option>
-            <option>Spacy</option>
+            <option value="comprehend">Comprehend</option>
+            <option value="flair">Flair</option>
+            <option value="spacy">Spacy</option>
           </select>
         </div>
         <div class="col-auto">
@@ -45,7 +45,12 @@
       <strong class="c-callout__title">
         Identified PII entities:
       </strong>
-      <textarea class="c-txt__input--area" id="pii-entities" width="100%" rows=10></textarea>
+      <textarea
+        class="c-txt__input--area"
+        id="pii-entities"
+        width="100%"
+        rows="10"
+      ></textarea>
     </div>
     <!-- Proceed? -->
     <div class="cotainer-fluid" style="margin-top: 15px;" }>
