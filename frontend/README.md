@@ -1,4 +1,4 @@
-# App name
+# PII Redaction App
 
 PII redaction app runs on Zendesk Support.
 
