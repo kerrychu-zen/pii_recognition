@@ -1,22 +1,21 @@
 import client from "./zafClient.js";
 
-const getCommentTexts = async () => {
-  const response = await client.get("ticket.comments");
-  const ticketComments = response["ticket.comments"];
-  // note text contains HTML
-  const commentTexts = ticketComments.map((comment) => comment.value);
-  return commentTexts;
-};
-
 const getComments = async () => {
   const response = await client.get("ticket.comments");
   const comments = response["ticket.comments"];
-  const commentIdValue = comments.map((comment) => ({
+  const commentsIdValue = comments.map((comment) => ({
     id: comment.id,
     text: comment.value,
   }));
 
-  return commentIdValue;
+  return commentsIdValue;
+};
+
+const getCommentTexts = async () => {
+  const comments = await getComments();
+  // note text contains HTML
+  const commentTexts = comments.map((comment) => comment["text"]);
+  return commentTexts;
 };
 
 const getTicketId = async () => {
