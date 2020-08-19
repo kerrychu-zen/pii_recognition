@@ -4,7 +4,7 @@ import { commentsConcatDelimiter } from "../constants.js";
 import models from "./dropdown.js";
 
 const textPreprocessor = (texts) => {
-  const cleanTexts = texts.map((text) => stripHtml(text));
+  const cleanTexts = texts.map(stripHtml);
   return concatStrings(cleanTexts, commentsConcatDelimiter);
 };
 
