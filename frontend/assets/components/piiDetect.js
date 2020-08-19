@@ -7,7 +7,7 @@ import {
 } from "../constants.js";
 
 const textPreprocessor = (texts) => {
-  const cleanTexts = texts.map((text) => stripHtml(text));
+  const cleanTexts = texts.map(stripHtml);
   return concatStrings(cleanTexts, commentsConcatDelimiter);
 };
 
