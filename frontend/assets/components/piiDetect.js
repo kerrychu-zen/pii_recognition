@@ -1,7 +1,7 @@
 import { getCommentTexts } from "../apis/zafApis.js";
 import { stripHtml, concatStrings } from "../utils.js";
 import { commentsConcatDelimiter } from "../constants.js";
-import models from "./dropdown.js";
+import models from "./models.js";
 
 const textPreprocessor = (texts) => {
   const cleanTexts = texts.map(stripHtml);
