@@ -23,6 +23,7 @@ pandas = "^1.0.3"
 pakkr = "^0.1.0"
 flask = "^1.1.2"
 boto3 = "^1.14.48"
+python-decouple = "^3.3"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
