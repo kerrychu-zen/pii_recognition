@@ -30,16 +30,17 @@ class ComprehendRecogniser(EntityRecogniser):
     def analyse(self, text: str, entities: List[str]) -> List[SpanLabel]:
         self.validate_entities(entities)
 
-        # TODO: Add feature for multilingual support but the first round only English
+        # TODO: Add feature supporting multilingual but the first round is for
+        # only English
         DEFAULT_LANG = 'en'
 
         response = self.comprehend.detect_entities(Text=text,
                                                    LanguageCode=DEFAULT_LANG)
         predicted_entities = response["Entities"]
 
+        # Enhancement: filter on comprehend prediction scores
         filtered = filter(lambda ent: ent["Type"] in entities,
                           predicted_entities)
-        # To be consistent with the other models, prediction scores are not added
         span_labels = map(
             lambda ent: SpanLabel(ent["Type"], ent["BeginOffset"], ent[
                 "EndOffset"]), filtered)
