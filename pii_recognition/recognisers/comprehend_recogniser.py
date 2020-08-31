@@ -28,6 +28,8 @@ class ComprehendRecogniser(EntityRecogniser):
                               region_name=AWS_REGION)
 
     def analyse(self, text: str, entities: List[str]) -> List[SpanLabel]:
+        self.validate_entities(entities)
+
         # TODO: Add feature for multilingual support but the first round only English
         DEFAULT_LANG = 'en'
 
@@ -35,9 +37,10 @@ class ComprehendRecogniser(EntityRecogniser):
                                                    LanguageCode=DEFAULT_LANG)
         predicted_entities = response["Entities"]
 
+        filtered = filter(lambda ent: ent["Type"] in entities,
+                          predicted_entities)
         # To be consistent with the other models, prediction scores are not added
-        span_labels = list(
-            map(
-                lambda entity: SpanLabel(entity["Type"], entity[
-                    "BeginOffset"], entity["EndOffset"]), predicted_entities))
-        return span_labels
+        span_labels = map(
+            lambda ent: SpanLabel(ent["Type"], ent["BeginOffset"], ent[
+                "EndOffset"]), filtered)
+        return list(span_labels)
