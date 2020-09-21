@@ -17,7 +17,7 @@ def encode_labels(text_length: int, span_labels: List[SpanLabel],
     for span in span_labels:
         s = span.start
         e = span.end
-        if e + 1 > text_length:
+        if e > text_length:
             raise ValueError("Span index is out of text range.")
         label_name = span.entity_type
         label_code = label_to_int[label_name]

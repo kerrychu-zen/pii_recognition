@@ -16,7 +16,7 @@ def test_encode_labels():
 
     spans = [SpanLabel(entity_type="LOC", start=5, end=8)]
     with pytest.raises(ValueError) as err:
-        encode_labels(text_length=5,
+        encode_labels(text_length=7,
                       span_labels=spans,
                       label_to_int={"LOC": 1})
     assert str(err.value) == "Span index is out of text range."
