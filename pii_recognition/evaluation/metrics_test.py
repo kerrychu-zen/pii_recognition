@@ -1,5 +1,7 @@
 import numpy as np
-from .metrics import compute_f_beta
+from numpy.testing import assert_almost_equal
+
+from .metrics import compute_f_beta, compute_label_precision, compute_label_recall
 
 
 def test_compute_f_beta():
@@ -20,3 +22,49 @@ def test_compute_f_beta():
 
     actual = compute_f_beta(0.3, 0.5, beta=2.0)
     assert np.isclose(actual, 0.44117647058)
+
+
+def test_compute_label_precision():
+    y_true = [1]
+    y_pred = [1]
+    actual = compute_label_precision(y_true, y_pred, label_name=1)
+    assert actual == 1.0
+
+    # binary
+    y_true = [0, 0, 1]
+    y_pred = [0, 1, 1]
+    actual = compute_label_precision(y_true, y_pred, label_name=1)
+    assert actual == 0.5
+
+    # multiclass
+    y_true = [0, 0, 0, 1, 0, 0, 2, 0, 2, 3, 0, 3, 3]
+    y_pred = [0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3, 3]
+    actual = compute_label_precision(y_true, y_pred, label_name=1)
+    assert_almost_equal(actual, 0.3333333)
+    actual = compute_label_precision(y_true, y_pred, label_name=2)
+    assert_almost_equal(actual, 0.6666666)
+    actual = compute_label_precision(y_true, y_pred, label_name=3)
+    assert actual == 0.75
+
+
+def test_compute_label_recall():
+    y_true = [1]
+    y_pred = [1]
+    actual = compute_label_recall(y_true, y_pred, label_name=1)
+    assert actual == 1.0
+
+    # binary
+    y_true = [0, 1, 1]
+    y_pred = [0, 0, 1]
+    actual = compute_label_recall(y_true, y_pred, label_name=1)
+    assert actual == 0.5
+
+    # multiclass
+    y_true = [0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3, 3]
+    y_pred = [0, 0, 0, 1, 0, 0, 2, 0, 2, 3, 0, 3, 3]
+    actual = compute_label_recall(y_true, y_pred, label_name=1)
+    assert_almost_equal(actual, 0.3333333)
+    actual = compute_label_recall(y_true, y_pred, label_name=2)
+    assert_almost_equal(actual, 0.6666666)
+    actual = compute_label_recall(y_true, y_pred, label_name=3)
+    assert actual == 0.75
