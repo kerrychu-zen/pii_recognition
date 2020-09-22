@@ -17,7 +17,8 @@ def compute_label_precision(
     """Compute recall for a designated label.
 
     This can calculate precision for a particular label for both binary and
-    multi-class settings.
+    multi-class settings. This function is not stable when calculating int and
+    str mixed labels, be aware of ValueError about unseen labels.
     """
     return precision_score(y_true, y_pred, average=None, labels=[label_name])[0]
 
@@ -28,6 +29,7 @@ def compute_label_recall(
     """Compute recall for a designated label.
 
     This can calculate recall for a particular label for both binary and
-    multi-class settings.
+    multi-class settings.This function is not stable when calculating int and
+    str mixed labels, be aware of ValueError about unseen labels.
     """
     return recall_score(y_true, y_pred, average=None, labels=[label_name])[0]
