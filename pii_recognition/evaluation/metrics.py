@@ -19,9 +19,8 @@ def compute_label_precision(y_true: List, y_pred: List,
                             label_name: Union[int, str]) -> float:
     """Compute recall for a designated label.
 
-    This can calculate precision for both binary and multi-class labels, however, users
-    must be aware in sklearn 0 is reserved, that is, labels not present in the data will
-    result in 0 components.
+    This can calculate precision for a particular label for both binary and
+    multi-class settings.
     """
     return precision_score(y_true, y_pred, average=None,
                            labels=[label_name])[0]
@@ -31,8 +30,7 @@ def compute_label_recall(y_true: List, y_pred: List,
                          label_name: Union[int, str]) -> float:
     """Compute recall for a designated label.
 
-    This can calculate recall for both binary and multi-class labels, however, users
-    must be aware in sklearn 0 is reserved, that is, labels not present in the data
-    will result in 0 components.
+    This can calculate recall for a particular label for both binary and
+    multi-class settings.
     """
     return recall_score(y_true, y_pred, average=None, labels=[label_name])[0]
