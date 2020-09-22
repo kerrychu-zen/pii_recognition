@@ -48,9 +48,7 @@ def test_compute_label_precision_for_binary():
 
 def test_compute_label_precision_for_multiclass():
     y_true = [0, 0, 0, 1, 0, 0, 2, 0, 2, "label_0", 0, "label_0", "label_0"]
-    y_pred = [
-        0, 0, 0, 1, 1, 1, 2, 2, 2, "label_0", "label_0", "label_0", "label_0"
-    ]
+    y_pred = [0, 0, 0, 1, 1, 1, 2, 2, 2, "label_0", "label_0", "label_0", "label_0"]
     actual = compute_label_precision(y_true, y_pred, label_name=1)
     assert_almost_equal(actual, 0.3333333)
     actual = compute_label_precision(y_true, y_pred, label_name=2)
@@ -65,7 +63,7 @@ def test_compute_label_precision_for_nonexist_label():
     y_true = [1]
     y_pred = [1]
     actual = compute_label_precision(y_true, y_pred, label_name=2)
-    assert actual == 0.
+    assert actual == 0.0
 
 
 def test_compute_label_recall_for_int_labels():
@@ -90,9 +88,7 @@ def test_compute_label_recall_for_binary():
 
 
 def test_compute_label_recall_for_multiclass():
-    y_true = [
-        0, 0, 0, 1, 1, 1, 2, 2, 2, "label_0", "label_0", "label_0", "label_0"
-    ]
+    y_true = [0, 0, 0, 1, 1, 1, 2, 2, 2, "label_0", "label_0", "label_0", "label_0"]
     y_pred = [0, 0, 0, 1, 0, 0, 2, 0, 2, "label_0", 0, "label_0", "label_0"]
     actual = compute_label_recall(y_true, y_pred, label_name=1)
     assert_almost_equal(actual, 0.3333333)
@@ -108,4 +104,4 @@ def test_compute_label_recall_for_nonexist_label():
     y_true = [1]
     y_pred = [1]
     actual = compute_label_recall(y_true, y_pred, label_name=2)
-    assert actual == 0.
+    assert actual == 0.0
