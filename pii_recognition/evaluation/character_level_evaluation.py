@@ -1,6 +1,5 @@
-import logging
 from dataclasses import asdict
-from typing import Dict, List, Any
+from typing import Any, Dict, List
 
 from pii_recognition.evaluation.metrics import (
     compute_label_precision,
@@ -10,13 +9,13 @@ from pii_recognition.labels.schema import SpanLabel
 
 
 def encode_labels(
-    text_length: int, span_labels: List[SpanLabel], label_to_int: Dict[Any, int]
+    text_length: int, span_labels: List[SpanLabel], label_to_int: Dict[Any, int],
 ) -> List[int]:
     """Encode span-based labels into integers.
 
     Encode a text at character level according to text-span labels as well as a mapping
-    defined by `label_to_int`. Regarding to the mapping, it must have a key of "default"
-    to map every non-labeled charater to this default value.
+    defined by `label_to_int`. Note multi-tagging is not supported. One entity can have
+    only one label tag.
 
     Args:
         text_length: length of a text.
@@ -26,12 +25,12 @@ def encode_labels(
     Returns:
         Integer coding of the text.
     """
-    if "default" in label_to_int:
-        coding = [label_to_int["default"]] * text_length
-    else:
-        logging.info("Default is not given, value 0 is assinged for default.")
-        assigned_default = 0
-        coding = [assigned_default] * text_length
+    if 0 in label_to_int.values():
+        raise ValueError(
+            "Value 0 is reserved! If a character does not belong to any classes, it "
+            "will be assigned with 0."
+        )
+    coding = [0] * text_length
 
     for span in span_labels:
         s = span.start
