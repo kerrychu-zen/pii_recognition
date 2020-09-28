@@ -6,7 +6,7 @@ from pii_recognition.evaluation.character_level_evaluation import (
     compute_entity_recalls_for_ground_truth,
     encode_labels,
 )
-from pii_recognition.labels.schema import SpanLabel
+from pii_recognition.labels.schema import Entity
 
 
 def test_encode_labels_for_0_taken():
@@ -20,9 +20,9 @@ def test_encode_labels_for_0_taken():
 
 def test_encode_labels_for_multi_labels():
     spans = [
-        SpanLabel(entity_type="LOC", start=5, end=8),
-        SpanLabel(entity_type="PER", start=10, end=15),
-        SpanLabel(entity_type="PERSON", start=2, end=5),
+        Entity(entity_type="LOC", start=5, end=8),
+        Entity(entity_type="PER", start=10, end=15),
+        Entity(entity_type="PERSON", start=2, end=5),
     ]
 
     # entity PER and PERSON map to the same int
@@ -32,8 +32,8 @@ def test_encode_labels_for_multi_labels():
 
 def test_encode_labels_for_missing_label_in_mapping():
     spans = [
-        SpanLabel(entity_type="LOC", start=5, end=8),
-        SpanLabel(entity_type="PER", start=10, end=15),
+        Entity(entity_type="LOC", start=5, end=8),
+        Entity(entity_type="PER", start=10, end=15),
     ]
 
     with pytest.raises(Exception) as error:
@@ -44,7 +44,7 @@ def test_encode_labels_for_missing_label_in_mapping():
 
 
 def test_encode_labels_for_span_beyond_range():
-    spans = [SpanLabel(entity_type="LOC", start=3, end=7)]
+    spans = [Entity(entity_type="LOC", start=3, end=7)]
 
     with pytest.raises(ValueError) as error:
         encode_labels(5, spans, {"LOC": 1})
@@ -54,7 +54,7 @@ def test_encode_labels_for_span_beyond_range():
 
 
 def test_compute_precisions_recalls_for_exact_match():
-    true_spans = pred_spans = [SpanLabel(entity_type="LOC", start=3, end=7)]
+    true_spans = pred_spans = [Entity(entity_type="LOC", start=3, end=7)]
     label_to_int = {"LOC": 1}
 
     precisions = compute_entity_precisions_for_prediction(
@@ -70,8 +70,8 @@ def test_compute_precisions_recalls_for_exact_match():
 
 
 def test_compute_precisions_recalls_for_pred_subset_of_true():
-    true_spans = [SpanLabel(entity_type="LOC", start=3, end=7)]
-    pred_spans = [SpanLabel(entity_type="LOC", start=4, end=6)]
+    true_spans = [Entity(entity_type="LOC", start=3, end=7)]
+    pred_spans = [Entity(entity_type="LOC", start=4, end=6)]
     label_to_int = {"LOC": 1}
 
     precisions = compute_entity_precisions_for_prediction(
@@ -87,8 +87,8 @@ def test_compute_precisions_recalls_for_pred_subset_of_true():
 
 
 def test_compute_precisions_recalls_for_pred_superset_of_true():
-    true_spans = [SpanLabel(entity_type="LOC", start=3, end=6)]
-    pred_spans = [SpanLabel(entity_type="LOC", start=2, end=8)]
+    true_spans = [Entity(entity_type="LOC", start=3, end=6)]
+    pred_spans = [Entity(entity_type="LOC", start=2, end=8)]
     label_to_int = {"LOC": 1}
 
     precisions = compute_entity_precisions_for_prediction(
@@ -104,8 +104,8 @@ def test_compute_precisions_recalls_for_pred_superset_of_true():
 
 
 def test_compute_precisions_recalls_for_pred_overlap_true():
-    true_spans = [SpanLabel(entity_type="LOC", start=2, end=7)]
-    pred_spans = [SpanLabel(entity_type="LOC", start=5, end=9)]
+    true_spans = [Entity(entity_type="LOC", start=2, end=7)]
+    pred_spans = [Entity(entity_type="LOC", start=5, end=9)]
     label_to_int = {"LOC": 1}
 
     precisions = compute_entity_precisions_for_prediction(
@@ -121,8 +121,8 @@ def test_compute_precisions_recalls_for_pred_overlap_true():
 
 
 def test_compute_precisions_recalls_for_no_overlap():
-    true_spans = [SpanLabel(entity_type="LOC", start=6, end=9)]
-    pred_spans = [SpanLabel(entity_type="LOC", start=2, end=4)]
+    true_spans = [Entity(entity_type="LOC", start=6, end=9)]
+    pred_spans = [Entity(entity_type="LOC", start=2, end=4)]
     label_to_int = {"LOC": 1}
 
     precisions = compute_entity_precisions_for_prediction(
@@ -139,10 +139,10 @@ def test_compute_precisions_recalls_for_no_overlap():
 
 def test_compute_precisions_recalls_for_one_pred_to_many_trues():
     true_spans = [
-        SpanLabel(entity_type="LOC", start=6, end=9),
-        SpanLabel(entity_type="LOC", start=13, end=15),
+        Entity(entity_type="LOC", start=6, end=9),
+        Entity(entity_type="LOC", start=13, end=15),
     ]
-    pred_spans = [SpanLabel(entity_type="LOC", start=5, end=15)]
+    pred_spans = [Entity(entity_type="LOC", start=5, end=15)]
     label_to_int = {"LOC": 1}
 
     precisions = compute_entity_precisions_for_prediction(
@@ -161,10 +161,10 @@ def test_compute_precisions_recalls_for_one_pred_to_many_trues():
 
 
 def test_compute_precisions_recalls_for_many_preds_to_one_true():
-    true_spans = [SpanLabel(entity_type="LOC", start=5, end=15)]
+    true_spans = [Entity(entity_type="LOC", start=5, end=15)]
     pred_spans = [
-        SpanLabel(entity_type="LOC", start=6, end=9),
-        SpanLabel(entity_type="LOC", start=13, end=15),
+        Entity(entity_type="LOC", start=6, end=9),
+        Entity(entity_type="LOC", start=13, end=15),
     ]
     label_to_int = {"LOC": 1}
 
@@ -182,8 +182,8 @@ def test_compute_precisions_recalls_for_many_preds_to_one_true():
 
 
 def test_compute_precisions_recalls_for_incorrect_type():
-    true_spans = [SpanLabel(entity_type="LOC", start=4, end=8)]
-    pred_spans = [SpanLabel(entity_type="PER", start=4, end=8)]
+    true_spans = [Entity(entity_type="LOC", start=4, end=8)]
+    pred_spans = [Entity(entity_type="PER", start=4, end=8)]
     label_to_int = {"LOC": 1, "PER": 2}
 
     precisions = compute_entity_precisions_for_prediction(
@@ -199,7 +199,7 @@ def test_compute_precisions_recalls_for_incorrect_type():
 
 
 def test_compute_precisions_recalls_for_no_pred():
-    true_spans = [SpanLabel(entity_type="LOC", start=4, end=8)]
+    true_spans = [Entity(entity_type="LOC", start=4, end=8)]
     pred_spans: List = []
     label_to_int = {"LOC": 1}
 
@@ -215,7 +215,7 @@ def test_compute_precisions_recalls_for_no_pred():
 
 def test_compute_precisions_recalls_for_no_true():
     true_spans: List = []
-    pred_spans = [SpanLabel(entity_type="LOC", start=4, end=8)]
+    pred_spans = [Entity(entity_type="LOC", start=4, end=8)]
     label_to_int = {"LOC": 1}
 
     precisions = compute_entity_precisions_for_prediction(
