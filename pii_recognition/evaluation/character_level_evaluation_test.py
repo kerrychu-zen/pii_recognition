@@ -4,21 +4,21 @@ import pytest
 from pii_recognition.evaluation.character_level_evaluation import (
     compute_entity_precisions_for_prediction,
     compute_entity_recalls_for_ground_truth,
-    encode_labels,
+    label_encoder,
 )
 from pii_recognition.labels.schema import Entity
 
 
-def test_encode_labels_for_0_taken():
+def test_label_encoder_for_0_taken():
     with pytest.raises(ValueError) as err:
-        encode_labels(3, [], {"LOC": 0})
+        label_encoder(3, [], {"LOC": 0})
     assert str(err.value) == (
         "Value 0 is reserved! If a character does not "
-        "belong to any classes, it will be assigned with 0."
+        "belong to any entity, it would be assigned with 0."
     )
 
 
-def test_encode_labels_for_multi_labels():
+def test_label_encoder_for_multi_labels():
     spans = [
         Entity(entity_type="LOC", start=5, end=8),
         Entity(entity_type="PER", start=10, end=15),
@@ -26,28 +26,28 @@ def test_encode_labels_for_multi_labels():
     ]
 
     # entity PER and PERSON map to the same int
-    actual = encode_labels(20, spans, {"LOC": 1, "PER": 2, "PERSON": 2})
+    actual = label_encoder(20, spans, {"LOC": 1, "PER": 2, "PERSON": 2})
     assert actual == [0, 0, 2, 2, 2, 1, 1, 1, 0, 0, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0]
 
 
-def test_encode_labels_for_missing_label_in_mapping():
+def test_label_encoder_for_missing_label_in_mapping():
     spans = [
         Entity(entity_type="LOC", start=5, end=8),
         Entity(entity_type="PER", start=10, end=15),
     ]
 
     with pytest.raises(Exception) as error:
-        encode_labels(20, spans, {"LOC": 1})
+        label_encoder(20, spans, {"LOC": 1})
     assert str(error.value) == (
-        "Label 'PER' is not presented in 'label_to_int' mapping."
+        "Missing label 'PER' in 'label_to_int' mapping."
     )
 
 
-def test_encode_labels_for_span_beyond_range():
+def test_label_encoder_for_span_beyond_range():
     spans = [Entity(entity_type="LOC", start=3, end=7)]
 
     with pytest.raises(ValueError) as error:
-        encode_labels(5, spans, {"LOC": 1})
+        label_encoder(5, spans, {"LOC": 1})
     assert str(error.value) == (
         "Span index is out of range: text length is 5 but got span index 7."
     )
