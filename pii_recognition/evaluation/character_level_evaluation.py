@@ -23,14 +23,14 @@ def encode_labels(
         label_to_int: a mapping between entity labels and integers.
 
     Returns:
-        Integer coding of the text.
+        Integer code of the text.
     """
     if 0 in label_to_int.values():
         raise ValueError(
             "Value 0 is reserved! If a character does not belong to any classes, it "
             "will be assigned with 0."
         )
-    coding = [0] * text_length
+    code = [0] * text_length
 
     for span in span_labels:
         s = span.start
@@ -48,48 +48,9 @@ def encode_labels(
                 f"Label {str(err)} is not presented in 'label_to_int' mapping."
             )
 
-        coding[s:e] = [label_code] * (e - s)
+        code[s:e] = [label_code] * (e - s)
 
-    return coding
-
-
-def _precisions_recalls_support(
-    text_length: int,
-    true_spans: List[SpanLabel],
-    pred_spans: List[SpanLabel],
-    label_mapping: Dict,
-    compute_for: str,
-) -> List[Dict]:
-    if compute_for not in {"precision", "recall"}:
-        raise ValueError(
-            f"Available options for computation are: "
-            f"'precision', 'recall' but got {compute_for}"
-        )
-
-    config = {
-        "precision": {"loop": pred_spans, "no_loop": true_spans},
-        "recall": {"loop": true_spans, "no_loop": pred_spans},
-    }
-
-    coding: List[int] = encode_labels(
-        text_length, config[compute_for]["no_loop"], label_mapping
-    )
-
-    scores: List = []
-    for span in config[compute_for]["loop"]:
-        span_coding: List[int] = encode_labels(text_length, [span], label_mapping)
-        int_label: int = label_mapping[span.entity_type]
-
-        if compute_for == "precision":
-            score = compute_label_precision(coding, span_coding, int_label)
-        elif compute_for == "recall":
-            score = compute_label_recall(span_coding, coding, int_label)
-
-        span_dict = asdict(span)
-        span_dict.update({compute_for: score})
-        scores.append(span_dict)
-
-    return scores
+    return code
 
 
 def compute_entity_precisions_for_prediction(
@@ -98,9 +59,21 @@ def compute_entity_precisions_for_prediction(
     pred_spans: List[SpanLabel],
     label_mapping: Dict,
 ) -> List[Dict]:
-    return _precisions_recalls_support(
-        text_length, true_spans, pred_spans, label_mapping, compute_for="precision"
-    )
+    true_code: List[int] = encode_labels(text_length, true_spans, label_mapping)
+
+    precisions: List = []
+    for pred_span in pred_spans:
+        pred_span_code: List[int] = encode_labels(
+            text_length, [pred_span], label_mapping
+        )
+        int_label: int = label_mapping[pred_span.entity_type]
+        score = compute_label_precision(true_code, pred_span_code, int_label)
+
+        span_dict = asdict(pred_span)
+        span_dict.update({"precision": score})
+        precisions.append(span_dict)
+
+    return precisions
 
 
 def compute_entity_recalls_for_ground_truth(
@@ -109,6 +82,18 @@ def compute_entity_recalls_for_ground_truth(
     pred_spans: List[SpanLabel],
     label_mapping: Dict,
 ) -> List[Dict]:
-    return _precisions_recalls_support(
-        text_length, true_spans, pred_spans, label_mapping, compute_for="recall"
-    )
+    pred_code: List[int] = encode_labels(text_length, pred_spans, label_mapping)
+
+    recalls: List = []
+    for true_span in true_spans:
+        true_span_code: List[int] = encode_labels(
+            text_length, [true_span], label_mapping
+        )
+        int_label: int = label_mapping[true_span.entity_type]
+        score = compute_label_recall(true_span_code, pred_code, int_label)
+
+        span_dict = asdict(true_span)
+        span_dict.update({"recall": score})
+        recalls.append(span_dict)
+
+    return recalls
