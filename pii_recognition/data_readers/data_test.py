@@ -1,5 +1,8 @@
-from .data import Data
+from typing import List
+
 import pytest
+
+from .data import Data
 
 
 def test_Data_token_labels():
@@ -52,7 +55,7 @@ def test_Data_span_labels():
 
 def test_Data_for_texts_labels_length_mismatch():
     texts = ["A tribute to Joshua Lewis", "It's like that since 12/17/1967"]
-    labels = []
+    labels: List = []
 
     with pytest.raises(AssertionError) as err:
         Data(
