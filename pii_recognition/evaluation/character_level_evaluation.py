@@ -44,9 +44,7 @@ def label_encoder(
         try:
             label_code = label_to_int[label_name]
         except KeyError as err:
-            raise Exception(
-                f"Missing label {str(err)} in 'label_to_int' mapping."
-            )
+            raise Exception(f"Missing label {str(err)} in 'label_to_int' mapping.")
 
         code[s:e] = [label_code] * (e - s)
 
@@ -70,9 +68,9 @@ def compute_entity_precisions_for_prediction(
         int_label: int = label_mapping[pred_entity.entity_type]
         score = compute_label_precision(true_code, pred_entity_code, int_label)
 
-        span_dict = asdict(pred_entity)
-        span_dict.update({"precision": score})
-        precisions.append(span_dict)
+        entity_dict = asdict(pred_entity)
+        entity_dict.update({"precision": score})
+        precisions.append(entity_dict)
 
     return precisions
 
@@ -94,8 +92,8 @@ def compute_entity_recalls_for_ground_truth(
         int_label: int = label_mapping[true_entity.entity_type]
         score = compute_label_recall(true_entity_code, pred_code, int_label)
 
-        span_dict = asdict(true_entity)
-        span_dict.update({"recall": score})
-        recalls.append(span_dict)
+        entity_dict = asdict(true_entity)
+        entity_dict.update({"recall": score})
+        recalls.append(entity_dict)
 
     return recalls

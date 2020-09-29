@@ -38,9 +38,7 @@ def test_label_encoder_for_missing_label_in_mapping():
 
     with pytest.raises(Exception) as error:
         label_encoder(20, spans, {"LOC": 1})
-    assert str(error.value) == (
-        "Missing label 'PER' in 'label_to_int' mapping."
-    )
+    assert str(error.value) == ("Missing label 'PER' in 'label_to_int' mapping.")
 
 
 def test_label_encoder_for_span_beyond_range():
