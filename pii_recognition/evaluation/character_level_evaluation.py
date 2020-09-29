@@ -37,7 +37,7 @@ def label_encoder(
         e = span.end
         if e > text_length:
             raise ValueError(
-                f"Span index is out of range: text length is "
+                f"Entity span index is out of range: text length is "
                 f"{text_length} but got span index {e}."
             )
         label_name = span.entity_type
