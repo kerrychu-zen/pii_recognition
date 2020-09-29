@@ -357,6 +357,7 @@ def test_compute_precisions_recalls_for_no_pred():
         Entity(entity_type="PER", start=10, end=15),
     ]
     pred_entities: List = []
+    # type matters
     label_to_int = {"LOC": 1, "PER": 2}
 
     precisions = compute_entity_precisions_for_prediction(
@@ -378,6 +379,7 @@ def test_compute_precisions_recalls_for_no_true():
         Entity(entity_type="LOC", start=3, end=7),
         Entity(entity_type="PER", start=10, end=15),
     ]
+    # type matters
     label_to_int = {"LOC": 1, "PER": 2}
 
     precisions = compute_entity_precisions_for_prediction(
