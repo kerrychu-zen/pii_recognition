@@ -1,5 +1,5 @@
 import json
-from typing import Any, Dict, Iterable, Optional, Sequence, Type
+from typing import Any, Dict, Iterable, List, Optional, Sequence, Type
 
 import yaml
 
@@ -42,6 +42,6 @@ def dump_yaml_file(path: str, data: Any):
         yaml.dump(data, stream)
 
 
-def load_json_file(path: str) -> Dict:
+def load_json_file(path: str) -> List[Dict]:
     with open(path, "r") as f:
         return json.load(f)

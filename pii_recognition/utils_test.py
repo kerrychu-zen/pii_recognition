@@ -11,7 +11,7 @@ from pii_recognition.utils import (
 )
 
 
-def read_data():
+def json_dumps():
     return json.dumps(
         [{"name": "John", "location": "AU"}, {"name": "Mia", "location": "AU"}]
     )
@@ -76,7 +76,7 @@ def test_dump_yaml_file():
         )
 
 
-@patch("builtins.open", new_callable=mock_open, read_data=read_data())
+@patch("builtins.open", new_callable=mock_open, read_data=json_dumps())
 def test_load_json_file(mock_file):
     data = load_json_file("any_path/file.json")
     assert data == [
