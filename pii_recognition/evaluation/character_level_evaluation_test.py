@@ -9,7 +9,7 @@ from pii_recognition.evaluation.character_level_evaluation import (
 from pii_recognition.labels.schema import Entity
 
 
-def test_label_encoder_for_0_taken():
+def test_label_encoder_for_reserved_0_taken():
     with pytest.raises(ValueError) as err:
         label_encoder(3, [], {"LOC": 0})
     assert str(err.value) == (
@@ -52,177 +52,237 @@ def test_label_encoder_for_span_beyond_range():
 
 
 def test_compute_precisions_recalls_for_exact_match():
-    true_spans = pred_spans = [Entity(entity_type="LOC", start=3, end=7)]
-    label_to_int = {"LOC": 1}
-
-    precisions = compute_entity_precisions_for_prediction(
-        10, true_spans, pred_spans, label_to_int
-    )
-    recalls = compute_entity_recalls_for_ground_truth(
-        10, true_spans, pred_spans, label_to_int
-    )
-    assert precisions == [
-        {"entity_type": "LOC", "start": 3, "end": 7, "precision": 1.0}
+    true_entities = pred_entities = [
+        Entity(entity_type="LOC", start=3, end=7),
+        Entity(entity_type="PER", start=10, end=15),
+        Entity(entity_type="LOC", start=23, end=32),
+        Entity(entity_type="PER", start=37, end=48),
     ]
-    assert recalls == [{"entity_type": "LOC", "start": 3, "end": 7, "recall": 1.0}]
-
-
-def test_compute_precisions_recalls_for_pred_subset_of_true():
-    true_spans = [Entity(entity_type="LOC", start=3, end=7)]
-    pred_spans = [Entity(entity_type="LOC", start=4, end=6)]
-    label_to_int = {"LOC": 1}
-
-    precisions = compute_entity_precisions_for_prediction(
-        10, true_spans, pred_spans, label_to_int
-    )
-    recalls = compute_entity_recalls_for_ground_truth(
-        10, true_spans, pred_spans, label_to_int
-    )
-    assert precisions == [
-        {"entity_type": "LOC", "start": 4, "end": 6, "precision": 1.0}
-    ]
-    assert recalls == [{"entity_type": "LOC", "start": 3, "end": 7, "recall": 0.5}]
-
-
-def test_compute_precisions_recalls_for_pred_superset_of_true():
-    true_spans = [Entity(entity_type="LOC", start=3, end=6)]
-    pred_spans = [Entity(entity_type="LOC", start=2, end=8)]
-    label_to_int = {"LOC": 1}
-
-    precisions = compute_entity_precisions_for_prediction(
-        10, true_spans, pred_spans, label_to_int
-    )
-    recalls = compute_entity_recalls_for_ground_truth(
-        10, true_spans, pred_spans, label_to_int
-    )
-    assert precisions == [
-        {"entity_type": "LOC", "start": 2, "end": 8, "precision": 0.5}
-    ]
-    assert recalls == [{"entity_type": "LOC", "start": 3, "end": 6, "recall": 1.0}]
-
-
-def test_compute_precisions_recalls_for_pred_overlap_true():
-    true_spans = [Entity(entity_type="LOC", start=2, end=7)]
-    pred_spans = [Entity(entity_type="LOC", start=5, end=9)]
-    label_to_int = {"LOC": 1}
-
-    precisions = compute_entity_precisions_for_prediction(
-        10, true_spans, pred_spans, label_to_int
-    )
-    recalls = compute_entity_recalls_for_ground_truth(
-        10, true_spans, pred_spans, label_to_int
-    )
-    assert precisions == [
-        {"entity_type": "LOC", "start": 5, "end": 9, "precision": 0.5}
-    ]
-    assert recalls == [{"entity_type": "LOC", "start": 2, "end": 7, "recall": 0.4}]
-
-
-def test_compute_precisions_recalls_for_no_overlap():
-    true_spans = [Entity(entity_type="LOC", start=6, end=9)]
-    pred_spans = [Entity(entity_type="LOC", start=2, end=4)]
-    label_to_int = {"LOC": 1}
-
-    precisions = compute_entity_precisions_for_prediction(
-        10, true_spans, pred_spans, label_to_int
-    )
-    recalls = compute_entity_recalls_for_ground_truth(
-        10, true_spans, pred_spans, label_to_int
-    )
-    assert precisions == [
-        {"entity_type": "LOC", "start": 2, "end": 4, "precision": 0.0}
-    ]
-    assert recalls == [{"entity_type": "LOC", "start": 6, "end": 9, "recall": 0.0}]
-
-
-def test_compute_precisions_recalls_for_one_pred_to_many_trues():
-    true_spans = [
-        Entity(entity_type="LOC", start=6, end=9),
-        Entity(entity_type="LOC", start=13, end=15),
-    ]
-    pred_spans = [Entity(entity_type="LOC", start=5, end=15)]
-    label_to_int = {"LOC": 1}
-
-    precisions = compute_entity_precisions_for_prediction(
-        20, true_spans, pred_spans, label_to_int
-    )
-    recalls = compute_entity_recalls_for_ground_truth(
-        20, true_spans, pred_spans, label_to_int
-    )
-    assert precisions == [
-        {"entity_type": "LOC", "start": 5, "end": 15, "precision": 0.5}
-    ]
-    assert recalls == [
-        {"entity_type": "LOC", "start": 6, "end": 9, "recall": 1.0},
-        {"entity_type": "LOC", "start": 13, "end": 15, "recall": 1.0},
-    ]
-
-
-def test_compute_precisions_recalls_for_many_preds_to_one_true():
-    true_spans = [Entity(entity_type="LOC", start=5, end=15)]
-    pred_spans = [
-        Entity(entity_type="LOC", start=6, end=9),
-        Entity(entity_type="LOC", start=13, end=15),
-    ]
-    label_to_int = {"LOC": 1}
-
-    precisions = compute_entity_precisions_for_prediction(
-        20, true_spans, pred_spans, label_to_int
-    )
-    recalls = compute_entity_recalls_for_ground_truth(
-        20, true_spans, pred_spans, label_to_int
-    )
-    assert precisions == [
-        {"entity_type": "LOC", "start": 6, "end": 9, "precision": 1.0},
-        {"entity_type": "LOC", "start": 13, "end": 15, "precision": 1.0},
-    ]
-    assert recalls == [{"entity_type": "LOC", "start": 5, "end": 15, "recall": 0.5}]
-
-
-def test_compute_precisions_recalls_for_incorrect_type():
-    true_spans = [Entity(entity_type="LOC", start=4, end=8)]
-    pred_spans = [Entity(entity_type="PER", start=4, end=8)]
     label_to_int = {"LOC": 1, "PER": 2}
 
     precisions = compute_entity_precisions_for_prediction(
-        10, true_spans, pred_spans, label_to_int
+        50, true_entities, pred_entities, label_to_int
     )
     recalls = compute_entity_recalls_for_ground_truth(
-        10, true_spans, pred_spans, label_to_int
+        50, true_entities, pred_entities, label_to_int
     )
     assert precisions == [
-        {"entity_type": "PER", "start": 4, "end": 8, "precision": 0.0}
+        {"entity_type": "LOC", "start": 3, "end": 7, "precision": 1.0},
+        {"entity_type": "PER", "start": 10, "end": 15, "precision": 1.0},
+        {"entity_type": "LOC", "start": 23, "end": 32, "precision": 1.0},
+        {"entity_type": "PER", "start": 37, "end": 48, "precision": 1.0},
     ]
-    assert recalls == [{"entity_type": "LOC", "start": 4, "end": 8, "recall": 0.0}]
+    assert recalls == [
+        {"entity_type": "LOC", "start": 3, "end": 7, "recall": 1.0},
+        {"entity_type": "PER", "start": 10, "end": 15, "recall": 1.0},
+        {"entity_type": "LOC", "start": 23, "end": 32, "recall": 1.0},
+        {"entity_type": "PER", "start": 37, "end": 48, "recall": 1.0},
+    ]
 
 
-def test_compute_precisions_recalls_for_no_pred():
-    true_spans = [Entity(entity_type="LOC", start=4, end=8)]
-    pred_spans: List = []
-    label_to_int = {"LOC": 1}
+def test_compute_precisions_recalls_for_pred_subset_of_true():
+    true_entities = pred_entities = [
+        Entity(entity_type="LOC", start=3, end=7),
+        Entity(entity_type="PER", start=10, end=15),
+        Entity(entity_type="LOC", start=23, end=32),
+        Entity(entity_type="PER", start=37, end=48),
+    ]
+    pred_entities = [
+        Entity(entity_type="LOC", start=4, end=7),
+        Entity(entity_type="PER", start=13, end=15),
+        Entity(entity_type="LOC", start=25, end=30),
+        Entity(entity_type="PER", start=40, end=46),
+    ]
+    label_to_int = {"LOC": 1, "PER": 2}
 
     precisions = compute_entity_precisions_for_prediction(
-        10, true_spans, pred_spans, label_to_int
+        50, true_entities, pred_entities, label_to_int
     )
     recalls = compute_entity_recalls_for_ground_truth(
-        10, true_spans, pred_spans, label_to_int
-    )
-    assert precisions == []
-    assert recalls == [{"entity_type": "LOC", "start": 4, "end": 8, "recall": 0.0}]
-
-
-def test_compute_precisions_recalls_for_no_true():
-    true_spans: List = []
-    pred_spans = [Entity(entity_type="LOC", start=4, end=8)]
-    label_to_int = {"LOC": 1}
-
-    precisions = compute_entity_precisions_for_prediction(
-        10, true_spans, pred_spans, label_to_int
-    )
-    recalls = compute_entity_recalls_for_ground_truth(
-        10, true_spans, pred_spans, label_to_int
+        50, true_entities, pred_entities, label_to_int
     )
     assert precisions == [
-        {"entity_type": "LOC", "start": 4, "end": 8, "precision": 0.0}
+        {"entity_type": "LOC", "start": 4, "end": 7, "precision": 1.0},
+        {"entity_type": "PER", "start": 13, "end": 15, "precision": 1.0},
+        {"entity_type": "LOC", "start": 25, "end": 30, "precision": 1.0},
+        {"entity_type": "PER", "start": 40, "end": 46, "precision": 1.0},
     ]
-    assert recalls == []
+    assert recalls == [
+        {"entity_type": "LOC", "start": 3, "end": 7, "recall": 0.75},
+        {"entity_type": "PER", "start": 10, "end": 15, "recall": 0.4},
+        {"entity_type": "LOC", "start": 23, "end": 32, "recall": 5 / 9},
+        {"entity_type": "PER", "start": 37, "end": 48, "recall": 6 / 11},
+    ]
+
+
+def test_compute_precisions_recalls_for_pred_superset_of_true():
+    true_entities = [
+        Entity(entity_type="LOC", start=4, end=7),
+        Entity(entity_type="PER", start=13, end=15),
+        Entity(entity_type="LOC", start=25, end=30),
+        Entity(entity_type="PER", start=40, end=46),
+    ]
+    pred_entities = pred_entities = [
+        Entity(entity_type="LOC", start=3, end=7),
+        Entity(entity_type="PER", start=10, end=15),
+        Entity(entity_type="LOC", start=23, end=32),
+        Entity(entity_type="PER", start=37, end=48),
+    ]
+    label_to_int = {"LOC": 1, "PER": 2}
+
+    precisions = compute_entity_precisions_for_prediction(
+        50, true_entities, pred_entities, label_to_int
+    )
+    recalls = compute_entity_recalls_for_ground_truth(
+        50, true_entities, pred_entities, label_to_int
+    )
+    assert precisions == [
+        {"entity_type": "LOC", "start": 3, "end": 7, "precision": 0.75},
+        {"entity_type": "PER", "start": 10, "end": 15, "precision": 0.4},
+        {"entity_type": "LOC", "start": 23, "end": 32, "precision": 5 / 9},
+        {"entity_type": "PER", "start": 37, "end": 48, "precision": 6 / 11},
+    ]
+    assert recalls == [
+        {"entity_type": "LOC", "start": 4, "end": 7, "recall": 1.0},
+        {"entity_type": "PER", "start": 13, "end": 15, "recall": 1.0},
+        {"entity_type": "LOC", "start": 25, "end": 30, "recall": 1.0},
+        {"entity_type": "PER", "start": 40, "end": 46, "recall": 1.0},
+    ]
+
+
+# def test_compute_precisions_recalls_for_pred_overlap_true():
+#     true_entities = [
+#         Entity(entity_type="LOC", start=3, end=7),
+#         Entity(entity_type="PER", start=10, end=15),
+#     ]
+#     pred_entities = [
+#         Entity(entity_type="LOC", start=2, end=5),
+#         Entity(entity_type="PER", start=13, end=20),
+#     ]
+#     label_to_int = {"LOC": 1, "PER": 2}
+
+#     precisions = compute_entity_precisions_for_prediction(
+#         10, true_entities, pred_entities, label_to_int
+#     )
+#     recalls = compute_entity_recalls_for_ground_truth(
+#         10, true_entities, pred_entities, label_to_int
+#     )
+#     assert precisions == [
+#         {"entity_type": "LOC", "start": 2, "end": 5, "precision": 1.0},
+#         {"entity_type": "PER", "start": 13, "end": 20, "precision": 1.0},
+#     ]
+#     assert recalls == [{"entity_type": "LOC", "start": 2, "end": 7, "recall": 0.4}]
+
+
+# def test_compute_precisions_recalls_for_no_overlap():
+#     true_spans = [Entity(entity_type="LOC", start=6, end=9)]
+#     pred_spans = [Entity(entity_type="LOC", start=2, end=4)]
+#     label_to_int = {"LOC": 1}
+
+#     precisions = compute_entity_precisions_for_prediction(
+#         10, true_spans, pred_spans, label_to_int
+#     )
+#     recalls = compute_entity_recalls_for_ground_truth(
+#         10, true_spans, pred_spans, label_to_int
+#     )
+#     assert precisions == [
+#         {"entity_type": "LOC", "start": 2, "end": 4, "precision": 0.0}
+#     ]
+#     assert recalls == [{"entity_type": "LOC", "start": 6, "end": 9, "recall": 0.0}]
+
+
+# def test_compute_precisions_recalls_for_one_pred_to_many_trues():
+#     true_spans = [
+#         Entity(entity_type="LOC", start=6, end=9),
+#         Entity(entity_type="LOC", start=13, end=15),
+#     ]
+#     pred_spans = [Entity(entity_type="LOC", start=5, end=15)]
+#     label_to_int = {"LOC": 1}
+
+#     precisions = compute_entity_precisions_for_prediction(
+#         20, true_spans, pred_spans, label_to_int
+#     )
+#     recalls = compute_entity_recalls_for_ground_truth(
+#         20, true_spans, pred_spans, label_to_int
+#     )
+#     assert precisions == [
+#         {"entity_type": "LOC", "start": 5, "end": 15, "precision": 0.5}
+#     ]
+#     assert recalls == [
+#         {"entity_type": "LOC", "start": 6, "end": 9, "recall": 1.0},
+#         {"entity_type": "LOC", "start": 13, "end": 15, "recall": 1.0},
+#     ]
+
+
+# def test_compute_precisions_recalls_for_many_preds_to_one_true():
+#     true_spans = [Entity(entity_type="LOC", start=5, end=15)]
+#     pred_spans = [
+#         Entity(entity_type="LOC", start=6, end=9),
+#         Entity(entity_type="LOC", start=13, end=15),
+#     ]
+#     label_to_int = {"LOC": 1}
+
+#     precisions = compute_entity_precisions_for_prediction(
+#         20, true_spans, pred_spans, label_to_int
+#     )
+#     recalls = compute_entity_recalls_for_ground_truth(
+#         20, true_spans, pred_spans, label_to_int
+#     )
+#     assert precisions == [
+#         {"entity_type": "LOC", "start": 6, "end": 9, "precision": 1.0},
+#         {"entity_type": "LOC", "start": 13, "end": 15, "precision": 1.0},
+#     ]
+#     assert recalls == [{"entity_type": "LOC", "start": 5, "end": 15, "recall": 0.5}]
+
+
+# def test_compute_precisions_recalls_for_incorrect_type():
+#     true_spans = [Entity(entity_type="LOC", start=4, end=8)]
+#     pred_spans = [Entity(entity_type="PER", start=4, end=8)]
+#     label_to_int = {"LOC": 1, "PER": 2}
+
+#     precisions = compute_entity_precisions_for_prediction(
+#         10, true_spans, pred_spans, label_to_int
+#     )
+#     recalls = compute_entity_recalls_for_ground_truth(
+#         10, true_spans, pred_spans, label_to_int
+#     )
+#     assert precisions == [
+#         {"entity_type": "PER", "start": 4, "end": 8, "precision": 0.0}
+#     ]
+#     assert recalls == [{"entity_type": "LOC", "start": 4, "end": 8, "recall": 0.0}]
+
+
+# def test_compute_precisions_recalls_for_overlap_and_type_mismatch():
+#     ...
+
+
+# def test_compute_precisions_recalls_for_no_pred():
+#     true_spans = [Entity(entity_type="LOC", start=4, end=8)]
+#     pred_spans: List = []
+#     label_to_int = {"LOC": 1}
+
+#     precisions = compute_entity_precisions_for_prediction(
+#         10, true_spans, pred_spans, label_to_int
+#     )
+#     recalls = compute_entity_recalls_for_ground_truth(
+#         10, true_spans, pred_spans, label_to_int
+#     )
+#     assert precisions == []
+#     assert recalls == [{"entity_type": "LOC", "start": 4, "end": 8, "recall": 0.0}]
+
+
+# def test_compute_precisions_recalls_for_no_true():
+#     true_spans: List = []
+#     pred_spans = [Entity(entity_type="LOC", start=4, end=8)]
+#     label_to_int = {"LOC": 1}
+
+#     precisions = compute_entity_precisions_for_prediction(
+#         10, true_spans, pred_spans, label_to_int
+#     )
+#     recalls = compute_entity_recalls_for_ground_truth(
+#         10, true_spans, pred_spans, label_to_int
+#     )
+#     assert precisions == [
+#         {"entity_type": "LOC", "start": 4, "end": 8, "precision": 0.0}
+#     ]
+#     assert recalls == []
