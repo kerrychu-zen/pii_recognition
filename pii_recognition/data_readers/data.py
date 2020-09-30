@@ -11,7 +11,6 @@ TEXT_LABELS = TypeVar("TEXT_LABELS", List[str], List[Entity])
 @dataclass
 class Data(Generic[TEXT_LABELS]):
     texts: List[str]
-    # labels are token based
     labels: List[TEXT_LABELS]
     supported_entities: Set[str]
     is_io_schema: bool
