@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List, TypeVar, Set
+from typing import List, TypeVar, Set, Generic
 from pii_recognition.labels.schema import Entity
 
 # Two kinds of entity labels
@@ -9,7 +9,7 @@ TEXT_LABELS = TypeVar("TEXT_LABELS", List[str], List[Entity])
 
 
 @dataclass
-class Data:
+class Data(Generic[TEXT_LABELS]):
     texts: List[str]
     # labels are token based
     labels: List[TEXT_LABELS]

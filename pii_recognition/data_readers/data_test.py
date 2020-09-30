@@ -3,6 +3,7 @@ from typing import List
 import pytest
 
 from .data import Data
+from pii_recognition.labels.schema import Entity
 
 
 def test_Data_token_labels():
@@ -27,18 +28,8 @@ def test_Data_token_labels():
 def test_Data_span_labels():
     texts = ["A tribute to Joshua Lewis", "It's like that since 12/17/1967"]
     labels = [
-        {
-            "entity_type": "PERSON",
-            "entity_value": "Joshua Lewis",
-            "start_position": 13,
-            "end_position": 25,
-        },
-        {
-            "entity_type": "BIRTHDAY",
-            "entity_value": "12/17/1967",
-            "start_position": 21,
-            "end_position": 31,
-        },
+        [Entity(entity_type="PERSON", start=13, end=25)],
+        [Entity(entity_type="BIRTHDAY", start=21, end=31)],
     ]
 
     data = Data(
