@@ -5,7 +5,7 @@ from pii_recognition.utils import load_json_file
 
 
 class PresidioFakePiiReader:
-    def _get_supported_entities(self, data: List[Dict]) -> Set:
+    def _get_supported_entities(self, data: List[Dict]) -> Set[str]:
         unique_labels = set()
         for item in data:
             spans = item["spans"]
