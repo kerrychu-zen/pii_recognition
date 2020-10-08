@@ -1,9 +1,8 @@
-from typing import List
+from typing import List, Optional
 
 from boto3.session import Session
 from botocore.client import BaseClient
 from decouple import config
-
 from pii_recognition.aws.config_session import config_cognito_session
 from pii_recognition.labels.schema import Entity
 
@@ -27,11 +26,10 @@ class ComprehendRecogniser(EntityRecogniser):
         return session.client(service_name="comprehend",
                               region_name=AWS_REGION)
 
-    def analyse(self, text: str, entities: List[str]) -> List[Entity]:
+    def analyse(self, text: str, entities: List[str]) -> Optional[List[Entity]]:
         self.validate_entities(entities)
 
-        # TODO: Add feature supporting multilingual but the first round is for
-        # only English
+        # TODO: Add multilingual support
         DEFAULT_LANG = 'en'
 
         response = self.comprehend.detect_entities(Text=text,
@@ -44,4 +42,8 @@ class ComprehendRecogniser(EntityRecogniser):
         span_labels = map(
             lambda ent: Entity(ent["Type"], ent["BeginOffset"], ent[
                 "EndOffset"]), filtered)
-        return list(span_labels)
+
+        results = list(span_labels)
+        if results:
+            return results
+        return
