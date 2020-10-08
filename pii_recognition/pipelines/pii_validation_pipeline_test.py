@@ -25,32 +25,26 @@ def data():
     )
 
 
-def analyse_returns():
-    return "test"
+@patch("pii_recognition.pipelines.pii_validation_pipeline.recogniser_registry")
+def test_identify_pii_entities(mock_registry, data):
+    mock_registry.create_instance.return_value.analyse.return_value = [
+        Entity("test", 0, 4)
+    ]
 
+    data = identify_pii_entities(
+        data,
+        "test_recogniser",
+        {"supported_entities": ["test"], "supported_languages": ["test"]},
+    )
 
-@patch("pii_recognition.recognisers.comprehend_recogniser.config_cognito_session")
-@patch("pii_recognition.recognisers.comprehend_recogniser.ComprehendRecogniser.analyse")
-def test_identify_pii_entities_with_comprehend(mock_analyse, mock_session, data):
-    mock_analyse.return_value = [Entity("test", 0, 4)]
-
-    recogniser_name = "ComprehendRecogniser"
-    recogniser_params = {
-        "supported_entities": [
-            "COMMERCIAL_ITEM",
-            "DATE",
-            "EVENT",
-            "LOCATION",
-            "ORGANIZATION",
-            "OTHER",
-            "PERSON",
-            "QUANTITY",
-            "TITLE",
-        ],
-        "supported_languages": ["en"],
-    }
-
-    data = identify_pii_entities(data, recogniser_name, recogniser_params)
+    assert [item.text for item in data.items] == [
+        "It's like that since 12/17/1967",
+        "The address of Balefire Global is Valadouro 3, Ubide 48145",
+    ]
+    assert [item.true_labels for item in data.items] == [
+        [Entity("BIRTHDAY", 21, 31)],
+        [Entity("ORGANIZATION", 15, 30), Entity("LOCATION", 34, 58)],
+    ]
     assert [item.pred_labels for item in data.items] == [
         [Entity("test", 0, 4)],
         [Entity("test", 0, 4)],
