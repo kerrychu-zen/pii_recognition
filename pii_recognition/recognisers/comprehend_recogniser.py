@@ -45,4 +45,4 @@ class ComprehendRecogniser(EntityRecogniser):
         results = list(span_labels)
         if results:
             return results
-        return
+        return None

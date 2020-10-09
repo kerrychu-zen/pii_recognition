@@ -93,8 +93,10 @@ class ModelEvaluator:
 
     def get_span_based_prediction(self, text: str) -> List[Entity]:
         predicted_spans = self.recogniser.analyse(text, self.target_entities)
-        self._validate_predictions([label.entity_type for label in predicted_spans])
-        return predicted_spans
+        if predicted_spans:
+            self._validate_predictions([label.entity_type for label in predicted_spans])
+            return predicted_spans
+        return []
 
     def get_token_based_prediction(self, text: str) -> List[TokenLabel]:
         recognised_entities = self.get_span_based_prediction(text)
