@@ -96,6 +96,7 @@ class ModelEvaluator:
         if predicted_spans:
             self._validate_predictions([label.entity_type for label in predicted_spans])
             return predicted_spans
+        # TODO: use optional instead of returning empty list
         return []
 
     def get_token_based_prediction(self, text: str) -> List[TokenLabel]:
