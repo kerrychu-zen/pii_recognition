@@ -36,12 +36,12 @@ def build_label_mapping(
     """Map an entity label to an integer.
 
     Create a dictionary for mapping entity labels. Targeted entity labels are mapped to
-    a positive integer starting from 1 and labels in the same group are mapped to the
-    same integer. Non-targeted labels are mapped to zero.
+    a positive integer starting from 1 and labels within the same group are mapped to
+    the same integer. Non-targeted labels are mapped to zero.
 
     Args:
-        grouped_targeted_labels: entity labels we are interested that have been grouped
-            into multiple clusters.
+        grouped_targeted_labels: entity labels we are interested that have been
+            separated by groups.
         nontargeted_labels: entity labels we are not interested.
 
     Returns:
@@ -74,7 +74,7 @@ def label_encoder(
         label_to_int: a dictionary that keys are entity labels and values are integers.
 
     Returns:
-        Integer code for the text.
+        Integer code of the text.
     """
     # note 0 means negative labels
     code = [0] * text_length
