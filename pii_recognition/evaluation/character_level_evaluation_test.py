@@ -1,8 +1,9 @@
 from typing import List
-from numpy.testing import assert_almost_equal
 
 import pytest
+from numpy.testing import assert_almost_equal
 from pii_recognition.evaluation.character_level_evaluation import (
+    build_label_mapping,
     compute_entity_precisions_for_prediction,
     compute_entity_recalls_for_ground_truth,
     compute_pii_detection_f1,
@@ -450,3 +451,18 @@ def test_compute_pii_detection_f1_for_empty_precisions_recalls():
     with pytest.raises(ValueError) as err:
         compute_pii_detection_f1([], [], recall_threshold=0.5)
     assert str(err.value) == "You are passing empty precisions and recalls lists!"
+
+
+def test_build_label_mapping_with_nontargeted_labels():
+    grouped_targeted_labels = [{"PERSON", "PER"}, {"LOCATION"}, {"DATE"}]
+    nontargeted_labels = {"NONTARGETED"}
+
+    actual = build_label_mapping(grouped_targeted_labels, nontargeted_labels)
+    assert actual == {"PERSON": 1, "PER": 1, "LOCATION": 2, "DATE": 3, "NONTARGETED": 0}
+
+
+def test_build_label_mapping_without_nontargeted_labels():
+    grouped_targeted_labels = [{"PERSON", "PER"}, {"LOCATION"}, {"DATE"}]
+
+    actual = build_label_mapping(grouped_targeted_labels)
+    assert actual == {"PERSON": 1, "PER": 1, "LOCATION": 2, "DATE": 3}
