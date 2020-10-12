@@ -1,5 +1,5 @@
-from dataclasses import asdict
-from typing import Any, Dict, List, Optional
+from dataclasses import asdict, dataclass
+from typing import Any, Dict, List, Optional, Set
 
 from pii_recognition.evaluation.metrics import (
     compute_f_beta,
@@ -7,6 +7,54 @@ from pii_recognition.evaluation.metrics import (
     compute_label_recall,
 )
 from pii_recognition.labels.schema import Entity
+
+
+@dataclass
+class EntityPrecision:
+    entity: Entity
+    precision: float
+
+
+@dataclass
+class EntityRecall:
+    entity: Entity
+    recall: float
+
+
+@dataclass
+class TicketScore:
+    precisions: List[EntityPrecision]
+    recalls: List[EntityRecall]
+
+
+def build_label_mapping(
+    grouped_targeted_labels: List[Set[str]],
+    nontargeted_labels: Optional[Set[str]] = None,
+) -> Dict[str, int]:
+    """Map an entity label to an integer.
+
+    Create a dictionary for mapping entity labels. Targeted entity labels are mapped to
+    a positive integer starting from 1 and labels in the same group are mapped to the
+    same integer. Non-targeted labels are mapped to zero.
+
+    Args:
+        grouped_targeted_labels: entity labels we are interested that have been grouped
+            into multiple clusters.
+        nontargeted_labels: entity labels we are not interested.
+
+    Returns:
+        A mapping dictionary.
+    """
+    mapping = {
+        label: i + 1
+        for i, label_group in enumerate(grouped_targeted_labels)
+        for label in label_group
+    }
+
+    if nontargeted_labels:
+        mapping.update({label: 0 for label in nontargeted_labels})
+
+    return mapping
 
 
 def label_encoder(
@@ -34,8 +82,13 @@ def label_encoder(
     code = [0] * text_length
 
     for span in entities:
+        label_name = span.entity_type
+        # 0 refers to ignored labels
+        if label_to_int[label_name] == 0:
+            continue
         s = span.start
         e = span.end
+
         if e > text_length:
             raise ValueError(
                 f"Entity span index is out of range: text length is "
@@ -57,7 +110,7 @@ def compute_entity_precisions_for_prediction(
     true_entities: List[Entity],
     pred_entities: List[Entity],
     label_mapping: Dict,
-) -> List[Dict]:
+) -> List[EntityPrecision]:
     """Compute precision for every entity in prediction."""
     true_code: List[int] = label_encoder(text_length, true_entities, label_mapping)
 
@@ -66,12 +119,9 @@ def compute_entity_precisions_for_prediction(
         pred_entity_code: List[int] = label_encoder(
             text_length, [pred_entity], label_mapping
         )
-        int_label: int = label_mapping[pred_entity.entity_type]
-        score = compute_label_precision(true_code, pred_entity_code, int_label)
-
-        entity_dict = asdict(pred_entity)
-        entity_dict.update({"precision": score})
-        precisions.append(entity_dict)
+        label_name: int = label_mapping[pred_entity.entity_type]
+        precision = compute_label_precision(true_code, pred_entity_code, label_name)
+        precisions.append(EntityPrecision(pred_entity, precision))
 
     return precisions
 
@@ -81,7 +131,7 @@ def compute_entity_recalls_for_ground_truth(
     true_entities: List[Entity],
     pred_entities: List[Entity],
     label_mapping: Dict,
-) -> List[Dict]:
+) -> List[EntityRecall]:
     """Compute recall for every entity in ground truth."""
     pred_code: List[int] = label_encoder(text_length, pred_entities, label_mapping)
 
@@ -90,12 +140,9 @@ def compute_entity_recalls_for_ground_truth(
         true_entity_code: List[int] = label_encoder(
             text_length, [true_entity], label_mapping
         )
-        int_label: int = label_mapping[true_entity.entity_type]
-        score = compute_label_recall(true_entity_code, pred_code, int_label)
-
-        entity_dict = asdict(true_entity)
-        entity_dict.update({"recall": score})
-        recalls.append(entity_dict)
+        label_name: int = label_mapping[true_entity.entity_type]
+        recall = compute_label_recall(true_entity_code, pred_code, label_name)
+        recalls.append(EntityRecall(true_entity, recall))
 
     return recalls
 
