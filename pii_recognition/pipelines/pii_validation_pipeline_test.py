@@ -59,49 +59,47 @@ def test_identify_pii_entities(mock_registry, data):
     ]
 
 
-def test_calculate_precisions_and_recalls_with_no_predictions(data):
+def test_calculate_precisions_and_recalls_with_empty_predictions(data):
     grouped_targeted_labels = [{"BIRTHDAY"}, {"ORGANIZATION"}, {"LOCATION"}]
 
     actual = calculate_precisions_and_recalls(data, grouped_targeted_labels)
-    assert actual == [
-        TicketScore(
-            precisions=[], recalls=[EntityRecall(Entity("BIRTHDAY", 21, 31), 0.0)]
-        ),
-        TicketScore(
-            precisions=[],
-            recalls=[
-                EntityRecall(Entity("ORGANIZATION", 15, 30), 0.0),
-                EntityRecall(Entity("LOCATION", 34, 58), 0.0),
-            ],
-        ),
-    ]
+    assert len(actual) == 2
+    assert actual[0] == TicketScore(
+        precisions=[], recalls=[EntityRecall(Entity("BIRTHDAY", 21, 31), 0.0)]
+    )
+    assert actual[1] == TicketScore(
+        precisions=[],
+        recalls=[
+            EntityRecall(Entity("ORGANIZATION", 15, 30), 0.0),
+            EntityRecall(Entity("LOCATION", 34, 58), 0.0),
+        ],
+    )
 
 
 def test_calculate_precisions_and_recalls_with_predictions(data):
-    data.items[0].pred_labels = [Entity("BIRTHDAY", 21, 31)]
+    data.items[0].pred_labels = [Entity("BIRTHDAY", 0, 10)]
     data.items[1].pred_labels = [
-        Entity("ORGANIZATION", 15, 30),
-        Entity("LOCATION", 34, 58),
+        Entity("ORGANIZATION", 20, 30),
+        Entity("LOCATION", 30, 46),
     ]
     grouped_targeted_labels = [{"BIRTHDAY"}, {"ORGANIZATION"}, {"LOCATION"}]
 
     actual = calculate_precisions_and_recalls(data, grouped_targeted_labels)
-    assert actual == [
-        TicketScore(
-            precisions=[EntityPrecision(Entity("BIRTHDAY", 21, 31), 1.0)],
-            recalls=[EntityRecall(Entity("BIRTHDAY", 21, 31), 1.0)],
-        ),
-        TicketScore(
-            precisions=[
-                EntityPrecision(Entity("ORGANIZATION", 15, 30), 1.0),
-                EntityPrecision(Entity("LOCATION", 34, 58), 1.0),
-            ],
-            recalls=[
-                EntityRecall(Entity("ORGANIZATION", 15, 30), 1.0),
-                EntityRecall(Entity("LOCATION", 34, 58), 1.0),
-            ],
-        ),
-    ]
+    assert len(actual) == 2
+    assert actual[0] == TicketScore(
+        precisions=[EntityPrecision(Entity("BIRTHDAY", 0, 10), 0.0)],
+        recalls=[EntityRecall(Entity("BIRTHDAY", 21, 31), 0.0)],
+    )
+    assert actual[1] == TicketScore(
+        precisions=[
+            EntityPrecision(Entity("ORGANIZATION", 20, 30), 1.0),
+            EntityPrecision(Entity("LOCATION", 30, 46), 0.75),
+        ],
+        recalls=[
+            EntityRecall(Entity("ORGANIZATION", 15, 30), 2 / 3),
+            EntityRecall(Entity("LOCATION", 34, 58), 0.5),
+        ],
+    )
 
 
 def test_calculate_precisions_and_recalls_with_nontargeted_labels(data):
@@ -111,13 +109,12 @@ def test_calculate_precisions_and_recalls_with_nontargeted_labels(data):
     actual = calculate_precisions_and_recalls(
         data, grouped_targeted_labels, nontargeted_labels
     )
-    assert actual == [
-        TicketScore(precisions=[], recalls=[],),
-        TicketScore(
-            precisions=[],
-            recalls=[
-                EntityRecall(Entity("ORGANIZATION", 15, 30), 0.0),
-                EntityRecall(Entity("LOCATION", 34, 58), 0.0),
-            ],
-        ),
-    ]
+    assert len(actual) == 2
+    assert actual[0] == TicketScore(precisions=[], recalls=[],)
+    assert actual[1] == TicketScore(
+        precisions=[],
+        recalls=[
+            EntityRecall(Entity("ORGANIZATION", 15, 30), 0.0),
+            EntityRecall(Entity("LOCATION", 34, 58), 0.0),
+        ],
+    )

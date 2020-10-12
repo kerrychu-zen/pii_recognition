@@ -13,12 +13,14 @@ from pii_recognition.labels.schema import Entity
 class EntityPrecision:
     entity: Entity
     precision: float
+    entity_src: str = "predicted"
 
 
 @dataclass
 class EntityRecall:
     entity: Entity
     recall: float
+    entity_src: str = "ground_truth"
 
 
 @dataclass
