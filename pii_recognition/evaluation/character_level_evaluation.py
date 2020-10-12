@@ -1,5 +1,5 @@
 from dataclasses import asdict, dataclass
-from typing import Any, Dict, List, Optional, Set
+from typing import Dict, List, Optional, Set
 
 from pii_recognition.evaluation.metrics import (
     compute_f_beta,
@@ -58,32 +58,32 @@ def build_label_mapping(
 
 
 def label_encoder(
-    text_length: int, entities: List[Entity], label_to_int: Dict[Any, int],
+    text_length: int, entities: List[Entity], label_to_int: Dict[str, int],
 ) -> List[int]:
     """Encode entity labels into integers.
 
-    Encode a text at character level according to its entity labels as well as a mapping
-    defined by `label_to_int`. Note multi-tagging is not supported. One entity can have
-    only one label tag.
+    Convert characters in a text to integers according to the entity labels provided
+    and label_to_int dictionary where the dictionary gives a mapping between an entity
+    label and an integer.
 
     Args:
         text_length: length of a text.
-        entities: entities in a text identified by entity_type, start, end.
-        label_to_int: a mapping between entity labels and integers.
+        entities: entities identified in a text.
+        label_to_int: a dictionary that keys are entity labels and values are integers.
 
     Returns:
-        Integer code of the text.
+        Integer code for the text.
     """
-    if 0 in label_to_int.values():
-        raise ValueError(
-            "Value 0 is reserved! If a character does not belong to any entity, it "
-            "would be assigned with 0."
-        )
+    # note 0 means negative labels
     code = [0] * text_length
 
     for span in entities:
         label_name = span.entity_type
-        # 0 refers to ignored labels
+        try:
+            label_code = label_to_int[label_name]
+        except KeyError as err:
+            raise Exception(f"Missing label {str(err)} in 'label_to_int' mapping.")
+
         if label_to_int[label_name] == 0:
             continue
         s = span.start
@@ -95,10 +95,6 @@ def label_encoder(
                 f"{text_length} but got span index {e}."
             )
         label_name = span.entity_type
-        try:
-            label_code = label_to_int[label_name]
-        except KeyError as err:
-            raise Exception(f"Missing label {str(err)} in 'label_to_int' mapping.")
 
         code[s:e] = [label_code] * (e - s)
 
@@ -116,11 +112,15 @@ def compute_entity_precisions_for_prediction(
 
     precisions = []
     for pred_entity in pred_entities:
+        int_label: int = label_mapping[pred_entity.entity_type]
+        # note 0 means negative labels
+        if int_label == 0:
+            continue
+
         pred_entity_code: List[int] = label_encoder(
             text_length, [pred_entity], label_mapping
         )
-        label_name: int = label_mapping[pred_entity.entity_type]
-        precision = compute_label_precision(true_code, pred_entity_code, label_name)
+        precision = compute_label_precision(true_code, pred_entity_code, int_label)
         precisions.append(EntityPrecision(pred_entity, precision))
 
     return precisions
@@ -137,11 +137,15 @@ def compute_entity_recalls_for_ground_truth(
 
     recalls = []
     for true_entity in true_entities:
+        int_label: int = label_mapping[true_entity.entity_type]
+        # note 0 means negative labels
+        if int_label == 0:
+            continue
+
         true_entity_code: List[int] = label_encoder(
             text_length, [true_entity], label_mapping
         )
-        label_name: int = label_mapping[true_entity.entity_type]
-        recall = compute_label_recall(true_entity_code, pred_code, label_name)
+        recall = compute_label_recall(true_entity_code, pred_code, int_label)
         recalls.append(EntityRecall(true_entity, recall))
 
     return recalls

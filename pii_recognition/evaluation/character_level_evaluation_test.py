@@ -8,17 +8,10 @@ from pii_recognition.evaluation.character_level_evaluation import (
     compute_entity_recalls_for_ground_truth,
     compute_pii_detection_f1,
     label_encoder,
+    EntityRecall,
+    EntityPrecision,
 )
 from pii_recognition.labels.schema import Entity
-
-
-def test_label_encoder_for_reserved_0_taken():
-    with pytest.raises(ValueError) as err:
-        label_encoder(3, [], {"LOC": 0})
-    assert str(err.value) == (
-        "Value 0 is reserved! If a character does not "
-        "belong to any entity, it would be assigned with 0."
-    )
 
 
 def test_label_encoder_for_multi_labels():
@@ -71,16 +64,16 @@ def test_compute_precisions_recalls_for_exact_match():
         50, true_entities, pred_entities, label_to_int
     )
     assert precisions == [
-        {"entity_type": "LOC", "start": 3, "end": 7, "precision": 1.0},
-        {"entity_type": "PER", "start": 10, "end": 15, "precision": 1.0},
-        {"entity_type": "LOC", "start": 23, "end": 32, "precision": 1.0},
-        {"entity_type": "PER", "start": 37, "end": 48, "precision": 1.0},
+        EntityPrecision(Entity(entity_type="LOC", start=3, end=7), 1.0),
+        EntityPrecision(Entity(entity_type="PER", start=10, end=15), 1.0),
+        EntityPrecision(Entity(entity_type="LOC", start=23, end=32), 1.0),
+        EntityPrecision(Entity(entity_type="PER", start=37, end=48), 1.0),
     ]
     assert recalls == [
-        {"entity_type": "LOC", "start": 3, "end": 7, "recall": 1.0},
-        {"entity_type": "PER", "start": 10, "end": 15, "recall": 1.0},
-        {"entity_type": "LOC", "start": 23, "end": 32, "recall": 1.0},
-        {"entity_type": "PER", "start": 37, "end": 48, "recall": 1.0},
+        EntityRecall(Entity(entity_type="LOC", start=3, end=7), 1.0),
+        EntityRecall(Entity(entity_type="PER", start=10, end=15), 1.0),
+        EntityRecall(Entity(entity_type="LOC", start=23, end=32), 1.0),
+        EntityRecall(Entity(entity_type="PER", start=37, end=48), 1.0),
     ]
 
 
@@ -108,16 +101,16 @@ def test_compute_precisions_recalls_for_pred_subset_of_true():
         50, true_entities, pred_entities, label_to_int
     )
     assert precisions == [
-        {"entity_type": "LOC", "start": 4, "end": 7, "precision": 1.0},
-        {"entity_type": "PER", "start": 13, "end": 15, "precision": 1.0},
-        {"entity_type": "LOC", "start": 25, "end": 30, "precision": 1.0},
-        {"entity_type": "PER", "start": 40, "end": 46, "precision": 1.0},
+        EntityPrecision(Entity(entity_type="LOC", start=4, end=7), 1.0),
+        EntityPrecision(Entity(entity_type="PER", start=13, end=15), 1.0),
+        EntityPrecision(Entity(entity_type="LOC", start=25, end=30), 1.0),
+        EntityPrecision(Entity(entity_type="PER", start=40, end=46), 1.0),
     ]
     assert recalls == [
-        {"entity_type": "LOC", "start": 3, "end": 7, "recall": 0.75},
-        {"entity_type": "PER", "start": 10, "end": 15, "recall": 0.4},
-        {"entity_type": "LOC", "start": 23, "end": 32, "recall": 5 / 9},
-        {"entity_type": "PER", "start": 37, "end": 48, "recall": 6 / 11},
+        EntityRecall(Entity(entity_type="LOC", start=3, end=7), 0.75),
+        EntityRecall(Entity(entity_type="PER", start=10, end=15), 0.4),
+        EntityRecall(Entity(entity_type="LOC", start=23, end=32), 5 / 9),
+        EntityRecall(Entity(entity_type="PER", start=37, end=48), 6 / 11),
     ]
 
 
@@ -145,16 +138,16 @@ def test_compute_precisions_recalls_for_pred_superset_of_true():
         50, true_entities, pred_entities, label_to_int
     )
     assert precisions == [
-        {"entity_type": "LOC", "start": 3, "end": 7, "precision": 0.75},
-        {"entity_type": "PER", "start": 10, "end": 15, "precision": 0.4},
-        {"entity_type": "LOC", "start": 23, "end": 32, "precision": 5 / 9},
-        {"entity_type": "PER", "start": 37, "end": 48, "precision": 6 / 11},
+        EntityPrecision(Entity(entity_type="LOC", start=3, end=7), 0.75),
+        EntityPrecision(Entity(entity_type="PER", start=10, end=15), 0.4),
+        EntityPrecision(Entity(entity_type="LOC", start=23, end=32), 5 / 9),
+        EntityPrecision(Entity(entity_type="PER", start=37, end=48), 6 / 11),
     ]
     assert recalls == [
-        {"entity_type": "LOC", "start": 4, "end": 7, "recall": 1.0},
-        {"entity_type": "PER", "start": 13, "end": 15, "recall": 1.0},
-        {"entity_type": "LOC", "start": 25, "end": 30, "recall": 1.0},
-        {"entity_type": "PER", "start": 40, "end": 46, "recall": 1.0},
+        EntityRecall(Entity(entity_type="LOC", start=4, end=7), 1.0),
+        EntityRecall(Entity(entity_type="PER", start=13, end=15), 1.0),
+        EntityRecall(Entity(entity_type="LOC", start=25, end=30), 1.0),
+        EntityRecall(Entity(entity_type="PER", start=40, end=46), 1.0),
     ]
 
 
@@ -182,16 +175,16 @@ def test_compute_precisions_recalls_for_pred_overlap_true():
         50, true_entities, pred_entities, label_to_int
     )
     assert precisions == [
-        {"entity_type": "LOC", "start": 1, "end": 4, "precision": 1 / 3},
-        {"entity_type": "PER", "start": 13, "end": 18, "precision": 0.4},
-        {"entity_type": "LOC", "start": 28, "end": 35, "precision": 4 / 7},
-        {"entity_type": "PER", "start": 45, "end": 49, "precision": 0.75},
+        EntityPrecision(Entity(entity_type="LOC", start=1, end=4), 1 / 3),
+        EntityPrecision(Entity(entity_type="PER", start=13, end=18), 0.4),
+        EntityPrecision(Entity(entity_type="LOC", start=28, end=35), 4 / 7),
+        EntityPrecision(Entity(entity_type="PER", start=45, end=49), 0.75),
     ]
     assert recalls == [
-        {"entity_type": "LOC", "start": 3, "end": 7, "recall": 0.25},
-        {"entity_type": "PER", "start": 10, "end": 15, "recall": 0.4},
-        {"entity_type": "LOC", "start": 23, "end": 32, "recall": 4 / 9},
-        {"entity_type": "PER", "start": 37, "end": 48, "recall": 3 / 11},
+        EntityRecall(Entity(entity_type="LOC", start=3, end=7), 0.25),
+        EntityRecall(Entity(entity_type="PER", start=10, end=15), 0.4),
+        EntityRecall(Entity(entity_type="LOC", start=23, end=32), 4 / 9),
+        EntityRecall(Entity(entity_type="PER", start=37, end=48), 3 / 11),
     ]
 
 
@@ -217,14 +210,14 @@ def test_compute_precisions_recalls_for_no_overlap():
         50, true_entities, pred_entities, label_to_int
     )
     assert precisions == [
-        {"entity_type": "LOC", "start": 15, "end": 20, "precision": 0.0},
-        {"entity_type": "PER", "start": 33, "end": 35, "precision": 0.0},
+        EntityPrecision(Entity(entity_type="LOC", start=15, end=20), 0.0),
+        EntityPrecision(Entity(entity_type="PER", start=33, end=35), 0.0),
     ]
     assert recalls == [
-        {"entity_type": "LOC", "start": 3, "end": 7, "recall": 0.0},
-        {"entity_type": "PER", "start": 10, "end": 15, "recall": 0.0},
-        {"entity_type": "LOC", "start": 23, "end": 32, "recall": 0.0},
-        {"entity_type": "PER", "start": 37, "end": 48, "recall": 0.0},
+        EntityRecall(Entity(entity_type="LOC", start=3, end=7), 0.0),
+        EntityRecall(Entity(entity_type="PER", start=10, end=15), 0.0),
+        EntityRecall(Entity(entity_type="LOC", start=23, end=32), 0.0),
+        EntityRecall(Entity(entity_type="PER", start=37, end=48), 0.0),
     ]
 
 
@@ -251,14 +244,14 @@ def test_compute_precisions_recalls_for_one_pred_to_many_trues():
         50, true_entities, pred_entities, label_to_int
     )
     assert precisions == [
-        {"entity_type": "LOC", "start": 3, "end": 20, "precision": 4 / 17},
-        {"entity_type": "PER", "start": 28, "end": 43, "precision": 0.4},
+        EntityPrecision(Entity(entity_type="LOC", start=3, end=20), 4 / 17),
+        EntityPrecision(Entity(entity_type="PER", start=28, end=43), 0.4),
     ]
     assert recalls == [
-        {"entity_type": "LOC", "start": 3, "end": 7, "recall": 1.0},
-        {"entity_type": "PER", "start": 10, "end": 15, "recall": 0.0},
-        {"entity_type": "LOC", "start": 23, "end": 32, "recall": 0.0},
-        {"entity_type": "PER", "start": 37, "end": 48, "recall": 6 / 11},
+        EntityRecall(Entity(entity_type="LOC", start=3, end=7), 1.0),
+        EntityRecall(Entity(entity_type="PER", start=10, end=15), 0.0),
+        EntityRecall(Entity(entity_type="LOC", start=23, end=32), 0.0),
+        EntityRecall(Entity(entity_type="PER", start=37, end=48), 6 / 11),
     ]
 
 
@@ -285,14 +278,14 @@ def test_compute_precisions_recalls_for_many_preds_to_one_true():
         50, true_entities, pred_entities, label_to_int
     )
     assert precisions == [
-        {"entity_type": "LOC", "start": 3, "end": 7, "precision": 1.0},
-        {"entity_type": "PER", "start": 10, "end": 15, "precision": 0.0},
-        {"entity_type": "LOC", "start": 23, "end": 32, "precision": 0.0},
-        {"entity_type": "PER", "start": 37, "end": 48, "precision": 6 / 11},
+        EntityPrecision(Entity(entity_type="LOC", start=3, end=7), 1.0),
+        EntityPrecision(Entity(entity_type="PER", start=10, end=15), 0.0),
+        EntityPrecision(Entity(entity_type="LOC", start=23, end=32), 0.0),
+        EntityPrecision(Entity(entity_type="PER", start=37, end=48), 6 / 11),
     ]
     assert recalls == [
-        {"entity_type": "LOC", "start": 3, "end": 20, "recall": 4 / 17},
-        {"entity_type": "PER", "start": 28, "end": 43, "recall": 0.4},
+        EntityRecall(Entity(entity_type="LOC", start=3, end=20), 4 / 17),
+        EntityRecall(Entity(entity_type="PER", start=28, end=43), 0.4),
     ]
 
 
@@ -316,12 +309,12 @@ def test_compute_precisions_recalls_for_incorrect_type():
         50, true_entities, pred_entities, label_to_int
     )
     assert precisions == [
-        {"entity_type": "PER", "start": 3, "end": 7, "precision": 0.0},
-        {"entity_type": "LOC", "start": 10, "end": 15, "precision": 0.0},
+        EntityPrecision(Entity(entity_type="PER", start=3, end=7), 0.0),
+        EntityPrecision(Entity(entity_type="LOC", start=10, end=15), 0.0),
     ]
     assert recalls == [
-        {"entity_type": "LOC", "start": 3, "end": 7, "recall": 0.0},
-        {"entity_type": "PER", "start": 10, "end": 15, "recall": 0.0},
+        EntityRecall(Entity(entity_type="LOC", start=3, end=7), 0.0),
+        EntityRecall(Entity(entity_type="PER", start=10, end=15), 0.0),
     ]
 
 
@@ -345,12 +338,12 @@ def test_compute_precisions_recalls_for_type_doesnt_matter():
         50, true_entities, pred_entities, label_to_int
     )
     assert precisions == [
-        {"entity_type": "PER", "start": 3, "end": 7, "precision": 1.0},
-        {"entity_type": "LOC", "start": 10, "end": 15, "precision": 1.0},
+        EntityPrecision(Entity(entity_type="PER", start=3, end=7), 1.0),
+        EntityPrecision(Entity(entity_type="LOC", start=10, end=15), 1.0),
     ]
     assert recalls == [
-        {"entity_type": "LOC", "start": 3, "end": 7, "recall": 1.0},
-        {"entity_type": "PER", "start": 10, "end": 15, "recall": 1.0},
+        EntityRecall(Entity(entity_type="LOC", start=3, end=7), 1.0),
+        EntityRecall(Entity(entity_type="PER", start=10, end=15), 1.0),
     ]
 
 
@@ -371,8 +364,8 @@ def test_compute_precisions_recalls_for_no_pred():
     )
     assert precisions == []
     assert recalls == [
-        {"entity_type": "LOC", "start": 3, "end": 7, "recall": 0.0},
-        {"entity_type": "PER", "start": 10, "end": 15, "recall": 0.0},
+        EntityRecall(Entity(entity_type="LOC", start=3, end=7), 0.0),
+        EntityRecall(Entity(entity_type="PER", start=10, end=15), 0.0),
     ]
 
 
@@ -392,8 +385,8 @@ def test_compute_precisions_recalls_for_no_true():
         50, true_entities, pred_entities, label_to_int
     )
     assert precisions == [
-        {"entity_type": "LOC", "start": 3, "end": 7, "precision": 0.0},
-        {"entity_type": "PER", "start": 10, "end": 15, "precision": 0.0},
+        EntityPrecision(Entity(entity_type="LOC", start=3, end=7), 0.0),
+        EntityPrecision(Entity(entity_type="PER", start=10, end=15), 0.0),
     ]
     assert recalls == []
 
