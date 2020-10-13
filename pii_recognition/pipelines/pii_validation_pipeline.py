@@ -4,7 +4,7 @@ from pakkr import returns
 from pii_recognition.data_readers.data import Data
 from pii_recognition.data_readers.presidio_fake_pii_reader import PresidioFakePiiReader
 from pii_recognition.evaluation.character_level_evaluation import (
-    TicketScore,
+    TextScore,
     build_label_mapping,
     compute_entity_precisions_for_prediction,
     compute_entity_recalls_for_ground_truth,
@@ -37,7 +37,7 @@ def calculate_precisions_and_recalls(
     data: Data,
     grouped_targeted_labels: List[Set[str]],
     nontargeted_labels: Optional[Set[str]] = None,
-) -> List[TicketScore]:
+) -> List[TextScore]:
     label_mapping = build_label_mapping(grouped_targeted_labels, nontargeted_labels)
 
     scores = []
@@ -53,7 +53,7 @@ def calculate_precisions_and_recalls(
         ent_recalls = compute_entity_recalls_for_ground_truth(
             len(item.text), item.true_labels, pred_labels, label_mapping
         )
-        ticket_score = TicketScore(precisions=ent_precisions, recalls=ent_recalls)
+        ticket_score = TextScore(precisions=ent_precisions, recalls=ent_recalls)
         scores.append(ticket_score)
 
     return scores

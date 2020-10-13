@@ -1,7 +1,7 @@
 from mock import patch
 from pii_recognition.data_readers.data import Data, DataItem
 from pii_recognition.evaluation.character_level_evaluation import (
-    TicketScore,
+    TextScore,
     EntityPrecision,
     EntityRecall,
 )
@@ -64,10 +64,10 @@ def test_calculate_precisions_and_recalls_with_empty_predictions(data):
 
     actual = calculate_precisions_and_recalls(data, grouped_targeted_labels)
     assert len(actual) == 2
-    assert actual[0] == TicketScore(
+    assert actual[0] == TextScore(
         precisions=[], recalls=[EntityRecall(Entity("BIRTHDAY", 21, 31), 0.0)]
     )
-    assert actual[1] == TicketScore(
+    assert actual[1] == TextScore(
         precisions=[],
         recalls=[
             EntityRecall(Entity("ORGANIZATION", 15, 30), 0.0),
@@ -86,11 +86,11 @@ def test_calculate_precisions_and_recalls_with_predictions(data):
 
     actual = calculate_precisions_and_recalls(data, grouped_targeted_labels)
     assert len(actual) == 2
-    assert actual[0] == TicketScore(
+    assert actual[0] == TextScore(
         precisions=[EntityPrecision(Entity("BIRTHDAY", 0, 10), 0.0)],
         recalls=[EntityRecall(Entity("BIRTHDAY", 21, 31), 0.0)],
     )
-    assert actual[1] == TicketScore(
+    assert actual[1] == TextScore(
         precisions=[
             EntityPrecision(Entity("ORGANIZATION", 20, 30), 1.0),
             EntityPrecision(Entity("LOCATION", 30, 46), 0.75),
@@ -110,8 +110,8 @@ def test_calculate_precisions_and_recalls_with_nontargeted_labels(data):
         data, grouped_targeted_labels, nontargeted_labels
     )
     assert len(actual) == 2
-    assert actual[0] == TicketScore(precisions=[], recalls=[],)
-    assert actual[1] == TicketScore(
+    assert actual[0] == TextScore(precisions=[], recalls=[],)
+    assert actual[1] == TextScore(
         precisions=[],
         recalls=[
             EntityRecall(Entity("ORGANIZATION", 15, 30), 0.0),

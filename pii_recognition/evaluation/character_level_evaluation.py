@@ -24,7 +24,7 @@ class EntityRecall:
 
 
 @dataclass
-class TicketScore:
+class TextScore:
     precisions: List[EntityPrecision]
     recalls: List[EntityRecall]
 
