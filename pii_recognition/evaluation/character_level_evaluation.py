@@ -155,6 +155,7 @@ def compute_pii_detection_f1(
     precisions: List[float],
     recalls: List[float],
     recall_threshold: Optional[float] = None,
+    beta: float = 1
 ) -> float:
     """Evaluate performance of PII detection with F1.
 
@@ -191,4 +192,4 @@ def compute_pii_detection_f1(
 
     ave_precision = sum(precisions) / len(precisions)
     ave_recall = sum(recalls) / len(recalls)
-    return compute_f_beta(ave_precision, ave_recall)
+    return compute_f_beta(ave_precision, ave_recall, beta)
