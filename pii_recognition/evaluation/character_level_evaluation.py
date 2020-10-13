@@ -96,8 +96,6 @@ def label_encoder(
                 f"Entity span index is out of range: text length is "
                 f"{text_length} but got span index {e}."
             )
-        label_name = span.entity_type
-
         code[s:e] = [label_code] * (e - s)
 
     return code
