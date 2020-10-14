@@ -11,6 +11,7 @@ from pii_recognition.evaluation.character_level_evaluation import (
 )
 from pii_recognition.recognisers import registry as recogniser_registry
 from pii_recognition.recognisers.entity_recogniser import EntityRecogniser
+from pii_recognition.utils import dump_to_json_file
 
 
 @returns(Data)
@@ -57,3 +58,8 @@ def calculate_precisions_and_recalls(
         scores.append(ticket_score)
 
     return scores
+
+
+@returns
+def report_results(results: Dict[str, float], dump_file: str):
+    dump_to_json_file(results, dump_file)
