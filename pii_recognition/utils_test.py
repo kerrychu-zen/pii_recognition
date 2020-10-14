@@ -1,4 +1,6 @@
 import json
+import os
+from tempfile import TemporaryDirectory
 from unittest.mock import Mock, call, mock_open, patch
 
 from pii_recognition.utils import (
@@ -87,8 +89,21 @@ def test_load_json_file(mock_file):
 
 
 @patch("builtins.open", new_callable=mock_open)
-def test_dum(mock_open_file):
+def test_dump_to_json_file(mock_open_file):
     dump_to_json_file("test_dump", "fake_path")
 
     handle = mock_open_file()
     handle.write.assert_called_once_with('"test_dump"')
+
+
+def test_dump_and_read_json_file():
+    obj = [
+        {"test_key_1": "test_value_1"},
+        {"test_key_2": {"test_sub_key_1": "test_sub_value_1"}},
+    ]
+
+    with TemporaryDirectory() as tmpdirname:
+        file_path = os.path.join(tmpdirname, "test.json")
+        dump_to_json_file(obj, file_path)
+        actual = load_json_file(file_path)
+    assert actual == obj
