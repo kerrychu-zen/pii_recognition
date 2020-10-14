@@ -3,6 +3,7 @@ from unittest.mock import Mock, call, mock_open, patch
 
 from pii_recognition.utils import (
     cached_property,
+    dump_to_json_file,
     dump_yaml_file,
     is_ascending,
     load_json_file,
@@ -17,11 +18,11 @@ def json_dumps():
     )
 
 
-def test_write_iterable_to_file():
-    with patch("builtins.open", mock_open()) as m:
-        write_iterable_to_file([1, 2], "fake_path")
-        handle = m()
-        handle.write.assert_has_calls([call("1\n"), call("2\n")])
+@patch("builtins.open", new_callable=mock_open)
+def test_write_iterable_to_file(mock_open_file):
+    write_iterable_to_file([1, 2], "fake_path")
+    handle = mock_open_file()
+    handle.write.assert_has_calls([call("1\n"), call("2\n")])
 
 
 def test_cached_property():
@@ -83,3 +84,11 @@ def test_load_json_file(mock_file):
         {"name": "John", "location": "AU"},
         {"name": "Mia", "location": "AU"},
     ]
+
+
+@patch("builtins.open", new_callable=mock_open)
+def test_dum(mock_open_file):
+    dump_to_json_file("test_dump", "fake_path")
+
+    handle = mock_open_file()
+    handle.write.assert_called_once_with('"test_dump"')
