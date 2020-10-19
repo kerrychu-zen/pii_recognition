@@ -66,12 +66,11 @@ def calculate_aggregate_metrics(
     scores: List[TextScore], f1_beta: float = 1.0
 ) -> Dict[str, float]:
     results = dict()
-    exact_match = get_rollup_f1s_on_pii(scores, f1_beta, recall_threshold=None)
-    results["exact_match_f1"] = sum(exact_match) / len(exact_match)
-
-    partial_match = get_rollup_f1s_on_pii(scores, f1_beta, recall_threshold=0.5)
-    results["partial_match_f1_threshold_at_50%"] = sum(partial_match) / len(
-        partial_match
+    results["exact_match_f1"] = get_rollup_f1_on_pii(
+        scores, f1_beta, recall_threshold=None
+    )
+    results["partial_match_f1_threshold_at_50%"] = get_rollup_f1_on_pii(
+        scores, f1_beta, recall_threshold=None
     )
     return results
 
@@ -81,13 +80,35 @@ def report_results(results: Dict[str, float], dump_file: str):
     dump_to_json_file(results, dump_file)
 
 
-def get_rollup_f1s_on_pii(
+def get_rollup_f1_on_pii(
     scores: List[TextScore], f1_beta: float, recall_threshold: Optional[float]
-) -> List[float]:
+) -> float:
+    """Calculate f score on PII recognition.
+
+    A single score, f score, will be calculate to indicate how a system did on
+    predicting PII entities. Recall thresholding is supported, if the system can
+    recognise a certain portion of an entity greater than the threshold, that
+    entity then will be considered identified.
+
+    Args:
+        scores: a list of text scores providing info including precisions and recalls.
+        f1_beta: beta value for f score.
+        recall_threshold: a float between 0 and 1. Any recall value that is greater
+            than or equals to the threshold would be rounded up to 1.
+
+    Returns:
+        A f score represents performance of a system.
+    """
     f1s = []
     for text_score in scores:
         precisions = [p.precision for p in text_score.precisions]
         recalls = [r.recall for r in text_score.recalls]
         f1 = compute_pii_detection_f1(precisions, recalls, recall_threshold, f1_beta)
         f1s.append(f1)
-    return f1s
+
+    if f1s:
+        return sum(f1s) / len(f1s)
+    else:
+        # The only possibility to have empty f1s is that arguemtn "scores"
+        # is empty. In this case, we assign it to 0.
+        return 0.0

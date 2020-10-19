@@ -167,8 +167,8 @@ def compute_pii_detection_f1(
     Args:
         precisions: a list of entity precision values.
         recalls: a list of entity recall values.
-        recall_threshold: a float between 0 and 1. Any value greater than or equals
-            to the threshold would be rounded up to 1.
+        recall_threshold: a float between 0 and 1. Any recall value that is greater
+            than or equals to the threshold would be rounded up to 1.
 
     Returns:
         F1 score.
