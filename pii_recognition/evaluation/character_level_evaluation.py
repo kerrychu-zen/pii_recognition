@@ -40,8 +40,8 @@ def build_label_mapping(
     the same integer. Non-targeted labels are mapped to zero.
 
     Args:
-        grouped_targeted_labels: entity labels we are interested that have been
-            separated by groups.
+        grouped_targeted_labels: entity labels we are interested that have been 
+            separated by groups, for example, [{"PER", "PERSON"}, {"ORG"}].
         nontargeted_labels: entity labels we are not interested.
 
     Returns:
