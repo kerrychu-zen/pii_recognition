@@ -111,20 +111,20 @@ def _update_score_table(
 def get_rollup_f1s_on_types(
     scores: List[TextScore], grouped_targeted_labels: List[Set[str]], f_beta: float,
 ) -> Dict[Tuple, float]:
-    """Calculate f scores for every group of entities.
+    """Calculate f scores for grouped types of entities.
 
-    There are entity labels being grouped and passed to this function, with which we
-    can calculate f scores. That means, every group in the label groups will get one
-    f score to represent how a system did on predicting this entity.
+    There are entity labels/types being grouped and passed to this function, with which
+    we can calculate f scores. As a result, every group in the label groups will get
+    one f score to represent how a system did on predicting the entity(ies).
 
     Args:
-        scores: a list of text scores providing info on entity precisions and recalls
+        scores: a list of text scores providing info including precisions and recalls.
         grouped_targeted_labels: entity labels we are interested that have been
             separated by groups, for example, [{"PER", "PERSON"}, {"ORG"}].
         f_beta: beta value for f score.
 
     Returns:
-        A dictionary that key is entity set and value is f score.
+        A dictionary that key is an entity group and value is f score for that group.
     """
     score_table: Dict[Tuple, Dict] = {
         tuple(label_set): {"precisions": [], "recalls": [], "f1": None}
