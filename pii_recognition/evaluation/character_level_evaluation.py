@@ -155,7 +155,7 @@ def compute_pii_detection_f1(
     precisions: List[float],
     recalls: List[float],
     recall_threshold: Optional[float] = None,
-    beta: float = 1
+    beta: float = 1,
 ) -> float:
     """Evaluate performance of PII detection with F1.
 
