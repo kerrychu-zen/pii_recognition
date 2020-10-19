@@ -1,9 +1,11 @@
-from typing import Dict, List, Optional, Set
+from typing import Dict, List, Optional, Set, Tuple, Union
 
 from pakkr import returns
 from pii_recognition.data_readers.data import Data
 from pii_recognition.data_readers.presidio_fake_pii_reader import PresidioFakePiiReader
 from pii_recognition.evaluation.character_level_evaluation import (
+    EntityPrecision,
+    EntityRecall,
     TextScore,
     build_label_mapping,
     compute_entity_precisions_for_prediction,
@@ -91,3 +93,37 @@ def get_rollup_f1s_on_pii(
         f1 = compute_pii_detection_f1(precisions, recalls, recall_threshold, f1_beta)
         f1s.append(f1)
     return f1s
+
+
+def _update_score_table(
+    score_table: Dict[Tuple, Dict], new_item: Union[EntityPrecision, EntityRecall]
+):
+    entity_label = new_item.entity.entity_type
+    for label_set in score_table.keys():
+        if entity_label in label_set:
+            if isinstance(new_item, EntityPrecision):
+                score_table[label_set]["precisions"].append(new_item.precision)
+            elif isinstance(new_item, EntityRecall):
+                score_table[label_set]["recalls"].append(new_item.recall)
+    return score_table
+
+
+def get_rollup_f1s_on_types(
+    scores: List[TextScore], grouped_targeted_labels: List[Set[str]], f1_beta: float,
+):
+    score_table = {
+        tuple(label_set): {"precisions": [], "recalls": [], "f1": None}
+        for label_set in grouped_targeted_labels
+    }
+
+    # update score table
+    for text_score in scores:
+        for precision in text_score.precisions:
+            score_table = _update_score_table(score_table, precision)
+        for recall in text_score.recalls:
+            score_table = _update_score_table(score_table, recall)
+
+    # average precisions and recalls
+    for key, value in score_table.items():
+        value["f1"] = compute_pii_detection_f1(value["precisions"], value["recalls"])
+    return {key: value["f1"] for key, value in score_table.items()}

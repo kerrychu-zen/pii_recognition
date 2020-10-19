@@ -12,6 +12,7 @@ from .pii_validation_pipeline import (
     calculate_aggregate_metrics,
     calculate_precisions_and_recalls,
     get_rollup_f1s_on_pii,
+    get_rollup_f1s_on_types,
     identify_pii_entities,
 )
 
@@ -53,6 +54,50 @@ def scores():
             recalls=[
                 EntityRecall(Entity("ORGANIZATION", 15, 30), 2 / 3),
                 EntityRecall(Entity("LOCATION", 34, 58), 0.5),
+            ],
+        )
+    )
+
+    return scores
+
+
+@fixture
+def complex_scores():
+    # 1. test label grouping i.e. DATE and BIRTHDAY
+    # 2. test removal of non-interested i.e. ORGANIZATION
+    # 3. test entity types appear in more than one texts i.e. LOCATION
+    scores = []
+    scores.append(
+        TextScore(
+            precisions=[EntityPrecision(Entity("DATE", 0, 10), 0.0)],
+            recalls=[EntityRecall(Entity("BIRTHDAY", 21, 31), 0.0)],
+        )
+    )
+
+    scores.append(
+        TextScore(
+            precisions=[
+                EntityPrecision(Entity("ORGANIZATION", 20, 30), 1.0),
+                EntityPrecision(Entity("LOCATION", 30, 46), 0.75),
+            ],
+            recalls=[
+                EntityRecall(Entity("ORGANIZATION", 15, 30), 2 / 3),
+                EntityRecall(Entity("LOCATION", 34, 58), 0.5),
+            ],
+        )
+    )
+
+    scores.append(
+        TextScore(
+            precisions=[
+                EntityPrecision(Entity("LOCATION", 10, 15), 1.0),
+                EntityPrecision(Entity("LOCATION", 20, 28), 0.375),
+                EntityPrecision(Entity("CREDIT_CARD", 40, 56), 1.0),
+            ],
+            recalls=[
+                EntityRecall(Entity("LOCATION", 10, 15), 1.0),
+                EntityRecall(Entity("LOCATION", 25, 35), 0.3),
+                EntityRecall(Entity("CREDIT_CARD", 40, 56), 1.0),
             ],
         )
     )
@@ -163,3 +208,15 @@ def test_calculate_aggregate_metrics(mock_pii_f1s):
 
     actual = calculate_aggregate_metrics([])
     assert actual == {"exact_match_f1": 0.5, "partial_match_f1_threshold_at_50%": 0.5}
+
+
+def test_get_rollup_f1s_on_types(complex_scores):
+    actual = get_rollup_f1s_on_types(
+        complex_scores, [{"BIRTHDAY", "DATE"}, {"LOCATION"}, {"CREDIT_CARD"}], 1.0
+    )
+
+    assert actual == {
+        ("BIRTHDAY", "DATE"): 0.0,
+        ("LOCATION",): 204 / 314,
+        ("CREDIT_CARD",): 1.0,
+    }
