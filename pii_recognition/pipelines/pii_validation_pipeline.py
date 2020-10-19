@@ -2,11 +2,14 @@ from typing import Dict, List, Optional, Set
 
 from pakkr import Pipeline, returns
 from pii_recognition.data_readers.data import Data
-from pii_recognition.data_readers.presidio_fake_pii_reader import \
-    PresidioFakePiiReader
+from pii_recognition.data_readers.presidio_fake_pii_reader import PresidioFakePiiReader
 from pii_recognition.evaluation.character_level_evaluation import (
-    TextScore, build_label_mapping, compute_entity_precisions_for_prediction,
-    compute_entity_recalls_for_ground_truth, compute_pii_detection_f1)
+    TextScore,
+    build_label_mapping,
+    compute_entity_precisions_for_prediction,
+    compute_entity_recalls_for_ground_truth,
+    compute_pii_detection_f1,
+)
 from pii_recognition.recognisers import registry as recogniser_registry
 from pii_recognition.recognisers.entity_recogniser import EntityRecogniser
 from pii_recognition.utils import dump_to_json_file, load_yaml_file
@@ -90,20 +93,7 @@ def get_rollup_f1s_on_pii(
     for text_score in scores:
         precisions = [p.precision for p in text_score.precisions]
         recalls = [r.recall for r in text_score.recalls]
-
-        if not precisions and recalls:
-            # there are true entities but the system predicts nothing
-            f1 = 0.0
-        elif precisions and not recalls:
-            # there is no true entity but the system predicts something
-            f1 = 0.0
-        elif not precisions and not recalls:
-            # there is no true entity and the system predicts nothing
-            f1 = 1.0
-        else:
-            f1 = compute_pii_detection_f1(
-                precisions, recalls, recall_threshold, f1_beta
-            )
+        f1 = compute_pii_detection_f1(precisions, recalls, recall_threshold, f1_beta)
         f1s.append(f1)
     return f1s
 
