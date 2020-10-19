@@ -110,5 +110,5 @@ def get_rollup_f1_on_pii(
         return sum(f1s) / len(f1s)
     else:
         # The only possibility to have empty f1s is that arguemtn "scores"
-        # is empty. In this case, we assign it to 0.
+        # is empty. In this case, we assign f score to 0.
         return 0.0
