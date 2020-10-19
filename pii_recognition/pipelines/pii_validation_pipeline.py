@@ -111,7 +111,7 @@ def _update_score_table(
 def get_rollup_f1s_on_types(
     scores: List[TextScore], grouped_targeted_labels: List[Set[str]], f1_beta: float,
 ):
-    score_table = {
+    score_table: Dict[Tuple, Dict] = {
         tuple(label_set): {"precisions": [], "recalls": [], "f1": None}
         for label_set in grouped_targeted_labels
     }
