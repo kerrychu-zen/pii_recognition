@@ -216,7 +216,7 @@ def test_get_rollup_f1s_on_types(complex_scores):
     )
 
     assert actual == {
-        ("BIRTHDAY", "DATE"): 0.0,
-        ("LOCATION",): 204 / 314,
-        ("CREDIT_CARD",): 1.0,
+        frozenset({"BIRTHDAY", "DATE"}): 0.0,
+        frozenset({"LOCATION"}): 204 / 314,
+        frozenset({"CREDIT_CARD"}): 1.0,
     }

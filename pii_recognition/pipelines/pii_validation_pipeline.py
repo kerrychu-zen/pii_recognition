@@ -1,4 +1,4 @@
-from typing import Dict, List, Optional, Set, Tuple, Union
+from typing import Dict, List, Optional, Set, Tuple, Union, FrozenSet
 
 from pakkr import returns
 from pii_recognition.data_readers.data import Data
@@ -96,7 +96,7 @@ def get_rollup_f1s_on_pii(
 
 
 def _update_score_table(
-    score_table: Dict[Tuple, Dict], new_item: Union[EntityPrecision, EntityRecall]
+    score_table: Dict[FrozenSet, Dict], new_item: Union[EntityPrecision, EntityRecall]
 ):
     entity_label = new_item.entity.entity_type
     for label_set in score_table.keys():
@@ -126,8 +126,8 @@ def get_rollup_f1s_on_types(
     Returns:
         A dictionary that key is an entity group and value is f score for that group.
     """
-    score_table: Dict[Tuple, Dict] = {
-        tuple(label_set): {"precisions": [], "recalls": [], "f1": None}
+    score_table: Dict[FrozenSet, Dict] = {
+        frozenset(label_set): {"precisions": [], "recalls": [], "f1": None}
         for label_set in grouped_targeted_labels
     }
 
