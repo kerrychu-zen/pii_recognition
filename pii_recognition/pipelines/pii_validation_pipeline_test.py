@@ -66,6 +66,9 @@ def complex_scores():
     # 1. test label grouping i.e. DATE and BIRTHDAY
     # 2. test removal of non-interested i.e. ORGANIZATION
     # 3. test entity types appear in more than one texts i.e. LOCATION
+    # 4. test empty precisions
+    # 5. test empty recalls
+    # 6. test empty precisions and recalls
     scores = []
     scores.append(
         TextScore(
@@ -91,16 +94,30 @@ def complex_scores():
         TextScore(
             precisions=[
                 EntityPrecision(Entity("LOCATION", 10, 15), 1.0),
-                EntityPrecision(Entity("LOCATION", 20, 28), 0.375),
+                EntityPrecision(Entity("LOCATION", 20, 30), 0.5),
                 EntityPrecision(Entity("CREDIT_CARD", 40, 56), 1.0),
             ],
             recalls=[
                 EntityRecall(Entity("LOCATION", 10, 15), 1.0),
-                EntityRecall(Entity("LOCATION", 25, 35), 0.3),
+                EntityRecall(Entity("LOCATION", 25, 35), 0.5),
                 EntityRecall(Entity("CREDIT_CARD", 40, 56), 1.0),
             ],
         )
     )
+
+    scores.append(
+        TextScore(
+            precisions=[], recalls=[EntityRecall(Entity("LOCATION", 13, 20), 0.0)],
+        )
+    )
+
+    scores.append(
+        TextScore(
+            precisions=[EntityPrecision(Entity("LOCATION", 13, 20), 0.0)], recalls=[],
+        )
+    )
+
+    scores.append(TextScore(precisions=[], recalls=[]))
 
     return scores
 
@@ -217,6 +234,6 @@ def test_get_rollup_f1s_on_types(complex_scores):
 
     assert actual == {
         frozenset({"BIRTHDAY", "DATE"}): 0.0,
-        frozenset({"LOCATION"}): 204 / 314,
+        frozenset({"LOCATION"}): 9 / 17,
         frozenset({"CREDIT_CARD"}): 1.0,
     }
