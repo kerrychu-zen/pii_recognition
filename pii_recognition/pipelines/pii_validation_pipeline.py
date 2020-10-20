@@ -1,4 +1,4 @@
-from typing import Dict, List, Optional, Set, Tuple, Union, FrozenSet
+from typing import Dict, FrozenSet, List, Optional, Set, Union
 
 from pakkr import returns
 from pii_recognition.data_readers.data import Data
