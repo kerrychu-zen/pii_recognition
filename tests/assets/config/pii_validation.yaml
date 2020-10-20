@@ -16,6 +16,7 @@ grouped_targeted_labels:
   -
     - LOCATION
 nontargeted_labels:
+  - EVENT
   - TITLE
   - ORGANIZATION
 dump_file: pii_recognition/experiments/pii_validation/reports/comprehend_scores.json
