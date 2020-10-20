@@ -110,7 +110,7 @@ def _update_score_table(
 
 def get_rollup_f1s_on_types(
     scores: List[TextScore], grouped_targeted_labels: List[Set[str]], f_beta: float,
-) -> Dict[Tuple, float]:
+) -> Dict[FrozenSet, float]:
     """Calculate f scores for grouped types of entities.
 
     There are entity labels/types being grouped and passed to this function, with which
