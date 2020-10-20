@@ -96,7 +96,6 @@ def get_rollup_f1s_on_pii(
 ) -> List[float]:
     f1s = []
     for text_score in scores:
-        import pdb; pdb.set_trace()
         precisions = [p.precision for p in text_score.precisions]
         recalls = [r.recall for r in text_score.recalls]
         f1 = compute_pii_detection_f1(precisions, recalls, recall_threshold, f1_beta)
