@@ -69,13 +69,18 @@ def calculate_precisions_and_recalls(
 def calculate_aggregate_metrics(
     scores: List[TextScore], f1_beta: float = 1.0
 ) -> Dict[str, float]:
+    round_ndigits = 4
     results = dict()
+
+    # This is not final, it has been changed slightly in another PR
     exact_match = get_rollup_f1s_on_pii(scores, f1_beta, recall_threshold=None)
-    results["exact_match_f1"] = sum(exact_match) / len(exact_match)
+    results["exact_match_f1"] = round(
+        sum(exact_match) / len(exact_match), round_ndigits
+    )
 
     partial_match = get_rollup_f1s_on_pii(scores, f1_beta, recall_threshold=0.5)
-    results["partial_match_f1_threshold_at_50%"] = sum(partial_match) / len(
-        partial_match
+    results["partial_match_f1_threshold_at_50%"] = round(
+        sum(partial_match) / len(partial_match), round_ndigits
     )
     return results
 
@@ -91,6 +96,7 @@ def get_rollup_f1s_on_pii(
 ) -> List[float]:
     f1s = []
     for text_score in scores:
+        import pdb; pdb.set_trace()
         precisions = [p.precision for p in text_score.precisions]
         recalls = [r.recall for r in text_score.recalls]
         f1 = compute_pii_detection_f1(precisions, recalls, recall_threshold, f1_beta)
