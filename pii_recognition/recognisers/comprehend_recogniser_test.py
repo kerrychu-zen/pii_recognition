@@ -40,7 +40,7 @@ def fake_response():
 
 
 @patch("pii_recognition.recognisers.comprehend_recogniser.config_cognito_session")
-def test_comprehend_recogniser_analyse(mock_session, fake_response):
+def test_comprehend_recogniser_analyse_for_ner_model(mock_session, fake_response):
     mocked_comprehend = MagicMock()
     mocked_comprehend.detect_entities.return_value = fake_response
 
@@ -64,6 +64,7 @@ def test_comprehend_recogniser_analyse(mock_session, fake_response):
             "TITLE",
         ],
         supported_languages=["en"],
+        model_name="ner",
     )
     recogniser.comprehend = mocked_comprehend
 

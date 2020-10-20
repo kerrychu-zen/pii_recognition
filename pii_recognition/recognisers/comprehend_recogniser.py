@@ -28,6 +28,13 @@ class ComprehendRecogniser(EntityRecogniser):
             "pii": self.comprehend.detect_pii_entities,
         }
 
+        supported_models = self._model_mapping.keys()
+        if self.model_name not in supported_models:
+            raise ValueError(
+                f"Available model names are: {supported_models} but"
+                f"got {self.model_name}"
+            )
+
         super().__init__(
             supported_entities=supported_entities,
             supported_languages=supported_languages,
@@ -40,19 +47,12 @@ class ComprehendRecogniser(EntityRecogniser):
         self.validate_entities(entities)
 
         # TODO: Add multilingual support
-        # based on boto3 Comprehend doc it supports
+        # based on boto3 Comprehend doc Comprehend supports
         # 'en'|'es'|'fr'|'de'|'it'|'pt'|'ar'|'hi'|'ja'|'ko'|'zh'|'zh-TW'
         DEFAULT_LANG = "en"
 
-        try:
-            model = self._model_mapping[self.model_name]
-        except KeyError:
-            model_names = self._model_mapping.keys()
-            raise ValueError(
-                f"Available model names are: {model_names} but got {self.model_name}"
-            )
-
-        response = model(Text=text, LanguageCode=DEFAULT_LANG)
+        model_func = self._model_mapping[self.model_name]
+        response = model_func(Text=text, LanguageCode=DEFAULT_LANG)
         predicted_entities = response["Entities"]
         # Fetch on entities we are interested
         filtered = filter(lambda ent: ent["Type"] in entities, predicted_entities)
