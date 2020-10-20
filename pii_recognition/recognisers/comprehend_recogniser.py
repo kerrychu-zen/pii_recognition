@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Callable, Dict, List, Optional
 
 from boto3.session import Session
 from botocore.client import BaseClient
@@ -14,9 +14,19 @@ AWS_REGION = "us-west-2"
 
 
 class ComprehendRecogniser(EntityRecogniser):
-    def __init__(self, supported_entities: List[str], supported_languages: List[str]):
+    def __init__(
+        self,
+        supported_entities: List[str],
+        supported_languages: List[str],
+        model_name: str,
+    ):
         sess = config_cognito_session(IDENTITY_POOL_ID, AWS_REGION)
+        self.model_name = model_name
         self.comprehend = self._initiate_comprehend(sess)
+        self._model_mapping: Dict[str, Callable] = {
+            "ner": self.comprehend.detect_entities,
+            "pii": self.comprehend.detect_pii_entities,
+        }
 
         super().__init__(
             supported_entities=supported_entities,
@@ -30,19 +40,25 @@ class ComprehendRecogniser(EntityRecogniser):
         self.validate_entities(entities)
 
         # TODO: Add multilingual support
+        # based on boto3 Comprehend doc it supports
+        # 'en'|'es'|'fr'|'de'|'it'|'pt'|'ar'|'hi'|'ja'|'ko'|'zh'|'zh-TW'
         DEFAULT_LANG = "en"
 
-        response = self.comprehend.detect_entities(Text=text, LanguageCode=DEFAULT_LANG)
-        predicted_entities = response["Entities"]
+        try:
+            model = self._model_mapping[self.model_name]
+        except KeyError:
+            model_names = self._model_mapping.keys()
+            raise ValueError(
+                f"Available model names are: {model_names} but got {self.model_name}"
+            )
 
-        # Enhancement: filter on comprehend prediction scores
+        response = model(Text=text, LanguageCode=DEFAULT_LANG)
+        predicted_entities = response["Entities"]
+        # Fetch on entities we are interested
         filtered = filter(lambda ent: ent["Type"] in entities, predicted_entities)
         span_labels = map(
             lambda ent: Entity(ent["Type"], ent["BeginOffset"], ent["EndOffset"]),
             filtered,
         )
 
-        results = list(span_labels)
-        if results:
-            return results
-        return None
+        return list(span_labels)
