@@ -634,5 +634,149 @@
             "Lowercase": false,
             "Template#": 100
         }
+    },
+    {
+        "full_text": "I work for Flightview",
+        "masked": null,
+        "spans": [
+            {
+                "entity_type": "ORGANIZATION",
+                "entity_value": "Flightview",
+                "start_position": 11,
+                "end_position": 21
+            }
+        ],
+        "tokens": [
+            {
+                "text": "I",
+                "idx": 0,
+                "tag_": "PRP",
+                "pos_": "PRON",
+                "dep_": "nsubj",
+                "lemma_": "-PRON-",
+                "_": {
+                    "is_in_vocabulary": false
+                }
+            },
+            {
+                "text": "work",
+                "idx": 2,
+                "tag_": "VBP",
+                "pos_": "VERB",
+                "dep_": "ROOT",
+                "lemma_": "work",
+                "_": {
+                    "is_in_vocabulary": false
+                }
+            },
+            {
+                "text": "for",
+                "idx": 7,
+                "tag_": "IN",
+                "pos_": "ADP",
+                "dep_": "prep",
+                "lemma_": "for",
+                "_": {
+                    "is_in_vocabulary": false
+                }
+            },
+            {
+                "text": "Flightview",
+                "idx": 11,
+                "tag_": "NNP",
+                "pos_": "PROPN",
+                "dep_": "pobj",
+                "lemma_": "Flightview",
+                "_": {
+                    "is_in_vocabulary": false
+                }
+            }
+        ],
+        "tags": [
+            "O",
+            "O",
+            "O",
+            "U-ORGANIZATION"
+        ],
+        "template_id": null,
+        "metadata": {
+            "Gender": "female",
+            "NameSet": "England/Wales",
+            "Country": "Andorra",
+            "Lowercase": false,
+            "Template#": 81
+        }
+    },
+    {
+        "full_text": "I work for Flight",
+        "masked": null,
+        "spans": [
+            {
+                "entity_type": "ORGANIZATION",
+                "entity_value": "Flight",
+                "start_position": 11,
+                "end_position": 17
+            }
+        ],
+        "tokens": [
+            {
+                "text": "I",
+                "idx": 0,
+                "tag_": "PRP",
+                "pos_": "PRON",
+                "dep_": "nsubj",
+                "lemma_": "-PRON-",
+                "_": {
+                    "is_in_vocabulary": false
+                }
+            },
+            {
+                "text": "work",
+                "idx": 2,
+                "tag_": "VBP",
+                "pos_": "VERB",
+                "dep_": "ROOT",
+                "lemma_": "work",
+                "_": {
+                    "is_in_vocabulary": false
+                }
+            },
+            {
+                "text": "for",
+                "idx": 7,
+                "tag_": "IN",
+                "pos_": "ADP",
+                "dep_": "prep",
+                "lemma_": "for",
+                "_": {
+                    "is_in_vocabulary": false
+                }
+            },
+            {
+                "text": "Flightview",
+                "idx": 11,
+                "tag_": "NNP",
+                "pos_": "PROPN",
+                "dep_": "pobj",
+                "lemma_": "Flight",
+                "_": {
+                    "is_in_vocabulary": false
+                }
+            }
+        ],
+        "tags": [
+            "O",
+            "O",
+            "O",
+            "U-ORGANIZATION"
+        ],
+        "template_id": null,
+        "metadata": {
+            "Gender": "female",
+            "NameSet": "England/Wales",
+            "Country": "Andorra",
+            "Lowercase": false,
+            "Template#": 81
+        }
     }
 ]
