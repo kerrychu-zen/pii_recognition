@@ -97,7 +97,7 @@ def get_rollup_f1s_on_pii(
 
 def _update_score_table(
     score_table: Dict[FrozenSet, Dict], new_item: Union[EntityPrecision, EntityRecall]
-):
+) -> Dict[FrozenSet, Dict]:
     entity_label = new_item.entity.entity_type
     for label_set in score_table.keys():
         if entity_label in label_set:
