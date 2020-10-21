@@ -1,7 +1,7 @@
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
-from moto import mock_cognitoidentity
 import pytest
+from moto import mock_cognitoidentity
 from pii_recognition.labels.schema import Entity
 from pii_recognition.recognisers.comprehend_recogniser import ComprehendRecogniser
 
@@ -47,57 +47,6 @@ def fake_response():
             "RetryAttempts": 0,
         },
     }
-
-
-# @patch("pii_recognition.recognisers.comprehend_recogniser.config_cognito_session")
-# def test_comprehend_recogniser_analyse_for_ner_model(mock_session, fake_response):
-#     mocked_comprehend = MagicMock()
-#     mocked_comprehend.detect_entities.return_value = fake_response
-
-#     fake_text = (
-#         "Could you please email me the statement for laste month , "
-#         "my credit card number is 5467800309398046? Also, how do I "
-#         "change my address to 23 Settlement Road, WINNINDOO 3858 for "
-#         "post mail?"
-#     )
-
-#     recogniser = ComprehendRecogniser(
-#         supported_entities=[
-#             "COMMERCIAL_ITEM",
-#             "DATE",
-#             "EVENT",
-#             "LOCATION",
-#             "ORGANIZATION",
-#             "OTHER",
-#             "PERSON",
-#             "QUANTITY",
-#             "TITLE",
-#         ],
-#         supported_languages=["en"],
-#         model_name="ner",
-#     )
-#     recogniser.comprehend = mocked_comprehend
-
-#     spans = recogniser.analyse(fake_text, recogniser.supported_entities)
-#     assert spans == [Entity("OTHER", 83, 99), Entity("LOCATION", 137, 171)]
-
-#     spans = recogniser.analyse(fake_text, ["OTHER"])
-#     assert spans == [
-#         Entity("OTHER", 83, 99),
-#     ]
-
-#     spans = recogniser.analyse(fake_text, ["LOCATION"])
-#     assert spans == [Entity("LOCATION", 137, 171)]
-
-#     with pytest.raises(AssertionError) as err:
-#         recogniser.analyse(
-#             fake_text, entities=["THOSE", "ENTITIES", "NOT", "SUPPORTED"]
-#         )
-#     assert str(err.value) == (
-#         "Only support ['COMMERCIAL_ITEM', 'DATE', 'EVENT', 'LOCATION', 'ORGANIZATION', "
-#         "'OTHER', 'PERSON', 'QUANTITY', 'TITLE'], but got ['THOSE', 'ENTITIES', 'NOT', "
-#         "'SUPPORTED']"
-#     )
 
 
 @mock_cognitoidentity
