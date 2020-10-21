@@ -28,11 +28,11 @@ class ComprehendRecogniser(EntityRecogniser):
             "pii": self.comprehend.detect_pii_entities,
         }
 
-        supported_models = self._model_mapping.keys()
+        supported_models = set(self._model_mapping.keys())
         if self.model_name not in supported_models:
             raise ValueError(
-                f"Available model names are: {supported_models} but"
-                f"got {self.model_name}"
+                f"Available model names are: {supported_models} but "
+                f"got model named {self.model_name}"
             )
 
         super().__init__(
@@ -54,7 +54,7 @@ class ComprehendRecogniser(EntityRecogniser):
         model_func = self._model_mapping[self.model_name]
         response = model_func(Text=text, LanguageCode=DEFAULT_LANG)
         predicted_entities = response["Entities"]
-        # Fetch on entities we are interested
+        # Remove from returning entities we are not interested
         filtered = filter(lambda ent: ent["Type"] in entities, predicted_entities)
         span_labels = map(
             lambda ent: Entity(ent["Type"], ent["BeginOffset"], ent["EndOffset"]),
