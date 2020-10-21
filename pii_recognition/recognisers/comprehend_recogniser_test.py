@@ -7,6 +7,16 @@ from pii_recognition.recognisers.comprehend_recogniser import ComprehendRecognis
 
 
 @pytest.fixture
+def text():
+    return (
+        "Could you please email me the statement for laste month , "
+        "my credit card number is 5467800309398046? Also, how do I "
+        "change my address to 23 Settlement Road, WINNINDOO 3858 for "
+        "post mail?"
+    )
+
+
+@pytest.fixture
 def fake_response():
     return {
         "Entities": [
@@ -112,12 +122,79 @@ def test_comprehend_recogniser_for_initialisation_pii_model():
 
 @mock_cognitoidentity
 def test_comprehend_recogniser_for_initialisation_invalid_model():
+    recogniser = ComprehendRecogniser(
+        supported_entities=["test"], supported_languages=["test"], model_name="invalid",
+    )
     with pytest.raises(ValueError) as err:
-        ComprehendRecogniser(
-            supported_entities=["test"],
-            supported_languages=["test"],
-            model_name="invalid",
+        recogniser._model_mapping["invalid_model"]
+    assert str(err.value) == (
+        "Available model names are: ['ner', 'pii'] but got model named invalid_model"
+    )
+
+
+@mock_cognitoidentity
+def test_comprehend_recogniser_analyse_for_ner_model(text, fake_response):
+    # mock API call
+    mocked_comprehend = MagicMock()
+    mocked_comprehend.detect_entities.return_value = fake_response
+
+    recogniser = ComprehendRecogniser(
+        supported_entities=["LOCATION", "OTHER"],
+        supported_languages=["en"],
+        model_name="ner",
+    )
+    recogniser.comprehend = mocked_comprehend
+
+    spans = recogniser.analyse(text, recogniser.supported_entities)
+    assert spans == [Entity("OTHER", 83, 99), Entity("LOCATION", 137, 171)]
+
+    spans = recogniser.analyse(text, ["OTHER"])
+    assert spans == [
+        Entity("OTHER", 83, 99),
+    ]
+
+    spans = recogniser.analyse(text, ["LOCATION"])
+    assert spans == [Entity("LOCATION", 137, 171)]
+
+
+@mock_cognitoidentity
+def test_comprehend_recogniser_analyse_for_pii_model(text, fake_response):
+    # mock API call
+    mocked_comprehend = MagicMock()
+    mocked_comprehend.detect_pii_entities.return_value = fake_response
+
+    recogniser = ComprehendRecogniser(
+        supported_entities=["LOCATION", "OTHER"],
+        supported_languages=["en"],
+        model_name="pii",
+    )
+    recogniser.comprehend = mocked_comprehend
+
+    spans = recogniser.analyse(text, recogniser.supported_entities)
+    assert spans == [Entity("OTHER", 83, 99), Entity("LOCATION", 137, 171)]
+
+    spans = recogniser.analyse(text, ["OTHER"])
+    assert spans == [
+        Entity("OTHER", 83, 99),
+    ]
+
+    spans = recogniser.analyse(text, ["LOCATION"])
+    assert spans == [Entity("LOCATION", 137, 171)]
+
+
+@mock_cognitoidentity
+def test_comprehend_recogniser_analyse_for_non_supported_entities(text):
+    recogniser = ComprehendRecogniser(
+        supported_entities=["LOCATION", "OTHER"],
+        supported_languages=["en"],
+        model_name="pii",
+    )
+
+    with pytest.raises(AssertionError) as err:
+        recogniser.analyse(
+            text, entities=["THOSE", "ENTITIES", "ARE", "NOT", "SUPPORTED"]
         )
     assert str(err.value) == (
-        "Available model names are: {'pii', 'ner'} but got model named invalid"
+        "Only support ['LOCATION', 'OTHER'], but got "
+        "['THOSE', 'ENTITIES', 'ARE', 'NOT', 'SUPPORTED']"
     )
