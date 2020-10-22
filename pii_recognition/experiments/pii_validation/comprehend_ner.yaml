@@ -13,6 +13,7 @@ recogniser_params:
     - TITLE
   supported_languages: 
     - en
+  model_name: ner
 grouped_targeted_labels:
   - 
     - OTHER
