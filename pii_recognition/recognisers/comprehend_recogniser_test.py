@@ -71,53 +71,29 @@ def test_comprehend_recogniser_for_initialisation_pii_model():
 
 @mock_cognitoidentity
 def test_comprehend_recogniser_for_initialisation_invalid_model():
-    recogniser = ComprehendRecogniser(
-        supported_entities=["test"], supported_languages=["test"], model_name="invalid",
-    )
     with pytest.raises(ValueError) as err:
-        recogniser._model_mapping["invalid_model"]
+        ComprehendRecogniser(
+            supported_entities=["test"],
+            supported_languages=["test"],
+            model_name="invalid_model",
+        )
     assert str(err.value) == (
         "Available model names are: ['ner', 'pii'] but got model named invalid_model"
     )
 
 
 @mock_cognitoidentity
-def test_comprehend_recogniser_analyse_for_ner_model(text, fake_response):
+def test_comprehend_recogniser_analyse(text, fake_response):
     # mock API call
-    mocked_comprehend = MagicMock()
-    mocked_comprehend.detect_entities.return_value = fake_response
+    mock_model = MagicMock()
+    mock_model.return_value = fake_response
 
     recogniser = ComprehendRecogniser(
         supported_entities=["LOCATION", "OTHER"],
         supported_languages=["en"],
         model_name="ner",
     )
-    recogniser.comprehend = mocked_comprehend
-
-    spans = recogniser.analyse(text, recogniser.supported_entities)
-    assert spans == [Entity("OTHER", 83, 99), Entity("LOCATION", 137, 171)]
-
-    spans = recogniser.analyse(text, ["OTHER"])
-    assert spans == [
-        Entity("OTHER", 83, 99),
-    ]
-
-    spans = recogniser.analyse(text, ["LOCATION"])
-    assert spans == [Entity("LOCATION", 137, 171)]
-
-
-@mock_cognitoidentity
-def test_comprehend_recogniser_analyse_for_pii_model(text, fake_response):
-    # mock API call
-    mocked_comprehend = MagicMock()
-    mocked_comprehend.detect_pii_entities.return_value = fake_response
-
-    recogniser = ComprehendRecogniser(
-        supported_entities=["LOCATION", "OTHER"],
-        supported_languages=["en"],
-        model_name="pii",
-    )
-    recogniser.comprehend = mocked_comprehend
+    recogniser.model_func = mock_model
 
     spans = recogniser.analyse(text, recogniser.supported_entities)
     assert spans == [Entity("OTHER", 83, 99), Entity("LOCATION", 137, 171)]

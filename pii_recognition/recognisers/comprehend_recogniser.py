@@ -33,17 +33,15 @@ class ComprehendRecogniser(EntityRecogniser):
     ):
         sess = config_cognito_session(IDENTITY_POOL_ID, AWS_REGION)
         self.model_name = model_name
-        self.comprehend = self._initiate_comprehend(sess)
+        comprehend = self._initiate_comprehend(sess)
+        model_mapping = ModelMapping(
+            ner=comprehend.detect_entities, pii=comprehend.detect_pii_entities
+        )
+        self.model_func = model_mapping[model_name]
 
         super().__init__(
             supported_entities=supported_entities,
             supported_languages=supported_languages,
-        )
-
-    @property
-    def _model_mapping(self) -> ModelMapping:
-        return ModelMapping(
-            ner=self.comprehend.detect_entities, pii=self.comprehend.detect_pii_entities
         )
 
     def _initiate_comprehend(self, session: Session) -> BaseClient:
@@ -57,8 +55,7 @@ class ComprehendRecogniser(EntityRecogniser):
         # 'en'|'es'|'fr'|'de'|'it'|'pt'|'ar'|'hi'|'ja'|'ko'|'zh'|'zh-TW'
         DEFAULT_LANG = "en"
 
-        model_func = self._model_mapping[self.model_name]
-        response = model_func(Text=text, LanguageCode=DEFAULT_LANG)
+        response = self.model_func(Text=text, LanguageCode=DEFAULT_LANG)
 
         # parse response
         predicted_entities = response["Entities"]
