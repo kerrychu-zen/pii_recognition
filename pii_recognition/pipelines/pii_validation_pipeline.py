@@ -63,14 +63,14 @@ def calculate_precisions_and_recalls(
 
 @returns(Dict)
 def calculate_aggregate_metrics(
-    scores: List[TextScore], f1_beta: float = 1.0
+    scores: List[TextScore], fbeta: float = 1.0
 ) -> Dict[str, float]:
     results = dict()
-    results["exact_match_f1"] = get_rollup_f1_on_pii(
-        scores, f1_beta, recall_threshold=None
+    results["exact_match_f1"] = get_rollup_fscore_on_pii(
+        scores, fbeta, recall_threshold=None
     )
-    results["partial_match_f1_threshold_at_50%"] = get_rollup_f1_on_pii(
-        scores, f1_beta, recall_threshold=None
+    results["partial_match_f1_threshold_at_50%"] = get_rollup_fscore_on_pii(
+        scores, fbeta, recall_threshold=None
     )
     return results
 
@@ -80,8 +80,8 @@ def report_results(results: Dict[str, float], dump_file: str):
     dump_to_json_file(results, dump_file)
 
 
-def get_rollup_f1_on_pii(
-    scores: List[TextScore], f1_beta: float, recall_threshold: Optional[float]
+def get_rollup_fscore_on_pii(
+    scores: List[TextScore], fbeta: float, recall_threshold: Optional[float]
 ) -> float:
     """Calculate f score on PII recognition.
 
@@ -92,23 +92,23 @@ def get_rollup_f1_on_pii(
 
     Args:
         scores: a list of text scores providing info including precisions and recalls.
-        f1_beta: beta value for f score.
+        fbeta: beta value for f score.
         recall_threshold: a float between 0 and 1. Any recall value that is greater
             than or equals to the threshold would be rounded up to 1.
 
     Returns:
         A f score represents performance of a system.
     """
-    f1s = []
+    fscores = []
     for text_score in scores:
         precisions = [p.precision for p in text_score.precisions]
         recalls = [r.recall for r in text_score.recalls]
-        f1 = compute_pii_detection_f1(precisions, recalls, recall_threshold, f1_beta)
-        f1s.append(f1)
+        f = compute_pii_detection_f1(precisions, recalls, recall_threshold, fbeta)
+        fscores.append(f)
 
-    if f1s:
-        return sum(f1s) / len(f1s)
+    if fbeta:
+        return sum(fscores) / len(fscores)
     else:
-        # The only possibility to have empty f1s is that argument "scores"
+        # The only possibility to have empty fscores is that argument "scores"
         # is empty. In this case, we assign f score to 0.
         return 0.0

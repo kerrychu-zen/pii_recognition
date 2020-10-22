@@ -10,7 +10,7 @@ from pytest import fixture
 
 from .pii_validation_pipeline import (
     calculate_precisions_and_recalls,
-    get_rollup_f1_on_pii,
+    get_rollup_fscore_on_pii,
     identify_pii_entities,
 )
 
@@ -146,11 +146,11 @@ def test_calculate_precisions_and_recalls_with_nontargeted_labels(data):
     )
 
 
-def test_get_rollup_f1_on_pii_no_threshold(scores):
-    actual = get_rollup_f1_on_pii(scores, f1_beta=1, recall_threshold=None)
+def test_get_rollup_fscore_on_pii_no_threshold(scores):
+    actual = get_rollup_fscore_on_pii(scores, fbeta=1, recall_threshold=None)
     assert actual == 0.35
 
 
-def test_get_rollup_f1_on_pii_threshold(scores):
-    actual = get_rollup_f1_on_pii(scores, f1_beta=1, recall_threshold=0.4)
+def test_get_rollup_fscore_on_pii_threshold(scores):
+    actual = get_rollup_fscore_on_pii(scores, fbeta=1, recall_threshold=0.4)
     assert actual == 7 / 15
