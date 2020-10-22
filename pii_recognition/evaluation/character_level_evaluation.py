@@ -151,15 +151,15 @@ def compute_entity_recalls_for_ground_truth(
     return recalls
 
 
-def compute_pii_detection_f1(
+def compute_pii_detection_fscore(
     precisions: List[float],
     recalls: List[float],
     recall_threshold: Optional[float] = None,
-    beta: float = 1
+    beta: float = 1,
 ) -> float:
-    """Evaluate performance of PII detection with F1.
+    """Evaluate performance of PII detection with F score.
 
-    Rollup precisions and recalls to calculate F1 on boundary detection for PII
+    Rollup precisions and recalls to calculate F score on boundary detection for PII
     recognition. Recall thresholding is supported, if the system can recognise
     a certain portion of an entity beyond the threshold, we will consider it a
     success.
@@ -167,11 +167,11 @@ def compute_pii_detection_f1(
     Args:
         precisions: a list of entity precision values.
         recalls: a list of entity recall values.
-        recall_threshold: a float between 0 and 1. Any value greater than or equals
-            to the threshold would be rounded up to 1.
+        recall_threshold: a float between 0 and 1. Any recall value that is greater
+            than or equals to the threshold would be rounded up to 1.
 
     Returns:
-        F1 score.
+        F score.
     """
     if recall_threshold:
         if recall_threshold > 1.0 or recall_threshold < 0.0:
@@ -181,11 +181,17 @@ def compute_pii_detection_f1(
             )
 
     if not precisions and not recalls:
-        raise ValueError("You are passing empty precisions and recalls lists!")
+        # empty precisions and recalls mean that
+        # there is no true entity and the system predicts nothing
+        return 1.0
     if not precisions:
-        raise ValueError("You are passing empty precisions list!")
+        # empty precisions mean that
+        # there are true entities but the system predicts nothing
+        return 0.0
     elif not recalls:
-        raise ValueError("You are passing empty recalls list!")
+        # empty recalls mean that
+        # there is no true entity but the system predicts something
+        return 0.0
 
     if recall_threshold:
         recalls = [1.0 if item >= recall_threshold else item for item in recalls]
