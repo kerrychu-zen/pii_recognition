@@ -8,7 +8,7 @@ from pii_recognition.evaluation.character_level_evaluation import (
     build_label_mapping,
     compute_entity_precisions_for_prediction,
     compute_entity_recalls_for_ground_truth,
-    compute_pii_detection_f1,
+    compute_pii_detection_fscore,
 )
 from pii_recognition.recognisers import registry as recogniser_registry
 from pii_recognition.recognisers.entity_recogniser import EntityRecogniser
@@ -103,7 +103,7 @@ def get_rollup_fscore_on_pii(
     for text_score in scores:
         precisions = [p.precision for p in text_score.precisions]
         recalls = [r.recall for r in text_score.recalls]
-        f = compute_pii_detection_f1(precisions, recalls, recall_threshold, fbeta)
+        f = compute_pii_detection_fscore(precisions, recalls, recall_threshold, fbeta)
         fscores.append(f)
 
     if fbeta:

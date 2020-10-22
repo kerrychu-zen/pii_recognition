@@ -151,15 +151,15 @@ def compute_entity_recalls_for_ground_truth(
     return recalls
 
 
-def compute_pii_detection_f1(
+def compute_pii_detection_fscore(
     precisions: List[float],
     recalls: List[float],
     recall_threshold: Optional[float] = None,
     beta: float = 1,
 ) -> float:
-    """Evaluate performance of PII detection with F1.
+    """Evaluate performance of PII detection with F score.
 
-    Rollup precisions and recalls to calculate F1 on boundary detection for PII
+    Rollup precisions and recalls to calculate F score on boundary detection for PII
     recognition. Recall thresholding is supported, if the system can recognise
     a certain portion of an entity beyond the threshold, we will consider it a
     success.
@@ -171,7 +171,7 @@ def compute_pii_detection_f1(
             than or equals to the threshold would be rounded up to 1.
 
     Returns:
-        F1 score.
+        F score.
     """
     if recall_threshold:
         if recall_threshold > 1.0 or recall_threshold < 0.0:
