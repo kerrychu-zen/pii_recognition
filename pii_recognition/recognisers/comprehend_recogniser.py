@@ -1,4 +1,4 @@
-from typing import Callable, Dict, List, Optional
+from typing import Callable, List
 
 from boto3.session import Session
 from botocore.client import BaseClient
@@ -32,12 +32,12 @@ class ComprehendRecogniser(EntityRecogniser):
         model_name: str,
     ):
         sess = config_cognito_session(IDENTITY_POOL_ID, AWS_REGION)
-        self.model_name = model_name
         comprehend = self._initiate_comprehend(sess)
         model_mapping = ModelMapping(
             ner=comprehend.detect_entities, pii=comprehend.detect_pii_entities
         )
         self.model_func = model_mapping[model_name]
+        self.model_name = model_name
 
         super().__init__(
             supported_entities=supported_entities,
