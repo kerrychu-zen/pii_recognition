@@ -71,11 +71,11 @@ def calculate_aggregate_metrics(
 ) -> Dict[str, float]:
     round_ndigits = 4
     results = dict()
-    results["exact_match_f1"] = round(get_rollup_fscore_on_pii(
-        scores, fbeta, recall_threshold=None), round_ndigits
+    results["exact_match_f1"] = round(
+        get_rollup_fscore_on_pii(scores, fbeta, recall_threshold=None), round_ndigits
     )
-    results["partial_match_f1_threshold_at_50%"] = round(get_rollup_fscore_on_pii(
-        scores, fbeta, recall_threshold=0.5), round_ndigits
+    results["partial_match_f1_threshold_at_50%"] = round(
+        get_rollup_fscore_on_pii(scores, fbeta, recall_threshold=0.5), round_ndigits
     )
     return results
 
@@ -111,7 +111,7 @@ def get_rollup_fscore_on_pii(
         f = compute_pii_detection_fscore(precisions, recalls, recall_threshold, fbeta)
         fscores.append(f)
 
-    if fbeta:
+    if fscores:
         return sum(fscores) / len(fscores)
     else:
         # The only possibility to have empty fscores is that argument "scores"
