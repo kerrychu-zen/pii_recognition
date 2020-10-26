@@ -45,7 +45,6 @@ grouped_targeted_labels:
     - IP_ADDRESS
   -
     - EMAIL
-  
 nontargeted_labels:
   # benchmark labels being removed
   - NATIONALITY
