@@ -220,7 +220,7 @@ def test_get_rollup_fscore_on_pii_threshold(scores):
 
 def test_get_rollup_f1s_on_types(complex_scores):
     actual = get_rollup_fscores_on_types(
-        complex_scores, [{"BIRTHDAY", "DATE"}, {"LOCATION"}, {"CREDIT_CARD"}], 1.0
+        [{"BIRTHDAY", "DATE"}, {"LOCATION"}, {"CREDIT_CARD"}], complex_scores, 1.0
     )
 
     assert actual == {
