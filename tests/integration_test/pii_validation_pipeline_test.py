@@ -64,4 +64,7 @@ def test_execute_pii_validation_pipeline(mock_registry):
         assert report == {
             "exact_match_f1": 0.5062,
             "partial_match_f1_threshold_at_50%": 0.5333,
+            "frozenset({'CREDIT_CARD', 'OTHER'})": 1.0,
+            "frozenset({'PERSON'})": 0.4,
+            "frozenset({'LOCATION'})": 0.6857
         }
