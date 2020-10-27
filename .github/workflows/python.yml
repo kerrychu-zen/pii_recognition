@@ -23,6 +23,7 @@ jobs:
           python-version: 3.7
       - name: ${{ matrix.task }}
         run: |
+          python -V
           pip install poetry
           poetry install
           poetry config virtualenvs.in-project true
