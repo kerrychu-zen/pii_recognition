@@ -9,7 +9,6 @@ from pii_recognition.labels.schema import Entity
 from .entity_recogniser import EntityRecogniser
 
 
-
 class ModelMapping(dict):
     def __getitem__(self, key: str) -> Callable:
         try:
