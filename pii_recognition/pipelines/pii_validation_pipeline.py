@@ -40,12 +40,12 @@ def identify_pii_entities(
     return data
 
 
-@returns(List)
+@returns(scores=List)
 def calculate_precisions_and_recalls(
     data: Data,
     grouped_targeted_labels: List[Set[str]],
     nontargeted_labels: Optional[Set[str]] = None,
-) -> List[TextScore]:
+) -> Dict[str, List[TextScore]]:
     label_mapping = build_label_mapping(grouped_targeted_labels, nontargeted_labels)
 
     scores = []
@@ -61,10 +61,38 @@ def calculate_precisions_and_recalls(
         ent_recalls = compute_entity_recalls_for_ground_truth(
             len(item.text), item.true_labels, pred_labels, label_mapping
         )
-        ticket_score = TextScore(precisions=ent_precisions, recalls=ent_recalls)
+        ticket_score = TextScore(
+            text=item.text, precisions=ent_precisions, recalls=ent_recalls
+        )
         scores.append(ticket_score)
 
-    return scores
+    return {"scores": scores}
+
+
+@returns()
+def log_mistakes(mistakes_dump_path: str, scores: List[TextScore]):
+    mistakes = dict()
+    for score in scores:
+        text = score.text
+        mistakes_in_precisions = {
+            text[p.entity.start : p.entity.end]: {
+                "type": p.entity.entity_type,
+                "score": round(p.precision, 2),
+                "src": p.entity_src,
+            }
+            for p in score.precisions
+        }
+        mistakes_in_recalls = {
+            text[p.entity.start : p.entity.end]: {
+                "type": p.entity.entity_type,
+                "score": round(p.recall, 2),
+                "src": p.entity_src,
+            }
+            for p in score.recalls
+        }
+        mistakes.update({text: {**mistakes_in_precisions, **mistakes_in_recalls}})
+
+    dump_to_json_file(mistakes, mistakes_dump_path)
 
 
 @returns(Dict)

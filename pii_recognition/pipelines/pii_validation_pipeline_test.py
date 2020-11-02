@@ -1,15 +1,25 @@
+import os
+from tempfile import TemporaryDirectory
+
 from mock import patch
 from numpy.testing import assert_almost_equal
 from pii_recognition.data_readers.data import Data, DataItem
 from pii_recognition.evaluation.character_level_evaluation import (
-    EntityPrecision, EntityRecall, TextScore)
+    EntityPrecision,
+    EntityRecall,
+    TextScore,
+)
 from pii_recognition.labels.schema import Entity
+from pii_recognition.utils import load_json_file
 from pytest import fixture
 
-from .pii_validation_pipeline import (calculate_precisions_and_recalls,
-                                      get_rollup_fscore_on_pii,
-                                      get_rollup_fscores_on_types,
-                                      identify_pii_entities, log_mistakes)
+from .pii_validation_pipeline import (
+    calculate_precisions_and_recalls,
+    get_rollup_fscore_on_pii,
+    get_rollup_fscores_on_types,
+    identify_pii_entities,
+    log_mistakes,
+)
 
 
 @fixture
@@ -167,7 +177,9 @@ def test_identify_pii_entities(mock_registry, data):
 def test_calculate_precisions_and_recalls_with_empty_predictions(data):
     grouped_targeted_labels = [{"BIRTHDAY"}, {"ORGANIZATION"}, {"LOCATION"}]
 
-    actual = calculate_precisions_and_recalls(data, grouped_targeted_labels)
+    unwrapped = calculate_precisions_and_recalls(data, grouped_targeted_labels)
+    actual = unwrapped["scores"]
+
     assert len(actual) == 2
     assert actual[0] == TextScore(
         text="It's like that since 12/17/1967",
@@ -192,7 +204,9 @@ def test_calculate_precisions_and_recalls_with_predictions(data):
     ]
     grouped_targeted_labels = [{"BIRTHDAY"}, {"ORGANIZATION"}, {"LOCATION"}]
 
-    actual = calculate_precisions_and_recalls(data, grouped_targeted_labels)
+    unwrapped = calculate_precisions_and_recalls(data, grouped_targeted_labels)
+    actual = unwrapped["scores"]
+
     assert len(actual) == 2
     assert actual[0] == TextScore(
         text="It's like that since 12/17/1967",
@@ -216,9 +230,11 @@ def test_calculate_precisions_and_recalls_with_nontargeted_labels(data):
     grouped_targeted_labels = [{"ORGANIZATION"}, {"LOCATION"}]
     nontargeted_labels = {"BIRTHDAY", "DATE"}
 
-    actual = calculate_precisions_and_recalls(
+    unwrapped = calculate_precisions_and_recalls(
         data, grouped_targeted_labels, nontargeted_labels
     )
+    actual = unwrapped["scores"]
+
     assert len(actual) == 2
     assert actual[0] == TextScore(
         text="It's like that since 12/17/1967", precisions=[], recalls=[],
@@ -252,3 +268,30 @@ def test_get_rollup_fscores_on_types(complex_scores):
     assert actual[frozenset({"BIRTHDAY", "DATE"})] == 0.0
     assert actual[frozenset({"CREDIT_CARD"})] == 1.0
     assert_almost_equal(actual[frozenset({"LOCATION"})], 0.395918367)
+
+
+def test_log_mistakes(scores):
+    with TemporaryDirectory() as tempdir:
+        fake_path = os.path.join(tempdir, "fake_path")
+        log_mistakes(fake_path, scores)
+        actual = load_json_file(fake_path)
+
+    assert len(actual) == 2
+    assert actual["It's like that since 9/23/1993"] == {
+        "It's like ": {"type": "BIRTHDAY", "score": 0.0, "src": "predicted"},
+        "9/23/1993": {"type": "BIRTHDAY", "score": 0.0, "src": "ground_truth"},
+    }
+    assert actual["The address of Balefire Global is Valadouro 3, Ubide 48145"] == {
+        "ire Global": {"type": "ORGANIZATION", "score": 1.0, "src": "predicted"},
+        " is Valadouro 3,": {"type": "LOCATION", "score": 0.75, "src": "predicted"},
+        "Balefire Global": {
+            "type": "ORGANIZATION",
+            "score": 0.67,
+            "src": "ground_truth",
+        },
+        "Valadouro 3, Ubide 48145": {
+            "type": "LOCATION",
+            "score": 0.5,
+            "src": "ground_truth",
+        },
+    }
