@@ -282,7 +282,6 @@ def test_log_mistakes(scores):
         "9/23/1993": {"type": "BIRTHDAY", "score": 0.0, "src": "ground_truth"},
     }
     assert actual["The address of Balefire Global is Valadouro 3, Ubide 48145"] == {
-        "ire Global": {"type": "ORGANIZATION", "score": 1.0, "src": "predicted"},
         " is Valadouro 3,": {"type": "LOCATION", "score": 0.75, "src": "predicted"},
         "Balefire Global": {
             "type": "ORGANIZATION",
