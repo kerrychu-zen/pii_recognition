@@ -81,16 +81,21 @@ def log_mistakes(mistakes_dump_path: str, scores: List[TextScore]):
                 "src": p.entity_src,
             }
             for p in score.precisions
+            if p.precision != 1.0
         }
         mistakes_in_recalls = {
-            text[p.entity.start : p.entity.end]: {
-                "type": p.entity.entity_type,
-                "score": round(p.recall, 2),
-                "src": p.entity_src,
+            text[r.entity.start : r.entity.end]: {
+                "type": r.entity.entity_type,
+                "score": round(r.recall, 2),
+                "src": r.entity_src,
             }
-            for p in score.recalls
+            for r in score.recalls
+            if r.recall != 1.0
         }
-        mistakes.update({text: {**mistakes_in_precisions, **mistakes_in_recalls}})
+
+        text_mistakes = {**mistakes_in_precisions, **mistakes_in_recalls}
+        if text_mistakes:
+            mistakes.update({text: {**mistakes_in_precisions, **mistakes_in_recalls}})
 
     dump_to_json_file(mistakes, mistakes_dump_path)
 
@@ -124,9 +129,9 @@ def calculate_aggregate_metrics(
 
 
 @returns()
-def report_results(results: Dict, dump_file: str):
+def report_results(results: Dict, scores_dump_path: str):
     results = stringify_keys(results)
-    dump_to_json_file(results, dump_file)
+    dump_to_json_file(results, scores_dump_path)
 
 
 def get_rollup_fscore_on_pii(
@@ -220,6 +225,7 @@ def exec_pipeline(config_yaml_file: str):
         read_benchmark_data,
         identify_pii_entities,
         calculate_precisions_and_recalls,
+        log_mistakes,
         calculate_aggregate_metrics,
         report_results,
         name="pii_validation_pipeline",
