@@ -1,7 +1,6 @@
 from mock import patch
 from pii_recognition.labels.schema import Entity
 from pii_recognition.recognisers import registry as recogniser_registry
-from pytest import fixture
 
 
 @patch("pii_recognition.recognisers.comprehend_recogniser.config_cognito_session")
