@@ -9,8 +9,9 @@ from .entity_recogniser import EntityRecogniser
 
 
 class GoogleRecogniser(EntityRecogniser):
+    CREDENTIALS_PATH = config("GOOGLE_APPLICATION_CREDENTIALS")
+
     def __init__(self, supported_entities: List[str], supported_languages: List[str]):
-        self.CREDENTIALS_PATH = config("GOOGLE_APPLICATION_CREDENTIALS")
         super().__init__(
             supported_entities=supported_entities,
             supported_languages=supported_languages,
