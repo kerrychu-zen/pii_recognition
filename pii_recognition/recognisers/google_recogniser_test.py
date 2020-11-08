@@ -8,11 +8,6 @@ from pytest import fixture, raises
 from .google_recogniser import GoogleRecogniser
 
 
-@fixture(autouse=True)
-def mock_google_credentials(monkeypatch):
-    return monkeypatch.setenv("GOOGLE_APPLICATION_CREDENTIALS", "TestingPath")
-
-
 @fixture
 def text() -> str:
     return (

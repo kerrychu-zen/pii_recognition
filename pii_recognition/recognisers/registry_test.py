@@ -4,11 +4,6 @@ from pii_recognition.recognisers import registry as recogniser_registry
 from pytest import fixture
 
 
-@fixture
-def mock_google_credentials(monkeypatch):
-    return monkeypatch.setenv("GOOGLE_APPLICATION_CREDENTIALS", "TestingPath")
-
-
 @patch("pii_recognition.recognisers.comprehend_recogniser.config_cognito_session")
 @patch("pii_recognition.recognisers.comprehend_recogniser.ComprehendRecogniser.analyse")
 def test_registry_for_comprehend(mock_analyse, mock_session):
@@ -40,7 +35,7 @@ def test_registry_for_comprehend(mock_analyse, mock_session):
 @patch("pii_recognition.recognisers.google_recogniser.GoogleRecogniser.client")
 @patch("pii_recognition.recognisers.google_recogniser.GoogleRecogniser.analyse")
 def test_registry_for_google_recogniser(
-    mock_analyse, mock_client, mock_google_credentials
+    mock_analyse, mock_client
 ):
     mock_analyse.return_value = [Entity("test", 0, 4)]
 
