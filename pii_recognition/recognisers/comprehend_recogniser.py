@@ -56,6 +56,7 @@ class ComprehendRecogniser(EntityRecogniser):
         DEFAULT_LANG = "en"
 
         response = self.model_func(Text=text, LanguageCode=DEFAULT_LANG)
+        import pdb; pdb.set_trace()
 
         # parse response
         predicted_entities = response["Entities"]
