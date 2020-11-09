@@ -96,7 +96,8 @@ def complex_scores():
         )
     )
 
-    # 3. test types occurred in multiple texts i.e. LOCATION
+    # 3. test multiple occurrences of a type i.e. LOCATION it occurs in
+    # case 4 and 5 as well, this will test calculation on aggregated scores.
     scores.append(
         TextScore(
             text=(
