@@ -59,12 +59,14 @@ def dump_to_json_file(obj: Any, path: str):
 def stringify_keys(data: Dict) -> Dict[str, Any]:
     stringify_dict = dict()
     for key, value in data.items():
-        if isinstance(value, dict):
-            stringify_dict[key] = stringify_keys(value)
-
         if not isinstance(key, str):
-            stringify_dict[str(key)] = value
+            new_key = str(key)
         else:
-            stringify_dict[key] = value
+            new_key = key
+
+        if isinstance(value, dict):
+            stringify_dict[new_key] = stringify_keys(value)
+        else:
+            stringify_dict[new_key] = value
 
     return stringify_dict
