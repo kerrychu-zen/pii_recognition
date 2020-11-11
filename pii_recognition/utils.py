@@ -77,7 +77,7 @@ class TextIndexer:
 
     def __init__(self, text: str):
         self.text = text
-        self._byte_to_utf8_mapping = None
+        self._byte_to_utf8_mapping: Optional[Dict[int, int]] = None
 
     @property
     def byte_to_utf8_mapping(self) -> Dict[int, int]:
@@ -90,6 +90,7 @@ class TextIndexer:
                 mapping[byte_index] = utf8_index
 
             self._byte_to_utf8_mapping = mapping
+
         return self._byte_to_utf8_mapping
 
     def byte_index_to_utf8_index(self, byte_index: int) -> int:
