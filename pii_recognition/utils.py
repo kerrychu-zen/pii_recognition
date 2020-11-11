@@ -70,3 +70,32 @@ def stringify_keys(data: Dict) -> Dict[str, Any]:
             stringify_dict[new_key] = value
 
     return stringify_dict
+
+
+class TextIndexer:
+    """Convert index in one encoding to index in another encoding."""
+
+    def __init__(self, text: str):
+        self.text = text
+        self._byte_to_utf8_mapping = None
+
+    @property
+    def byte_to_utf8_mapping(self) -> Dict[int, int]:
+        if not self._byte_to_utf8_mapping:
+            byte_index = utf8_index = 0
+            mapping = {byte_index: utf8_index}
+            for char in self.text:
+                byte_index += len(char.encode())
+                utf8_index += 1
+                mapping[byte_index] = utf8_index
+
+            self._byte_to_utf8_mapping = mapping
+        return self._byte_to_utf8_mapping
+
+    def byte_index_to_utf8_index(self, byte_index: int) -> int:
+        try:
+            return self.byte_to_utf8_mapping[byte_index]
+        except KeyError:
+            raise Exception(
+                f"Index {byte_index} is an invalid boundary converting to UTF8."
+            )
