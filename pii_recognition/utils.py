@@ -97,6 +97,9 @@ class TextIndexer:
         try:
             return self.byte_to_utf8_mapping[byte_index]
         except KeyError:
+            # The only usage now is Google NL models and so far it does
+            # not cause any failures on index conversion. We may not consider
+            # logics on handling failures until we encouter such cases.
             raise Exception(
                 f"Index {byte_index} is an invalid boundary converting to UTF8."
             )
