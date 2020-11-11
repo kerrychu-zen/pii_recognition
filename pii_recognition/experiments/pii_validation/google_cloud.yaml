@@ -19,14 +19,13 @@ recogniser_params:
     - en
 grouped_targeted_labels:
   - 
-   - CREDIT_CARD
-   - URL
-   - IP_ADDRESS
-   - IBAN
-   - EMAIL
-   - OTHER
+    - CREDIT_CARD
+    - EMAIL
+    - OTHER
   -
     - US_SSN
+    - IBAN
+    - IP_ADDRESS
     - NUMBER
   -
     - BIRTHDAY
@@ -38,6 +37,9 @@ grouped_targeted_labels:
     - ADDRESS
   -
     - PERSON
+  -
+    # checked, URL is not in the model's OTHER category
+    - URL
 nontargeted_labels:
   # benchmark entities being removed
   - NATIONALITY
