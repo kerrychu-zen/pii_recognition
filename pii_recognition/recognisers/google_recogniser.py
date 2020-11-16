@@ -44,15 +44,19 @@ class GoogleRecogniser(EntityRecogniser):
         for entity in response.entities:
             entity_type = entity.type_.name
             for mention in entity.mentions:
-                # google is using byte offset
-                byte_begin_offset = mention.text.begin_offset
-                start = indexer.byte_index_to_utf8_index(byte_begin_offset)
-                # content is decoded in chosen langauge which is UTF8
-                text_length = len(mention.text.content)
-                end = start + text_length
-                span_labels.append(
-                    Entity(entity_type=entity_type, start=start, end=end)
-                )
+                # Two types of mention: PROPER and COMMON. We are only interested in
+                # PROPER.
+                # https://cloud.google.com/natural-language/docs/basics#entity_analysis
+                if mention.type_.name == "PROPER":
+                    # google is using byte offset
+                    byte_begin_offset = mention.text.begin_offset
+                    start = indexer.byte_index_to_utf8_index(byte_begin_offset)
+                    # content is decoded in chosen langauge which is UTF8
+                    text_length = len(mention.text.content)
+                    end = start + text_length
+                    span_labels.append(
+                        Entity(entity_type=entity_type, start=start, end=end)
+                    )
 
         return span_labels
 
