@@ -19,13 +19,13 @@ recogniser_params:
     - en
 grouped_targeted_labels:
   - 
-    - CREDIT_CARD
     - EMAIL
     - OTHER
   -
     - US_SSN
     - IBAN
     - IP_ADDRESS
+    - CREDIT_CARD
     - NUMBER
   -
     - BIRTHDAY
