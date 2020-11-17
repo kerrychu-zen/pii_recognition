@@ -45,7 +45,7 @@ nontargeted_labels:
   - NATIONALITY
   - TITLE
   - ORGANIZATION
-  # comprehend entities being removed
+  # Google NL API entities being removed
   - UNKNOWN
   - EVENT
   - WORK_OF_ART
