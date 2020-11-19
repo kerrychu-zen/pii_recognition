@@ -227,28 +227,27 @@ def get_rollup_metrics_on_types(
 
     metrics = dict()
     for key, value in score_table.items():
-        f1 = compute_pii_detection_fscore(
-            value["precisions"], value["recalls"], beta=fbeta
+        f1 = round(
+            compute_pii_detection_fscore(
+                value["precisions"], value["recalls"], beta=fbeta
+            ),
+            4,
         )
 
         if value["precisions"]:
-            ave_precision = sum(value["precisions"]) / len(value["precisions"])
+            ave_precision = round(
+                sum(value["precisions"]) / len(value["precisions"]), 4
+            )
         else:
             ave_precision = "undefined"
 
         if value["recalls"]:
-            ave_recall = sum(value["recalls"]) / len(value["recalls"])
+            ave_recall = round(sum(value["recalls"]) / len(value["recalls"]), 4)
         else:
             ave_recall = "undefined"
 
         metrics.update(
-            {
-                key: {
-                    "f1": round(f1, 4),
-                    "ave-precision": round(ave_precision, 4),
-                    "ave-recall": round(ave_recall, 4),
-                }
-            }
+            {key: {"f1": f1, "ave-precision": ave_precision, "ave-recall": ave_recall}}
         )
     return metrics
 
