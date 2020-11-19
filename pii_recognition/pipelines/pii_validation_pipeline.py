@@ -107,17 +107,12 @@ def calculate_aggregate_metrics(
     grouped_targeted_labels: List[Set[str]],
     fbeta: float = 1.0,
 ) -> Dict[Union[str, FrozenSet[str]], float]:
-    round_ndigits = 4
     results: Dict[Union[str, FrozenSet[str]], float] = dict()
 
-    results["exact_match_f1"] = (
-        get_rollup_fscore_on_pii(scores, fbeta, recall_threshold=None),
-        round_ndigits,
-    )
-
-    results["partial_match_f1_threshold_at_50%"] = (
-        get_rollup_fscore_on_pii(scores, fbeta, recall_threshold=0.5),
-        round_ndigits,
+    results["exact_match_f1"] = get_rollup_fscore_on_pii(
+        scores, fbeta, recall_threshold=None)
+    results["partial_match_f1_threshold_at_50%"] = get_rollup_fscore_on_pii(
+        scores, fbeta, recall_threshold=0.5
     )
 
     type_scores: Mapping = get_rollup_metrics_on_types(
