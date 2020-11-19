@@ -16,7 +16,7 @@ from pytest import fixture
 from .pii_validation_pipeline import (
     calculate_precisions_and_recalls,
     get_rollup_fscore_on_pii,
-    get_rollup_fscores_on_types,
+    get_rollup_metrics_on_types,
     identify_pii_entities,
     log_predictions_and_ground_truths,
 )
@@ -257,18 +257,42 @@ def test_get_rollup_fscore_on_pii_no_threshold(scores):
 
 def test_get_rollup_fscore_on_pii_threshold(scores):
     actual = get_rollup_fscore_on_pii(scores, fbeta=1, recall_threshold=0.4)
-    assert actual == 7 / 15
+    assert actual == 0.4667
 
 
-def test_get_rollup_fscores_on_types(complex_scores):
-    actual = get_rollup_fscores_on_types(
+def test_get_rollup_metrics_on_types(complex_scores):
+    actual = get_rollup_metrics_on_types(
         [{"BIRTHDAY", "DATE"}, {"LOCATION"}, {"CREDIT_CARD"}], complex_scores, 1.0
     )
 
     assert len(actual) == 3
-    assert actual[frozenset({"BIRTHDAY", "DATE"})] == 0.0
-    assert actual[frozenset({"CREDIT_CARD"})] == 1.0
-    assert_almost_equal(actual[frozenset({"LOCATION"})], 0.395918367)
+    assert actual[frozenset({"BIRTHDAY", "DATE"})] == {
+        "f1": 0.0,
+        "ave-precision": 0.0,
+        "ave-recall": 0.0,
+    }
+    assert actual[frozenset({"CREDIT_CARD"})] == {
+        "f1": 1.0,
+        "ave-precision": 1.0,
+        "ave-recall": 1.0,
+    }
+    assert actual[frozenset({"LOCATION"})] == {
+        "f1": 0.3959,
+        "ave-precision": 0.5,
+        "ave-recall": 0.3277,
+    }
+
+
+def test_get_rollup_metrics_on_types_empty_scores():
+    actual = get_rollup_metrics_on_types([{"BIRTHDAY", "DATE"}], [], 1.0)
+
+    assert actual == {
+        frozenset({"BIRTHDAY", "DATE"}): {
+            "f1": 1.0,
+            "ave-precision": "undefined",
+            "ave-recall": "undefined",
+        }
+    }
 
 
 def test_log_mistakes(scores):
