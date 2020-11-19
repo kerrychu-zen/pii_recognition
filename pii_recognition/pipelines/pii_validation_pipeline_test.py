@@ -2,7 +2,7 @@ import os
 from tempfile import TemporaryDirectory
 
 from mock import patch
-from numpy.testing import assert_almost_equal
+from numpy.testing import assert_almost_equal, assert_array_almost_equal
 from pii_recognition.data_readers.data import Data, DataItem
 from pii_recognition.evaluation.character_level_evaluation import (
     EntityPrecision,
@@ -19,6 +19,7 @@ from .pii_validation_pipeline import (
     get_rollup_metrics_on_types,
     identify_pii_entities,
     log_predictions_and_ground_truths,
+    regroup_scores_on_types,
 )
 
 
@@ -318,3 +319,20 @@ def test_log_mistakes(scores):
         "Balefire Global": {"type": "ORGANIZATION", "score": 0.67, "start": 15},
         "Valadouro 3, Ubide 48145": {"type": "LOCATION", "score": 0.5, "start": 34},
     }
+
+
+def test_regroup_scores_on_types(scores):
+    actual = regroup_scores_on_types(
+        [{"DATE", "BIRTHDAY"}, {"LOCATION"}, {"ORGANIZATION"}], scores
+    )
+
+    assert len(actual) == 3
+    assert actual[frozenset({"DATE", "BIRTHDAY"})] == {
+        "precisions": [0.0],
+        "recalls": [0.0],
+    }
+    assert actual[frozenset({"LOCATION"})] == {"precisions": [0.75], "recalls": [0.5]}
+    assert actual[frozenset({"ORGANIZATION"})]["precisions"] == [1.0]
+    assert_array_almost_equal(
+        actual[frozenset({"ORGANIZATION"})]["recalls"], [0.6666666666666666]
+    )
