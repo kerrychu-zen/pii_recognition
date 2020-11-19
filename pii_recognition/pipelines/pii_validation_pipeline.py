@@ -72,8 +72,7 @@ def calculate_precisions_and_recalls(
 
 @returns()
 def log_predictions_and_ground_truths(
-    predictions_dump_path: str,
-    scores: List[TextScore]
+    predictions_dump_path: str, scores: List[TextScore]
 ):
     results = dict()
     for score in scores:
