@@ -104,7 +104,7 @@ def test_execute_pii_validation_pipeline(mock_registry):
                 "score": 0.52,
                 "start": 36,
             },
-            "5550253262199449": {"type": "CREDIT_CARD", "score": 1.0, "start": 75,},
+            "5550253262199449": {"type": "CREDIT_CARD", "score": 1.0, "start": 75},
         }
 
         assert item_two["predicted"] == {}
