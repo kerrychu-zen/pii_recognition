@@ -2,7 +2,7 @@ import os
 from tempfile import TemporaryDirectory
 
 from mock import patch
-from numpy.testing import assert_almost_equal, assert_array_almost_equal
+from numpy.testing import assert_array_almost_equal
 from pii_recognition.data_readers.data import Data, DataItem
 from pii_recognition.evaluation.character_level_evaluation import (
     EntityPrecision,
