@@ -214,7 +214,7 @@ def regroup_scores_on_types(
 
 def get_rollup_metrics_on_types(
     grouped_labels: List[Set[str]], scores: List[TextScore], fbeta: float,
-) -> Dict[FrozenSet[str], Union[float, str]]:
+) -> Dict[FrozenSet[str], Dict[str, Union[float, str]]]:
     """Calculate f1, average precision and average recall for every group in the
     grouped labels.
     """
